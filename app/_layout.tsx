@@ -114,10 +114,7 @@ function RootLayoutNav() {
           options={{
             title: '',
             headerShown: true,
-            headerStyle: {
-              backgroundColor: theme.red.val,
-            },
-            headerTintColor: theme.color.val,
+            headerTransparent: true,
           }}
         />
       </Stack>

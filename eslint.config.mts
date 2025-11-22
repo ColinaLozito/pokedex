@@ -49,6 +49,16 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-require-imports': 'off', // Allow require() for assets
       'prettier/prettier': 'error',
+      'max-len': [
+        'warn',
+        {
+          code: 120,
+          ignoreComments: true,
+          ignoreStrings: true,
+          ignoreTemplateLiterals: true,
+        },
+      ]
+
     },
   }
 )

@@ -9,12 +9,19 @@ export interface Pokemon {
   [key: string]: any
 }
 
+export interface RecentSelection {
+  id: number
+  name: string
+  selectedAt: number // timestamp
+}
+
 interface PokemonState {
   // State
   dailyPokemon: Pokemon | null
   bookmarks: Pokemon[]
   discovered: Record<number, number> // Pokemon ID -> count
   recentSearches: string[] // Last 5 searches
+  recentSelections: RecentSelection[] // Last 5 selected Pokémon
   pokemonList: PokemonListItem[] // Complete list of Pokémon from API
   cachedLists: {
     types?: any[]
@@ -28,11 +35,15 @@ interface PokemonState {
   addDiscovered: (pokemonId: number) => void
   addRecentSearch: (search: string) => void
   clearRecentSearches: () => void
+  addRecentSelection: (pokemon: PokemonListItem) => void
+  removeRecentSelection: (pokemonId: number) => void
+  clearRecentSelections: () => void
   setPokemonList: (list: PokemonListItem[]) => void
   setCachedList: (key: 'types' | 'generations', data: any[]) => void
 }
 
 const MAX_RECENT_SEARCHES = 5
+const MAX_RECENT_SELECTIONS = 5
 
 export const usePokemonStore = create<PokemonState>()(
   persist(
@@ -42,6 +53,7 @@ export const usePokemonStore = create<PokemonState>()(
       bookmarks: [],
       discovered: {},
       recentSearches: [],
+      recentSelections: [],
       pokemonList: [],
       cachedLists: {},
 
@@ -84,6 +96,27 @@ export const usePokemonStore = create<PokemonState>()(
 
       clearRecentSearches: () =>
         set({ recentSearches: [] }),
+
+      addRecentSelection: (pokemon) =>
+        set((state) => {
+          // Remove if already exists to avoid duplicates
+          const filtered = state.recentSelections.filter((s) => s.id !== pokemon.id)
+          // Add to the beginning with timestamp
+          const updated = [
+            { id: pokemon.id, name: pokemon.name, selectedAt: Date.now() },
+            ...filtered
+          ].slice(0, MAX_RECENT_SELECTIONS)
+
+          return { recentSelections: updated }
+        }),
+
+      removeRecentSelection: (pokemonId) =>
+        set((state) => ({
+          recentSelections: state.recentSelections.filter((s) => s.id !== pokemonId),
+        })),
+
+      clearRecentSelections: () =>
+        set({ recentSelections: [] }),
 
       setPokemonList: (list) =>
         set({ pokemonList: list }),

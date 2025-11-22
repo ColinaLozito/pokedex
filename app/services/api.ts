@@ -1,7 +1,7 @@
 // PokéAPI service layer
 // This file will contain all API calls to PokéAPI
 
-import { extractPokemonId } from "app/helpers/extractPokemonId"
+import { extractPokemonId, extractTypeId } from "app/helpers/extractPokemonId"
 
 const BASE_URL = 'https://pokeapi.co/api/v2'
 
@@ -12,6 +12,11 @@ export interface PokemonResponse {
 }
 
 export interface PokemonListItem {
+  id: number
+  name: string
+}
+
+export interface TypeListItem {
   id: number
   name: string
 }

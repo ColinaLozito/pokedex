@@ -1,13 +1,12 @@
-import '../tamagui-web.css'
-
 import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
-import { Provider } from 'components/Provider'
 import { useTheme } from 'tamagui'
+import { Provider } from './components/Provider'
+import Montserrat from '../assets/fonts/Montserrat.ttf'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -16,26 +15,25 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  initialRouteName: 'index',
 }
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
-  const [interLoaded, interError] = useFonts({
-    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
-    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+  const [fontsLoaded, fontError] = useFonts({
+    Montserrat: Montserrat,
   })
 
   useEffect(() => {
-    if (interLoaded || interError) {
+    if (fontsLoaded || fontError) {
       // Hide the splash screen after the fonts have loaded (or an error was returned) and the UI is ready.
       SplashScreen.hideAsync()
     }
-  }, [interLoaded, interError])
+  }, [fontsLoaded, fontError])
 
-  if (!interLoaded && !interError) {
+  if (!fontsLoaded && !fontError) {
     return null
   }
 
@@ -53,28 +51,51 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 function RootLayoutNav() {
   const colorScheme = useColorScheme()
   const theme = useTheme()
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style="dark" />
       <Stack>
         <Stack.Screen
-          name="(tabs)"
+          name="index"
           options={{
             headerShown: false,
           }}
         />
 
         <Stack.Screen
-          name="modal"
+          name="screens/home"
           options={{
-            title: 'Tamagui + Expo',
-            presentation: 'modal',
-            animation: 'slide_from_right',
-            gestureEnabled: true,
-            gestureDirection: 'horizontal',
-            contentStyle: {
+            title: 'Pokédex',
+            headerShown: false,
+            headerStyle: {
               backgroundColor: theme.background.val,
             },
+            headerTintColor: theme.color.val,
+          }}
+        />
+
+        <Stack.Screen
+          name="screens/parent"
+          options={{
+            title: '',
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: theme.red.val,
+            },
+            headerTintColor: theme.color.val,
+          }}
+        />
+
+        <Stack.Screen
+          name="screens/kid"
+          options={{
+            title: '',
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: theme.red.val,
+            },
+            headerTintColor: theme.color.val,
           }}
         />
       </Stack>

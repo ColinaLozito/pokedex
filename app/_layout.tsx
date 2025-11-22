@@ -6,6 +6,8 @@ import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { useTheme } from 'tamagui'
 import { Provider } from './components/Provider'
+import { usePokemonStore } from './store/pokemonStore'
+import { fetchPokemonList } from './services/api'
 import Montserrat from '../assets/fonts/Montserrat.ttf'
 
 export {
@@ -25,7 +27,7 @@ export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
     Montserrat: Montserrat,
   })
-
+  
   useEffect(() => {
     if (fontsLoaded || fontError) {
       // Hide the splash screen after the fonts have loaded (or an error was returned) and the UI is ready.
@@ -45,6 +47,26 @@ export default function RootLayout() {
 }
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
+  const pokemonList = usePokemonStore((state) => state.pokemonList)
+  const setPokemonList = usePokemonStore((state) => state.setPokemonList)
+
+  useEffect(() => {
+    // Only fetch if pokemonList is empty (not cached)
+    if (pokemonList.length === 0) {
+      console.log('Pokémon list is empty, fetching from API...')
+      fetchPokemonList()
+        .then((list) => {
+          console.log('Successfully fetched and storing Pokémon list')
+          setPokemonList(list)
+        })
+        .catch((error) => {
+          console.error('Failed to fetch Pokémon list:', error)
+        })
+    } else {
+      console.log('Pokémon list already cached, skipping API fetch')
+    }
+  }, [])
+
   return <Provider>{children}</Provider>
 }
 

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import type { PokemonListItem } from '../services/api'
 
 export interface Pokemon {
   id: number
@@ -11,10 +12,10 @@ export interface Pokemon {
 interface PokemonState {
   // State
   dailyPokemon: Pokemon | null
-  retriesLeft: number
   bookmarks: Pokemon[]
   discovered: Record<number, number> // Pokemon ID -> count
   recentSearches: string[] // Last 5 searches
+  pokemonList: PokemonListItem[] // Complete list of Pokémon from API
   cachedLists: {
     types?: any[]
     generations?: any[]
@@ -22,17 +23,15 @@ interface PokemonState {
 
   // Actions
   setDailyPokemon: (pokemon: Pokemon | null) => void
-  decrementRetries: () => void
-  resetRetries: () => void
   addBookmark: (pokemon: Pokemon) => void
   removeBookmark: (pokemonId: number) => void
   addDiscovered: (pokemonId: number) => void
   addRecentSearch: (search: string) => void
   clearRecentSearches: () => void
+  setPokemonList: (list: PokemonListItem[]) => void
   setCachedList: (key: 'types' | 'generations', data: any[]) => void
 }
 
-const MAX_RETRIES = 10
 const MAX_RECENT_SEARCHES = 5
 
 export const usePokemonStore = create<PokemonState>()(
@@ -40,23 +39,15 @@ export const usePokemonStore = create<PokemonState>()(
     (set) => ({
       // Initial state
       dailyPokemon: null,
-      retriesLeft: MAX_RETRIES,
       bookmarks: [],
       discovered: {},
       recentSearches: [],
+      pokemonList: [],
       cachedLists: {},
 
       // Actions
       setDailyPokemon: (pokemon) =>
         set({ dailyPokemon: pokemon }),
-
-      decrementRetries: () =>
-        set((state) => ({
-          retriesLeft: Math.max(0, state.retriesLeft - 1),
-        })),
-
-      resetRetries: () =>
-        set({ retriesLeft: MAX_RETRIES }),
 
       addBookmark: (pokemon) =>
         set((state) => {
@@ -93,6 +84,9 @@ export const usePokemonStore = create<PokemonState>()(
 
       clearRecentSearches: () =>
         set({ recentSearches: [] }),
+
+      setPokemonList: (list) =>
+        set({ pokemonList: list }),
 
       setCachedList: (key, data) =>
         set((state) => ({

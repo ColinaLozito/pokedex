@@ -14,6 +14,6 @@ config.resolver.sourceExts.push('mjs')
 
 module.exports = withTamagui(config, {
   components: ['tamagui'],
-  config: './tamagui.config.ts',
+  config: './config/tamagui.config',
   outputCSS: './tamagui-web.css',
 })

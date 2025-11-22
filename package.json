@@ -12,7 +12,11 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "lint": "eslint app",
+    "lint:fix": "eslint app --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "jest": {
     "preset": "jest-expo"
@@ -50,11 +54,24 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.6",
+    "@eslint/js": "^9.39.1",
     "@expo/metro-runtime": "~6.1.2",
     "@tamagui/babel-plugin": "^1.138.0",
     "@tamagui/cli": "^1.138.0",
     "@tamagui/metro-plugin": "^1.138.0",
     "@types/react": "~19.1.10",
-    "typescript": "~5.9.2"
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-native": "^5.0.0",
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
+    "prettier": "^3.6.2",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.47.0"
   }
 }

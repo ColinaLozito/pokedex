@@ -29,20 +29,42 @@ tsconfig.tsbuildinfo
 node_modules
 **/_
 **/tests/spec/out
-.DS_Store
 
 .next
 .vercel
 .tamagui
 .idea
+.vscode
 
 .env
 # local env files
 .env.local
 .env.development.local
-.env.test.localp
+.env.test.local
 .env.production.local
 
 .expo
 ios
 android
+
+# Build outputs
+build/
+coverage/
+*.log
+
+# Editor and OS files
+*.swp
+*.swo
+*~
+Thumbs.db
+.DS_Store
+
+# Metro bundler cache
+.metro/
+
+# Jest
+.jest/
+
+# Temporary files
+*.tmp
+.cache/

@@ -6,22 +6,28 @@ import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprite
 
 interface BookmarkedPokemonProps {
   onSelect?: (id: number) => void
+  variant?: 'kid' | 'parent' // Specify which bookmark type to use
 }
 
-export default function BookmarkedPokemon({ onSelect }: BookmarkedPokemonProps) {
-  // Get bookmarked Pokemon IDs and functions
-  const bookmarkedPokemonIds = usePokemonDataStore((state) => state.bookmarkedPokemonIds)
-  const toggleBookmark = usePokemonDataStore((state) => state.toggleBookmark)
+export default function BookmarkedPokemon({ onSelect, variant = 'kid' }: BookmarkedPokemonProps) {
+  const theme = useTheme()
   const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
-  const theme = useTheme()
+  
+  // Get bookmarked Pokemon IDs and functions based on variant
+  const bookmarkedPokemonIds = usePokemonDataStore((state) => 
+    variant === 'parent' ? state.parentBookmarkedPokemonIds : state.bookmarkedPokemonIds
+  )
+  const toggleBookmark = usePokemonDataStore((state) => 
+    variant === 'parent' ? state.toggleParentBookmark : state.toggleBookmark
+  )
   
   if (bookmarkedPokemonIds.length === 0) {
     return null
   }
 
   const handleRemoveBookmark = (pokemonId: number) => {
-    console.log(`[BOOKMARKS] Removing bookmark for Pokemon ID: ${pokemonId}`)
+    console.log(`[BOOKMARKS] Removing bookmark for Pokemon ID: ${pokemonId} (variant: ${variant})`)
     toggleBookmark(pokemonId)
   }
 
@@ -53,12 +59,12 @@ export default function BookmarkedPokemon({ onSelect }: BookmarkedPokemonProps) 
   })
 
   return (
-    <YStack gap="$3">
-      <XStack gap="$2" style={{ alignItems: 'center' }}>
-        <Bookmark size={20} color="$yellow10" fill="$yellow10" />
+    <YStack style={{ gap: 12 }}>
+      <XStack style={{ gap: 8, alignItems: 'center' }}>
+        <Bookmark size={20} color={theme.text.val} fill={theme.text.val} />
         <H4 color={theme.text.val}>Bookmarked Pokemon</H4>
       </XStack>
-      <XStack gap="$2" style={{ flexWrap: 'wrap', justifyContent: 'space-between' }}>
+      <XStack style={{ flexWrap: 'wrap', justifyContent: 'space-between', gap: 8 }}>
         {bookmarkedPokemonData.map((pokemon) => (
           <YStack key={pokemon.id} style={{ width: '48%' }}>
             <PokemonCard

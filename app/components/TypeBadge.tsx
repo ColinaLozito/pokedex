@@ -35,6 +35,7 @@ export default function TypeBadge({ typeName, size = 'medium' }: TypeBadgeProps)
   
   return (
     <YStack
+      elevation={1}
       style={{
         backgroundColor: typeColor,
         paddingHorizontal: styles.paddingHorizontal,

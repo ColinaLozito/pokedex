@@ -23,10 +23,17 @@ interface PokemonDataState {
   pokemonDetails: Record<number, CombinedPokemonDetail> // Detailed Pokemon data keyed by ID
   basicPokemonCache: Record<number, PokemonDetail> // Cache for basic Pokemon data (used in evolutions)
   currentPokemonId: number | null // Currently selected Pokemon ID
-  bookmarkedPokemonIds: number[] // Array of bookmarked Pokemon IDs
+  bookmarkedPokemonIds: number[] // Array of bookmarked Pokemon IDs (for kid)
+  parentBookmarkedPokemonIds: number[] // Array of bookmarked Pokemon IDs (for parent)
   loading: boolean
   error: string | null
   fetchingIds: Set<number> // Track which IDs are currently being fetched to prevent duplicates
+  
+  // Parent screen state
+  dailyPokemonId: number | null // Daily random Pokemon ID
+  dailyPokemonDate: string | null // Date string (YYYY-MM-DD) when daily Pokemon was set
+  rerollCount: number // Number of rerolls today
+  rerollDate: string | null // Date string (YYYY-MM-DD) for reroll tracking
 
   // Actions
   fetchPokemonListAction: () => Promise<void>
@@ -40,6 +47,15 @@ interface PokemonDataState {
   toggleBookmark: (id: number) => void
   isBookmarked: (id: number) => boolean
   getBookmarkedPokemon: () => CombinedPokemonDetail[]
+  toggleParentBookmark: (id: number) => void
+  isParentBookmarked: (id: number) => boolean
+  getParentBookmarkedPokemon: () => CombinedPokemonDetail[]
+  
+  // Parent screen actions
+  getDailyPokemon: () => Promise<number> // Get or generate daily Pokemon ID
+  setDailyPokemonId: (id: number) => void // Set daily Pokemon ID (from roulette)
+  rerollDailyPokemon: () => Promise<number> // Reroll to new random Pokemon (legacy)
+  getRerollCount: () => number // Get today's reroll count
 }
 
 export const usePokemonDataStore = create<PokemonDataState>()(
@@ -51,9 +67,14 @@ export const usePokemonDataStore = create<PokemonDataState>()(
       basicPokemonCache: {},
       currentPokemonId: null,
       bookmarkedPokemonIds: [],
+      parentBookmarkedPokemonIds: [],
       loading: false,
       error: null,
       fetchingIds: new Set(),
+      dailyPokemonId: null,
+      dailyPokemonDate: null,
+      rerollCount: 0,
+      rerollDate: null,
 
       /**
        * Fetch the complete Pokemon list (lightweight)
@@ -277,7 +298,153 @@ export const usePokemonDataStore = create<PokemonDataState>()(
         return state.bookmarkedPokemonIds
           .map((id) => state.pokemonDetails[id])
           .filter((pokemon) => pokemon !== undefined)
-      }
+      },
+      
+      /**
+       * Toggle parent bookmark
+       */
+      toggleParentBookmark: (id: number) => {
+        set((state) => {
+          const currentBookmarks = state.parentBookmarkedPokemonIds
+          const isBookmarked = currentBookmarks.includes(id)
+          
+          const newBookmarkedIds = isBookmarked
+            ? currentBookmarks.filter((bookmarkId) => bookmarkId !== id)
+            : [...currentBookmarks, id]
+          
+          return { parentBookmarkedPokemonIds: newBookmarkedIds }
+        })
+      },
+      
+      /**
+       * Check if a Pokemon is bookmarked by parent
+       */
+      isParentBookmarked: (id: number): boolean => {
+        return get().parentBookmarkedPokemonIds.includes(id)
+      },
+      
+      /**
+       * Get all parent bookmarked Pokemon details
+       */
+      getParentBookmarkedPokemon: (): CombinedPokemonDetail[] => {
+        const state = get()
+        return state.parentBookmarkedPokemonIds
+          .map((id) => state.pokemonDetails[id])
+          .filter((pokemon) => pokemon !== undefined)
+      },
+      
+      /**
+       * Helper: Get today's date string (YYYY-MM-DD)
+       */
+      getTodayDateString: (): string => {
+        const now = new Date()
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+      },
+      
+      /**
+       * Helper: Check if it's a new day
+       */
+      isNewDay: (): boolean => {
+        const state = get()
+        const today = state.getTodayDateString()
+        return state.dailyPokemonDate !== today
+      },
+      
+      /**
+       * Generate random Pokemon ID (1-1000)
+       */
+      generateRandomPokemonId: (): number => {
+        return Math.floor(Math.random() * 1000) + 1
+      },
+      
+      /**
+       * Get or generate daily Pokemon ID
+       * Resets if it's a new day
+       */
+      getDailyPokemon: async (): Promise<number> => {
+        const state = get()
+        const today = state.getTodayDateString()
+        
+        // Check if we need to reset (new day)
+        if (state.isNewDay()) {
+          console.log('[DAILY POKEMON] New day detected, generating new daily Pokemon')
+          const newId = state.generateRandomPokemonId()
+          set({
+            dailyPokemonId: newId,
+            dailyPokemonDate: today,
+            rerollCount: 0,
+            rerollDate: today
+          })
+          return newId
+        }
+        
+        // If we have a daily Pokemon for today, return it
+        if (state.dailyPokemonId && state.dailyPokemonDate === today) {
+          return state.dailyPokemonId
+        }
+        
+        // Generate new daily Pokemon
+        const newId = state.generateRandomPokemonId()
+        set({
+          dailyPokemonId: newId,
+          dailyPokemonDate: today,
+          rerollCount: 0,
+          rerollDate: today
+        })
+        return newId
+      },
+      
+      /**
+       * Set daily Pokemon ID (used when roulette completes)
+       * Increments reroll count if same day
+       */
+      setDailyPokemonId: (id: number) => {
+        const state = get()
+        const today = state.getTodayDateString()
+        
+        // Reset reroll count if new day
+        if (state.rerollDate !== today) {
+          set({
+            rerollCount: 1,
+            rerollDate: today,
+            dailyPokemonId: id,
+            dailyPokemonDate: today
+          })
+        } else {
+          // Increment reroll count
+          set({
+            rerollCount: state.rerollCount + 1,
+            dailyPokemonId: id,
+            dailyPokemonDate: today
+          })
+        }
+      },
+      
+      /**
+       * Reroll to a new random Pokemon (legacy - kept for compatibility)
+       * Increments reroll count if same day
+       */
+      rerollDailyPokemon: async (): Promise<number> => {
+        const state = get()
+        const newId = state.generateRandomPokemonId()
+        state.setDailyPokemonId(newId)
+        return newId
+      },
+      
+      /**
+       * Get today's reroll count
+       */
+      getRerollCount: (): number => {
+        const state = get()
+        const today = state.getTodayDateString()
+        
+        // Reset if new day
+        if (state.rerollDate !== today) {
+          return 0
+        }
+        
+        return state.rerollCount
+      },
     }),
     {
       name: 'pokemon-data-storage',
@@ -288,7 +455,12 @@ export const usePokemonDataStore = create<PokemonDataState>()(
         pokemonDetails: state.pokemonDetails,
         basicPokemonCache: state.basicPokemonCache,
         currentPokemonId: state.currentPokemonId,
-        bookmarkedPokemonIds: state.bookmarkedPokemonIds
+        bookmarkedPokemonIds: state.bookmarkedPokemonIds,
+        parentBookmarkedPokemonIds: state.parentBookmarkedPokemonIds,
+        dailyPokemonId: state.dailyPokemonId,
+        dailyPokemonDate: state.dailyPokemonDate,
+        rerollCount: state.rerollCount,
+        rerollDate: state.rerollDate
       })
     }
   )

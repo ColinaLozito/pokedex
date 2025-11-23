@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import type { PokemonListItem } from '../services/api'
+import type { PokemonListItem, TypeListItem } from '../services/api'
 
 export interface Pokemon {
   id: number
@@ -23,6 +23,7 @@ interface PokemonState {
   recentSearches: string[] // Last 5 searches
   recentSelections: RecentSelection[] // Last 5 selected Pokémon
   pokemonList: PokemonListItem[] // Complete list of Pokémon from API
+  typeList: TypeListItem[] // Complete list of Pokémon types from API
   cachedLists: {
     types?: any[]
     generations?: any[]
@@ -39,6 +40,7 @@ interface PokemonState {
   removeRecentSelection: (pokemonId: number) => void
   clearRecentSelections: () => void
   setPokemonList: (list: PokemonListItem[]) => void
+  setTypeList: (list: TypeListItem[]) => void
   setCachedList: (key: 'types' | 'generations', data: any[]) => void
 }
 
@@ -55,6 +57,7 @@ export const usePokemonStore = create<PokemonState>()(
       recentSearches: [],
       recentSelections: [],
       pokemonList: [],
+      typeList: [],
       cachedLists: {},
 
       // Actions
@@ -120,6 +123,9 @@ export const usePokemonStore = create<PokemonState>()(
 
       setPokemonList: (list) =>
         set({ pokemonList: list }),
+
+      setTypeList: (list) =>
+        set({ typeList: list }),
 
       setCachedList: (key, data) =>
         set((state) => ({

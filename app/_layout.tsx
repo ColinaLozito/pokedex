@@ -7,7 +7,7 @@ import { SplashScreen, Stack } from 'expo-router'
 import { useTheme } from 'tamagui'
 import { Provider } from './components/Provider'
 import { usePokemonStore } from './store/pokemonStore'
-import { fetchPokemonList } from './services/api'
+import { fetchPokemonList, fetchTypeList } from './services/api'
 import Montserrat from '../assets/fonts/Montserrat.ttf'
 
 export {
@@ -49,6 +49,8 @@ export default function RootLayout() {
 const Providers = ({ children }: { children: React.ReactNode }) => {
   const pokemonList = usePokemonStore((state) => state.pokemonList)
   const setPokemonList = usePokemonStore((state) => state.setPokemonList)
+  const typeList = usePokemonStore((state) => state.typeList)
+  const setTypeList = usePokemonStore((state) => state.setTypeList)
 
   useEffect(() => {
     // Only fetch if pokemonList is empty (not cached)
@@ -65,7 +67,22 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     } else {
       console.log('Pokémon list already cached, skipping API fetch')
     }
-  }, [])
+
+    // Only fetch if typeList is empty (not cached)
+    if (typeList.length === 0) {
+      console.log('Type list is empty, fetching from API...')
+      fetchTypeList()
+        .then((list) => {
+          console.log('Successfully fetched and storing type list')
+          setTypeList(list)
+        })
+        .catch((error) => {
+          console.error('Failed to fetch type list:', error)
+        })
+    } else {
+      console.log('Type list already cached, skipping API fetch')
+    }
+  }, [pokemonList.length, typeList.length, setPokemonList, setTypeList])
 
   return <Provider>{children}</Provider>
 }

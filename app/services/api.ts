@@ -68,3 +68,38 @@ export async function fetchPokemonList(): Promise<PokemonListItem[]> {
   }
 }
 
+/**
+ * Fetch complete list of Pokémon types
+ * Transforms the response from { name, url } to { id, name }
+ */
+export async function fetchTypeList(): Promise<TypeListItem[]> {
+  try {
+    const response = await fetch(`${BASE_URL}/type`)
+    const data = await response.json()
+    
+    // Log the raw response to inspect structure
+    console.log('Type API Raw Response:', JSON.stringify(data.results, null, 2))
+    console.log('Number of types fetched:', data.results?.length || 0)
+    
+    // Transform the results to extract ID from URL
+    const transformedList: TypeListItem[] = (data.results || []).map((type: { name: string; url: string }) => ({
+      id: extractTypeId(type.url),
+      name: type.name,
+    }))
+    
+    // Filter out "unknown" and "shadow" types (special types not commonly used)
+    const filteredList = transformedList.filter(
+      (type) => type.name !== 'unknown' && type.name !== 'shadow'
+    )
+    
+    // Log the transformed result
+    console.log('Transformed Type List:', JSON.stringify(filteredList, null, 2))
+    console.log('Total types:', filteredList.length)
+    
+    return filteredList
+  } catch (error) {
+    console.error('Error fetching type list:', error)
+    throw error
+  }
+}
+

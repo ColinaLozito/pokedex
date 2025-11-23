@@ -1,5 +1,6 @@
 import AutocompleteDropdownList from 'app/components/AutocompleteDropdown'
 import RecentSelections from 'app/components/RecentSelections'
+import TypeGrid from 'app/components/TypeGrid'
 import { usePokemonStore } from 'app/store/pokemonStore'
 import { FlatList } from 'react-native'
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
@@ -20,6 +21,11 @@ export default function KidScreen() {
     if (selectedPokemon) {
       addRecentSelection(selectedPokemon)
     }
+  }
+
+  const handleTypeSelect = (typeId: number, typeName: string) => {
+    console.log('Type selected:', typeName, 'with ID:', typeId)
+    // TODO: Filter Pokémon by type
   }
 
   const dataSet = pokemonList.map((pokemon) => ({
@@ -53,6 +59,8 @@ export default function KidScreen() {
                 />
                 <YStack height={10} />
                 <RecentSelections />
+                <YStack height={20} />
+                <TypeGrid onTypeSelect={handleTypeSelect} />
               </YStack>
             }
           />

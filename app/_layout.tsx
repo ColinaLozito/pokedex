@@ -6,6 +6,9 @@ import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { useTheme } from 'tamagui'
 import { Provider } from './components/Provider'
+import { usePokemonStore } from './store/pokemonStore'
+import { usePokemonDataStore } from './store/pokemonDataStore'
+import { fetchTypeList } from './services/api'
 import Montserrat from '../assets/fonts/Montserrat.ttf'
 
 export {
@@ -25,8 +28,11 @@ export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
     Montserrat: Montserrat,
   })
-
+  
   useEffect(() => {
+    /* (async () => {
+      await AsyncStorage.clear()
+    })() */
     if (fontsLoaded || fontError) {
       // Hide the splash screen after the fonts have loaded (or an error was returned) and the UI is ready.
       SplashScreen.hideAsync()
@@ -45,6 +51,32 @@ export default function RootLayout() {
 }
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
+  const typeList = usePokemonStore((state) => state.typeList)
+  const setTypeList = usePokemonStore((state) => state.setTypeList)
+  
+  // Use new data store for Pokemon list
+  const fetchPokemonListAction = usePokemonDataStore((state) => state.fetchPokemonListAction)
+
+  useEffect(() => {
+    // Fetch Pokemon list using new store (handles caching internally)
+    fetchPokemonListAction()
+
+    // Only fetch if typeList is empty (not cached)
+    if (typeList.length === 0) {
+      console.log('Type list is empty, fetching from API...')
+      fetchTypeList()
+        .then((list) => {
+          console.log('Successfully fetched and storing type list')
+          setTypeList(list)
+        })
+        .catch((error) => {
+          console.error('Failed to fetch type list:', error)
+        })
+    } else {
+      console.log('Type list already cached, skipping API fetch')
+    }
+  }, [fetchPokemonListAction, typeList.length, setTypeList])
+
   return <Provider>{children}</Provider>
 }
 
@@ -66,7 +98,7 @@ function RootLayoutNav() {
         <Stack.Screen
           name="screens/home"
           options={{
-            title: 'Pokédex',
+            title: '',
             headerShown: false,
             headerStyle: {
               backgroundColor: theme.background.val,
@@ -92,10 +124,14 @@ function RootLayoutNav() {
           options={{
             title: '',
             headerShown: true,
-            headerStyle: {
-              backgroundColor: theme.red.val,
-            },
-            headerTintColor: theme.color.val,
+            headerTransparent: true,
+          }}
+        />
+        <Stack.Screen
+          name="screens/pokemonDetails"
+          options={{
+            title: '',
+            headerShown: false,
           }}
         />
       </Stack>

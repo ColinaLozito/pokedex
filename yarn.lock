@@ -12480,6 +12480,7 @@ __metadata:
     react: "npm:19.1.0"
     react-dom: "npm:19.1.0"
     react-native: "npm:0.81.5"
+    react-native-autocomplete-dropdown: "npm:^5.0.0"
     react-native-reanimated: "npm:~4.1.1"
     react-native-safe-area-context: "npm:~5.6.0"
     react-native-screens: "npm:~4.16.0"
@@ -12823,6 +12824,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-animatable@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "react-native-animatable@npm:1.4.0"
+  dependencies:
+    prop-types: "npm:^15.8.1"
+  checksum: 10/df11665d1e5b67cdaf4b9f1e9cfa15e315a2654e3e6850cf1d22ce8c092ee272fe78352f11bea0a4461d58372c6c35cefd2e5619d09928f8fd72972547d74b8a
+  languageName: node
+  linkType: hard
+
+"react-native-autocomplete-dropdown@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "react-native-autocomplete-dropdown@npm:5.0.0"
+  dependencies:
+    lodash.debounce: "npm:^4.0.8"
+    react-native-animatable: "npm:^1.4.0"
+    react-native-feather: "npm:^1.1.2"
+    react-native-size-matters: "npm:^0.4.2"
+  peerDependencies:
+    react: ">=19.0.0"
+    react-native: ">=0.60.0"
+    react-native-svg: ">=13.0.0"
+  checksum: 10/862b4cabd19c848c21c960a37220455ebfaa57fc07cce80268eb62910c1d1abe33dc32c1a60bd14a1a985d90daba30d8e4c1c3094b671f07a895a4ca0ed379cd
+  languageName: node
+  linkType: hard
+
 "react-native-css-interop@npm:^0.1.22":
   version: 0.1.22
   resolution: "react-native-css-interop@npm:0.1.22"
@@ -12844,6 +12870,16 @@ __metadata:
     react-native-svg:
       optional: true
   checksum: 10/778520da829b3360e2a233af59c5c10720cf315cc60eac43869865ac2ce21ab09bb4ef483838451e2921e686859129b5aba26d44173a9477a9fa2caea4e8f311
+  languageName: node
+  linkType: hard
+
+"react-native-feather@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "react-native-feather@npm:1.1.2"
+  peerDependencies:
+    react-native: ">=0.46"
+    react-native-svg: ">=5.3"
+  checksum: 10/4fc035926bd6d8c8e93eee3180c4d739aca301fe98a1a5e5b0d9901066db1e7817088b1f78334943ecbc726ef62a81870cddea42195f1f4ca58f520df5872a42
   languageName: node
   linkType: hard
 
@@ -12903,6 +12939,15 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10/f055d37b3abf96f42c15d61645441995884ed69b2a6b35f63a21abeb147b9df7e084447d2a329a424ee3686d703c25817ea588d3be9e6ebc38e5c653ebe5e05b
+  languageName: node
+  linkType: hard
+
+"react-native-size-matters@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "react-native-size-matters@npm:0.4.2"
+  peerDependencies:
+    react-native: "*"
+  checksum: 10/65dac50cad8d03bd046c62e327edf1c162c650fa3320613343bb978ca4b83c8e4e61b0f528502a154a1d4e4baa6dc296799a57737177e3d3c77b64750f5d8076
   languageName: node
   linkType: hard
 

@@ -7,7 +7,8 @@ import { SplashScreen, Stack } from 'expo-router'
 import { useTheme } from 'tamagui'
 import { Provider } from './components/Provider'
 import { usePokemonStore } from './store/pokemonStore'
-import { fetchPokemonList, fetchTypeList } from './services/api'
+import { usePokemonDataStore } from './store/pokemonDataStore'
+import { fetchTypeList } from './services/api'
 import Montserrat from '../assets/fonts/Montserrat.ttf'
 
 export {
@@ -29,6 +30,9 @@ export default function RootLayout() {
   })
   
   useEffect(() => {
+    /* (async () => {
+      await AsyncStorage.clear()
+    })() */
     if (fontsLoaded || fontError) {
       // Hide the splash screen after the fonts have loaded (or an error was returned) and the UI is ready.
       SplashScreen.hideAsync()
@@ -47,26 +51,15 @@ export default function RootLayout() {
 }
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
-  const pokemonList = usePokemonStore((state) => state.pokemonList)
-  const setPokemonList = usePokemonStore((state) => state.setPokemonList)
   const typeList = usePokemonStore((state) => state.typeList)
   const setTypeList = usePokemonStore((state) => state.setTypeList)
+  
+  // Use new data store for Pokemon list
+  const fetchPokemonListAction = usePokemonDataStore((state) => state.fetchPokemonListAction)
 
   useEffect(() => {
-    // Only fetch if pokemonList is empty (not cached)
-    if (pokemonList.length === 0) {
-      console.log('Pokémon list is empty, fetching from API...')
-      fetchPokemonList()
-        .then((list) => {
-          console.log('Successfully fetched and storing Pokémon list')
-          setPokemonList(list)
-        })
-        .catch((error) => {
-          console.error('Failed to fetch Pokémon list:', error)
-        })
-    } else {
-      console.log('Pokémon list already cached, skipping API fetch')
-    }
+    // Fetch Pokemon list using new store (handles caching internally)
+    fetchPokemonListAction()
 
     // Only fetch if typeList is empty (not cached)
     if (typeList.length === 0) {
@@ -82,7 +75,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     } else {
       console.log('Type list already cached, skipping API fetch')
     }
-  }, [pokemonList.length, typeList.length, setPokemonList, setTypeList])
+  }, [fetchPokemonListAction, typeList.length, setTypeList])
 
   return <Provider>{children}</Provider>
 }
@@ -105,7 +98,7 @@ function RootLayoutNav() {
         <Stack.Screen
           name="screens/home"
           options={{
-            title: 'Pokédex',
+            title: '',
             headerShown: false,
             headerStyle: {
               backgroundColor: theme.background.val,
@@ -132,6 +125,13 @@ function RootLayoutNav() {
             title: '',
             headerShown: true,
             headerTransparent: true,
+          }}
+        />
+        <Stack.Screen
+          name="screens/pokemonDetails"
+          options={{
+            title: '',
+            headerShown: false,
           }}
         />
       </Stack>

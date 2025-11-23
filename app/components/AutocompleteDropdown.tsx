@@ -12,7 +12,15 @@ interface AutocompleteDropdownProviderProps {
 export default function AutocompleteDropdownList({ onSelectItem, dataSet }: AutocompleteDropdownProviderProps) {
     const theme = useTheme()
     const handleSelectItem = (item: AutocompleteDropdownItem | null) => {
-        onSelectItem(parseInt(item?.id ?? '0', 10));
+        // Only trigger if item is valid and has an ID
+        if (!item || !item.id) {
+            return
+        }
+        
+        const id = parseInt(item.id, 10)
+        if (id > 0) {
+            onSelectItem(id)
+        }
     }
     
     return (

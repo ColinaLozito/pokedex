@@ -1,32 +1,34 @@
-import { usePokemonStore } from 'app/store/pokemonStore'
 import { usePokemonDataStore } from 'app/store/pokemonDataStore'
+import { Bookmark } from '@tamagui/lucide-icons'
 import { H4, XStack, YStack } from 'tamagui'
 import PokemonCard from './PokemonCard'
 import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
 
-interface RecentSelectionsProps {
+interface BookmarkedPokemonProps {
   onSelect?: (id: number) => void
 }
 
-export default function RecentSelections({ onSelect }: RecentSelectionsProps) {
-  const recentSelections = usePokemonStore((state) => state.recentSelections)
-  const removeRecentSelection = usePokemonStore((state) => state.removeRecentSelection)
+export default function BookmarkedPokemon({ onSelect }: BookmarkedPokemonProps) {
+  // Get bookmarked Pokemon IDs and functions
+  const bookmarkedPokemonIds = usePokemonDataStore((state) => state.bookmarkedPokemonIds)
+  const toggleBookmark = usePokemonDataStore((state) => state.toggleBookmark)
   const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
 
-  if (recentSelections.length === 0) {
+  if (bookmarkedPokemonIds.length === 0) {
     return null
   }
 
-  const handleRemove = (pokemonId: number) => {
-    removeRecentSelection(pokemonId)
+  const handleRemoveBookmark = (pokemonId: number) => {
+    console.log(`[BOOKMARKS] Removing bookmark for Pokemon ID: ${pokemonId}`)
+    toggleBookmark(pokemonId)
   }
 
-  // Get Pokemon data with sprites for each recent selection
-  const recentPokemonData = recentSelections.map((pokemon) => {
+  // Get Pokemon data for each bookmarked ID
+  const bookmarkedPokemonData = bookmarkedPokemonIds.map((id) => {
     // Try to get full details first, fall back to basic cache
-    const fullData = getPokemonDetail(pokemon.id)
-    const basicData = getBasicPokemon(pokemon.id)
+    const fullData = getPokemonDetail(id)
+    const basicData = getBasicPokemon(id)
     
     // Get all types and primary type
     const types = fullData?.types || basicData?.types || undefined
@@ -35,14 +37,14 @@ export default function RecentSelections({ onSelect }: RecentSelectionsProps) {
     // Use direct sprite URL (no need to fetch just for sprite)
     // If we have cached data, use it; otherwise use direct URL
     const sprite = fullData 
-      ? getPokemonSprite(fullData, pokemon.id)
+      ? getPokemonSprite(fullData, id)
       : (basicData 
-        ? getPokemonSprite(basicData, pokemon.id)
-        : getPokemonSpriteUrl(pokemon.id))
+        ? getPokemonSprite(basicData, id)
+        : getPokemonSpriteUrl(id))
     
     return {
-      id: pokemon.id,
-      name: pokemon.name,
+      id,
+      name: fullData?.name || basicData?.name || `Pokemon #${id}`,
       sprite,
       primaryType,
       types
@@ -51,18 +53,21 @@ export default function RecentSelections({ onSelect }: RecentSelectionsProps) {
 
   return (
     <YStack gap="$3">
-      <H4>Recent Selections</H4>
+      <XStack gap="$2" style={{ alignItems: 'center' }}>
+        <Bookmark size={20} color="$yellow10" fill="$yellow10" />
+        <H4>Bookmarked Pokemon</H4>
+      </XStack>
       <XStack gap="$2" style={{ flexWrap: 'wrap', justifyContent: 'space-between' }}>
-        {recentPokemonData.map((pokemon) => (
+        {bookmarkedPokemonData.map((pokemon) => (
           <YStack key={pokemon.id} style={{ width: '48%' }}>
             <PokemonCard
               id={pokemon.id}
               name={pokemon.name}
               sprite={pokemon.sprite}
-              variant="recent"
+              variant="bookmark"
               primaryType={pokemon.primaryType}
               types={pokemon.types}
-              onRemove={handleRemove}
+              onRemove={handleRemoveBookmark}
               onSelect={onSelect}
             />
           </YStack>

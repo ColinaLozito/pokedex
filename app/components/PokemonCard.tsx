@@ -14,6 +14,7 @@ interface PokemonCardProps {
   sprite?: string | null
   variant?: 'recent' | 'bookmark'
   primaryType?: string  // Pokemon's primary type for background coloring
+  displayRemoveButton?: boolean
   types?: Array<{      // All Pokemon types for display
     slot: number
     type: {
@@ -32,6 +33,7 @@ export default function PokemonCard({
   variant = 'recent',
   primaryType,
   types,
+  displayRemoveButton = false,
   onRemove,
   onSelect 
 }: PokemonCardProps) {
@@ -103,18 +105,21 @@ export default function PokemonCard({
       >
         <YStack style={{ padding: 10, height: '100%', position: 'relative' }}>
           {/* Remove Button - Top Right */}
-          <XStack style={{ position: 'absolute', top: 6, right: 6, zIndex: 10 }}>
-            <Button
-              size="$1.5"
-              circular
-              icon={X}
-              chromeless
-              style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
-              color="white"
-              onPress={handleRemove}
-            />
-          </XStack>
-
+          {
+            displayRemoveButton && (
+              <XStack style={{ position: 'absolute', top: 6, right: 6, zIndex: 10 }}>
+                <Button
+                  size="$1.5"
+                  circular
+                  icon={X}
+                  chromeless
+                  style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+                  color="white"
+                  onPress={handleRemove}
+                />
+              </XStack>
+            )
+          }
           {/* Top Section: Name and Number */}
           <XStack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
             <Text 

@@ -134,6 +134,13 @@ function RootLayoutNav() {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="screens/typeFilter"
+          options={{
+            title: '',
+            headerShown: false,
+          }}
+        />
       </Stack>
     </ThemeProvider>
   )

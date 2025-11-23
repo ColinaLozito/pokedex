@@ -71,7 +71,13 @@ export default function KidScreen() {
 
   const handleTypeSelect = (typeId: number, typeName: string) => {
     console.log('Type selected:', typeName, 'with ID:', typeId)
-    // TODO: Filter Pokémon by type
+    router.push({
+      pathname: '/screens/typeFilter',
+      params: {
+        typeId: typeId.toString(),
+        typeName: typeName,
+      },
+    })
   }
 
   const dataSet = pokemonList.map((pokemon) => ({
@@ -81,7 +87,6 @@ export default function KidScreen() {
   
   return (
     <AutocompleteDropdownContextProvider headerOffset={insets.top}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
         <YStack
           flex={1}
           height="100%"
@@ -97,9 +102,9 @@ export default function KidScreen() {
             renderItem={() => null}
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={
-              <YStack>
-                <H3>Select a Pokemon</H3>
-                <YStack height={10} />
+              <YStack style={{ paddingTop: insets.top }}>
+                <H3 color={theme.text.val}>Search for a Pokemon</H3>
+                <YStack height={24} />
                 <AutocompleteDropdownList
                   onSelectItem={handleSelectItem}
                   dataSet={dataSet}
@@ -110,11 +115,11 @@ export default function KidScreen() {
                 <RecentSelections />
                 <YStack height={20} />
                 <TypeGrid onTypeSelect={handleTypeSelect} />
+                <YStack height={40} />
               </YStack>
             }
           />
         </YStack>
-      </SafeAreaView>
     </AutocompleteDropdownContextProvider>
   )
 }

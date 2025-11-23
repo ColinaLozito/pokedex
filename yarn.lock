@@ -3852,6 +3852,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@shopify/flash-list@npm:2.0.2":
+  version: 2.0.2
+  resolution: "@shopify/flash-list@npm:2.0.2"
+  dependencies:
+    tslib: "npm:2.8.1"
+  peerDependencies:
+    "@babel/runtime": "*"
+    react: "*"
+    react-native: "*"
+  checksum: 10/9e4dad24e886b6ff318a66a27500e1293fa28d7c466453893c45a73ca195e9fac5d6cd41142cb5ad7480f8a89475ecd5ba0dfbac61a20b7704eb85b690990540
+  languageName: node
+  linkType: hard
+
 "@sinclair/typebox@npm:^0.27.8":
   version: 0.27.8
   resolution: "@sinclair/typebox@npm:0.27.8"
@@ -12446,6 +12459,7 @@ __metadata:
     "@expo/metro-runtime": "npm:~6.1.2"
     "@react-native-async-storage/async-storage": "npm:^2.2.0"
     "@react-navigation/native": "npm:^7.1.6"
+    "@shopify/flash-list": "npm:2.0.2"
     "@tamagui/babel-plugin": "npm:^1.138.0"
     "@tamagui/cli": "npm:^1.138.0"
     "@tamagui/config": "npm:^1.138.0"
@@ -14488,7 +14502,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.6.2":
+"tslib@npm:2.8.1, tslib@npm:^2.0.0, tslib@npm:^2.6.2":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10/3e2e043d5c2316461cb54e5c7fe02c30ef6dccb3384717ca22ae5c6b5bc95232a6241df19c622d9c73b809bea33b187f6dbc73030963e29950c2141bc32a79f7

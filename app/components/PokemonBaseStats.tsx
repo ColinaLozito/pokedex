@@ -1,4 +1,4 @@
-import { Card, H4, Text, XStack, YStack } from 'tamagui'
+import { Card, H4, Text, XStack, YStack, useTheme } from 'tamagui'
 
 interface StatInfo {
   base_stat: number
@@ -14,29 +14,31 @@ interface PokemonBaseStatsProps {
 }
 
 export default function PokemonBaseStats({ stats, primaryTypeColor }: PokemonBaseStatsProps) {
+  const theme = useTheme()
+  
   return (
     <Card>
       <Card.Header padded>
-        <H4 marginBottom="$3">Base Stats</H4>
-        <YStack gap="$3">
+        <H4 style={{ marginBottom: 12 }} color={theme.text.val}>Base Stats</H4>
+        <YStack style={{ gap: 12 }}>
           {stats.map((statInfo) => (
-            <YStack key={statInfo.stat.name} gap="$1">
+            <YStack key={statInfo.stat.name} style={{ gap: 4 }}>
               <XStack style={{ justifyContent: 'space-between' }}>
                 <Text 
-                  fontSize="$3" 
+                  fontSize={14} 
                   textTransform="capitalize"
-                  color="$gray11"
+                  color={theme.text.val}
                 >
                   {statInfo.stat.name.replace('-', ' ')}
                 </Text>
-                <Text fontSize="$3" fontWeight="600">
+                <Text fontSize={14} fontWeight="600" color={theme.text.val}>
                   {statInfo.base_stat}
                 </Text>
               </XStack>
               <YStack
                 style={{
                   height: 6,
-                  backgroundColor: '$gray5',
+                  backgroundColor: theme.gray5?.val || '#F5F5F5',
                   borderRadius: 8,
                   overflow: 'hidden',
                 }}

@@ -2,7 +2,7 @@ import typeSymbolsIcons from 'app/helpers/typeSymbolsIcons'
 import { usePokemonStore } from 'app/store/pokemonStore'
 import { pokemonTypeColors } from 'config/colors'
 import { Image } from 'react-native'
-import { Card, GetThemeValueForKey, H4, Text, XStack, YStack } from 'tamagui'
+import { Card, GetThemeValueForKey, H4, Text, useTheme, XStack, YStack } from 'tamagui'
 
 export interface TypeGridItem {
   id: number
@@ -15,7 +15,8 @@ interface TypeGridProps {
 
 export default function TypeGrid({ onTypeSelect }: TypeGridProps) {
   const typeList = usePokemonStore((state) => state.typeList)
-
+  const theme = useTheme()
+  
   if (typeList.length === 0) {
     return null
   }
@@ -37,18 +38,16 @@ export default function TypeGrid({ onTypeSelect }: TypeGridProps) {
   }
 
   return (
-    <YStack gap="$3">
-      <H4>Pokémon Types</H4>
-      <YStack gap="$2">
+    <YStack gap={12}>
+      <H4 color={theme.text.val}>Pokémon Types</H4>
+      <YStack gap={8}>
         {rows.map((row, rowIndex) => (
-          <XStack key={rowIndex} gap="$2" width="100%">
+          <XStack key={rowIndex} gap={8} width="100%">
             {row.map((type) => (
               <Card
                 key={type.id}
                 flex={1}
-                elevate
-                size="$3"
-                bordered
+                borderWidth={0}
                 animation="bouncy"
                 hoverStyle={{ scale: 0.98 }}
                 pressStyle={{ scale: 0.95 }}
@@ -59,12 +58,11 @@ export default function TypeGrid({ onTypeSelect }: TypeGridProps) {
                   <XStack 
                     content="space-between" 
                     items="center"
-                    gap="$2"
+                    gap={8}
                   >
                     <YStack flex={1}>
                       <Text 
-                        fontSize="$4" 
-                        fontWeight="700" 
+                        fontSize={16} 
                         textTransform="capitalize"
                         color="white"
                       >

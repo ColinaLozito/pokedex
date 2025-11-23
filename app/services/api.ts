@@ -377,3 +377,45 @@ export async function fetchTypeList(): Promise<TypeListItem[]> {
   }
 }
 
+/**
+ * Type response from PokéAPI
+ */
+export interface TypeResponse {
+  id: number
+  name: string
+  pokemon: Array<{
+    pokemon: {
+      name: string
+      url: string
+    }
+    slot: number
+  }>
+}
+
+/**
+ * Fetch Pokemon by type ID or name
+ * Returns list of Pokemon with their IDs
+ */
+export async function fetchPokemonByType(typeIdOrName: number | string): Promise<PokemonListItem[]> {
+  try {
+    const response = await fetch(`${BASE_URL}type/${typeIdOrName}`)
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch type: ${response.status}`)
+    }
+    
+    const data: TypeResponse = await response.json()
+    
+    // Transform to PokemonListItem format
+    const pokemonList: PokemonListItem[] = data.pokemon.map((entry) => ({
+      id: extractPokemonId(entry.pokemon.url),
+      name: entry.pokemon.name,
+    }))
+    
+    return pokemonList
+  } catch (error) {
+    console.error(`[TYPE FETCH] Error fetching Pokemon by type ${typeIdOrName}:`, error)
+    throw error
+  }
+}
+

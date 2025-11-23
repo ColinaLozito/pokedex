@@ -3,7 +3,7 @@ import { EvolutionChainLink } from 'app/services/api'
 import { extractPokemonId } from 'app/helpers/extractPokemonId'
 import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
 import { Pressable } from 'react-native'
-import { Text, XStack, YStack, Image, H4 } from 'tamagui'
+import { Text, XStack, YStack, Image, H4, useTheme } from 'tamagui'
 
 interface EvolutionChainProps {
   evolutionChainTree: EvolutionChainLink
@@ -66,6 +66,7 @@ export default function EvolutionChain({
   currentPokemonId,
   onPokemonPress 
 }: EvolutionChainProps) {
+  const theme = useTheme()
   const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   
   // Build the evolution tree
@@ -99,7 +100,7 @@ export default function EvolutionChain({
             alignItems: 'center',
             padding: 8,
             borderRadius: 12,
-            //backgroundColor: isCurrent ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+            backgroundColor: isCurrent ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
             minWidth: "20%",
             maxWidth: "100%",
           }}
@@ -107,22 +108,24 @@ export default function EvolutionChain({
           <Image
             source={{ uri: sprite }}
             style={{
-              width: 50,
-              height: 50,
+              width: 90,
+              height: 90,
             }}
             resizeMode="contain"
           />
           <Text 
-            fontSize="$1" 
+            fontSize={12} 
             fontWeight="700" 
             textTransform="capitalize"
             style={{ marginTop: 8, textAlign: 'center' }}
+            color={theme.text.val}
           >
             {node.name}
           </Text>
           <Text 
-            fontSize="$2" 
+            fontSize={14} 
             style={{ marginTop: 4 }}
+            color={theme.text.val}
           >
             #{node.id.toString().padStart(3, '0')}
           </Text>
@@ -147,28 +150,30 @@ export default function EvolutionChain({
             alignItems: 'center',
             padding: 12,
             borderRadius: 12,
-            //backgroundColor: isCurrent ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+            backgroundColor: isCurrent ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
           }}
         >
           <Image
             source={{ uri: sprite }}
             style={{
-              width: 70,
-              height: 70,
+              width: 90,
+              height: 90,
             }}
             resizeMode="contain"
           />
           <Text 
-            fontSize="$2" 
+            fontSize={14} 
             fontWeight="700" 
             textTransform="capitalize"
             style={{ marginTop: 12, textAlign: 'center' }}
+            color={theme.text.val}
           >
             {node.name}
           </Text>
           <Text 
-            fontSize="$3" 
+            fontSize={16} 
             style={{ marginTop: 6 }}
+            color={theme.text.val}
           >
             #{node.id.toString().padStart(3, '0')}
           </Text>
@@ -206,16 +211,18 @@ export default function EvolutionChain({
             resizeMode="contain"
           />
           <Text 
-            fontSize="$2" 
+            fontSize={14} 
             fontWeight="700" 
             textTransform="capitalize"
             style={{ marginTop: 6, textAlign: 'center' }}
+            color={theme.text.val}
           >
             {node.name}
           </Text>
           <Text 
-            fontSize="$2" 
+            fontSize={14} 
             style={{ marginTop: 4 }}
+            color={theme.text.val}
           >
             #{node.id.toString().padStart(3, '0')}
           </Text>
@@ -253,8 +260,9 @@ export default function EvolutionChain({
             {index < nodes.length - 1 && (
               <XStack style={{ marginHorizontal: 0, alignItems: 'center' }}>
                 <Text 
-                  fontSize="$4" 
+                  fontSize={20} 
                   fontWeight="300"
+                  color={theme.text.val}
                 >
                   →
                 </Text>
@@ -304,7 +312,7 @@ export default function EvolutionChain({
   
   return (
     <YStack style={{ width: '100%' }}>
-      <H4 style={{ marginBottom: 24, textAlign: 'center' }}>Evolution</H4>
+      <H4 style={{ marginBottom: 24, textAlign: 'center' }} color={theme.text.val}>Evolution</H4>
       
       {isBranching ? (
         // Branching evolution (variants)

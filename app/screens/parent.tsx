@@ -105,7 +105,10 @@ export default function ParentScreen() {
     try {
       await fetchPokemonDetail(id)
       setCurrentPokemonId(id)
-      router.push('/screens/pokemonDetails')
+      router.push({
+        pathname: '/screens/pokemonDetails',
+        params: { source: 'parent' }
+      })
     } catch (error) {
       console.error('Failed to fetch Pokemon:', error)
     }
@@ -163,10 +166,7 @@ export default function ParentScreen() {
           {selectedPokemonId && currentPokemon && (
             <Card elevate backgroundColor={theme.red.val}>
               <Card.Header padded>
-                <YStack style={{ gap: 12, alignItems: 'center', width: '100%' }}>
-                  <Text fontSize={16} fontWeight="600" color={theme.text.val}>
-                    Selected Pokemon
-                  </Text>
+                <YStack style={{ gap: 12, alignItems: 'center', width: '100%', paddingTop: 24 }}>
                   <YStack style={{ width: '70%' }}>
                     <PokemonCard
                       id={currentPokemon.id}
@@ -178,6 +178,7 @@ export default function ParentScreen() {
                       onRemove={handleRemove}
                       onSelect={handlePokemonPress}
                       displayRemoveButton={false}
+                      bookmarkSource="parent"
                     />
                   </YStack>
                   
@@ -201,7 +202,7 @@ export default function ParentScreen() {
             <Card elevate bordered background={theme.red.val}>
               <Card.Header padded>
                 <YStack style={{ gap: 12, alignItems: 'center', width: '100%' }}>
-                  <Text fontSize={16} fontWeight="600" style={{ textAlign: 'center' }} color={theme.text.val}>
+                  <Text fontSize={16} style={{ textAlign: 'center' }} color={theme.text.val}>
                     Ready to spin?
                   </Text>
                   <Button 
@@ -241,7 +242,7 @@ export default function ParentScreen() {
               size={48}
               bordered
             >
-              {loading ? 'Loading...' : isSpinning ? 'Spinning...' : 'Try Again'}
+              {loading ? 'Loading...' : isSpinning ? 'Shuffling...' : 'Try Again'}
             </Button>
           )}
           

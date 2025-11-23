@@ -77,6 +77,7 @@ export default function BookmarkedPokemon({ onSelect, variant = 'kid' }: Bookmar
               onRemove={handleRemoveBookmark}
               onSelect={onSelect}
               displayRemoveButton={true}
+              bookmarkSource={variant}
             />
           </YStack>
         ))}

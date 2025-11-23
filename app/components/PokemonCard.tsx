@@ -91,6 +91,7 @@ export default function PokemonCard({
       style={({ pressed }) => ({
         opacity: pressed ? 0.9 : 1,
         transform: [{ scale: pressed ? 0.98 : 1 }],
+        width: '100%',
       })}
     >
       <Card
@@ -101,6 +102,7 @@ export default function PokemonCard({
         style={{
           backgroundColor,
           height: 140,
+          width: '100%',
         }}
       >
         <YStack style={{ padding: 10, height: '100%', position: 'relative' }}>

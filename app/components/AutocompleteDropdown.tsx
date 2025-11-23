@@ -36,6 +36,12 @@ export default function AutocompleteDropdownList({ onSelectItem, dataSet }: Auto
           borderColor: theme.border.val,
           borderWidth: 1,
         }}
+        textInputProps={{
+          style: {
+            color: theme.text.val,
+          },
+          placeholderTextColor: theme.gray10?.val || '#737373',
+        }}
         suggestionsListContainerStyle={{
           top: -60,
         }}

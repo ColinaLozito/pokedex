@@ -1,6 +1,6 @@
 import { usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { Bookmark } from '@tamagui/lucide-icons'
-import { H4, XStack, YStack } from 'tamagui'
+import { H4, useTheme, XStack, YStack } from 'tamagui'
 import PokemonCard from './PokemonCard'
 import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
 
@@ -14,7 +14,8 @@ export default function BookmarkedPokemon({ onSelect }: BookmarkedPokemonProps) 
   const toggleBookmark = usePokemonDataStore((state) => state.toggleBookmark)
   const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
-
+  const theme = useTheme()
+  
   if (bookmarkedPokemonIds.length === 0) {
     return null
   }
@@ -55,7 +56,7 @@ export default function BookmarkedPokemon({ onSelect }: BookmarkedPokemonProps) 
     <YStack gap="$3">
       <XStack gap="$2" style={{ alignItems: 'center' }}>
         <Bookmark size={20} color="$yellow10" fill="$yellow10" />
-        <H4>Bookmarked Pokemon</H4>
+        <H4 color={theme.text.val}>Bookmarked Pokemon</H4>
       </XStack>
       <XStack gap="$2" style={{ flexWrap: 'wrap', justifyContent: 'space-between' }}>
         {bookmarkedPokemonData.map((pokemon) => (
@@ -69,6 +70,7 @@ export default function BookmarkedPokemon({ onSelect }: BookmarkedPokemonProps) 
               types={pokemon.types}
               onRemove={handleRemoveBookmark}
               onSelect={onSelect}
+              displayRemoveButton={true}
             />
           </YStack>
         ))}

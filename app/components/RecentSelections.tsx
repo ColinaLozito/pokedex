@@ -1,6 +1,6 @@
 import { usePokemonStore } from 'app/store/pokemonStore'
 import { usePokemonDataStore } from 'app/store/pokemonDataStore'
-import { H4, XStack, YStack } from 'tamagui'
+import { H4, useTheme, XStack, YStack } from 'tamagui'
 import PokemonCard from './PokemonCard'
 import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
 
@@ -13,6 +13,7 @@ export default function RecentSelections({ onSelect }: RecentSelectionsProps) {
   const removeRecentSelection = usePokemonStore((state) => state.removeRecentSelection)
   const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
+  const theme = useTheme()
 
   if (recentSelections.length === 0) {
     return null
@@ -51,7 +52,7 @@ export default function RecentSelections({ onSelect }: RecentSelectionsProps) {
 
   return (
     <YStack gap="$3">
-      <H4>Recent Selections</H4>
+      <H4 color={theme.text.val}>Recent Selections</H4>
       <XStack gap="$2" style={{ flexWrap: 'wrap', justifyContent: 'space-between' }}>
         {recentPokemonData.map((pokemon) => (
           <YStack key={pokemon.id} style={{ width: '48%' }}>
@@ -64,6 +65,7 @@ export default function RecentSelections({ onSelect }: RecentSelectionsProps) {
               types={pokemon.types}
               onRemove={handleRemove}
               onSelect={onSelect}
+              displayRemoveButton={true}
             />
           </YStack>
         ))}

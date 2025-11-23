@@ -3,13 +3,14 @@ import { useColorScheme } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { SplashScreen, Stack } from 'expo-router'
-import { useTheme } from 'tamagui'
+import { router, SplashScreen, Stack } from 'expo-router'
+import { Button, useTheme, XStack } from 'tamagui'
 import { Provider } from './components/Provider'
 import { usePokemonStore } from './store/pokemonStore'
 import { usePokemonDataStore } from './store/pokemonDataStore'
 import { fetchTypeList } from './services/api'
 import Montserrat from '../assets/fonts/Montserrat.ttf'
+import { ChevronLeft } from '@tamagui/lucide-icons'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -112,10 +113,22 @@ function RootLayoutNav() {
           options={{
             title: '',
             headerShown: true,
-            headerStyle: {
-              backgroundColor: theme.red.val,
-            },
-            headerTintColor: theme.color.val,
+            headerTransparent: true,
+            header: () => <XStack style={{ paddingHorizontal: 16, paddingTop: 50 }}>
+              <Button
+                size={40}
+                circular
+                onPress={() => router.back()}
+                icon={ChevronLeft}
+                color={theme.text.val}
+                scaleIcon={1.7}
+                elevate
+                shadowColor={theme.shadowColor?.val as any || 'rgba(0, 0, 0, 0.1)'}
+                shadowOpacity={0.3}
+                shadowRadius={8}
+                opacity={0.6}
+              />
+            </XStack>,
           }}
         />
 
@@ -125,6 +138,21 @@ function RootLayoutNav() {
             title: '',
             headerShown: true,
             headerTransparent: true,
+            header: () => <XStack style={{ paddingHorizontal: 16, paddingTop: 50 }}>
+              <Button
+                size={40}
+                circular
+                onPress={() => router.back()}
+                icon={ChevronLeft}
+                color={theme.text.val}
+                scaleIcon={1.7}
+                elevate
+                shadowColor={theme.shadowColor?.val as any || 'rgba(0, 0, 0, 0.1)'}
+                shadowOpacity={0.3}
+                shadowRadius={8}
+                opacity={0.6}
+              />
+            </XStack>,
           }}
         />
         <Stack.Screen

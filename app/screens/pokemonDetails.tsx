@@ -122,9 +122,9 @@ export default function PokemonDetailsScreen() {
   if (loading) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
-        <YStack flex={1} justifyContent="center" alignItems="center">
+        <YStack flex={1} style={{ justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color={theme.color.val} />
-          <Text marginTop="$4">Loading Pokémon...</Text>
+          <Text style={{ marginTop: 16 }} color={theme.text.val}>Loading Pokémon...</Text>
         </YStack>
       </SafeAreaView>
     )
@@ -135,15 +135,14 @@ export default function PokemonDetailsScreen() {
   if (error && !currentPokemon) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
-        <YStack flex={1} justifyContent="center" alignItems="center" padding="$4">
-          <Text fontSize="$6" color="$red10" textAlign="center">
+        <YStack flex={1} style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+          <Text fontSize={20} style={{ color: theme.red10?.val || '#EF4444', textAlign: 'center' }}>
             {error}
           </Text>
-          <YStack height={20} />
+          <YStack style={{ height: 20 }} />
           <Text 
-            fontSize="$4" 
-            color="$blue10" 
-            textDecorationLine="underline"
+            fontSize={16} 
+            style={{ color: theme.blue10?.val || '#3B82F6', textDecorationLine: 'underline' }}
             onPress={() => router.back()}
           >
             ← Go Back
@@ -157,11 +156,11 @@ export default function PokemonDetailsScreen() {
   if (!currentPokemon) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
-        <YStack flex={1} justifyContent="center" alignItems="center" padding="$4">
-          <Text fontSize="$6" textAlign="center">
+        <YStack flex={1} style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+          <Text fontSize={20} style={{ textAlign: 'center' }} color={theme.text.val}>
             No Pokémon data available
           </Text>
-          <Text fontSize="$3" color="$gray10" marginTop="$2">
+          <Text fontSize={14} style={{ color: theme.gray10?.val || '#737373', marginTop: 8 }}>
             Please select a Pokémon first
           </Text>
         </YStack>
@@ -174,7 +173,7 @@ export default function PokemonDetailsScreen() {
   console.log("mainSprite", mainSprite)
 
   return (
-    <YStack flex={1} backgroundColor={getPrimaryTypeColor()}>
+    <YStack flex={1} style={{ backgroundColor: getPrimaryTypeColor() }}>
       <XStack 
         position="absolute" 
         style={{ 
@@ -189,13 +188,14 @@ export default function PokemonDetailsScreen() {
       >
         {/* Back Button */}
         <Button
-          size="$4"
+          size={40}
           circular
           onPress={() => router.back()}
           icon={ChevronLeft}
+          color={theme.text.val}
           scaleIcon={1.7}
           elevate
-          shadowColor="$shadowColor"
+          shadowColor={theme.shadowColor?.val as any || 'rgba(0, 0, 0, 0.1)'}
           shadowOpacity={0.3}
           shadowRadius={8}
           opacity={0.6}
@@ -203,28 +203,30 @@ export default function PokemonDetailsScreen() {
 
         {/* Bookmark Button */}
         <Button
-          size="$4"
+          size={40}
           circular
           onPress={() => toggleBookmark(currentPokemon.id)}
           icon={isBookmarked ? BookmarkCheck : Bookmark}
+          color={theme.text.val}
+          scaleIcon={1.5}
           elevate
-          shadowColor="$shadowColor"
+          shadowColor={theme.shadowColor?.val as any || 'rgba(0, 0, 0, 0.1)'}
           shadowOpacity={0.3}
           shadowRadius={8}
           opacity={0.6}
         />
       </XStack>
 
-      <ScrollView ref={scrollViewRef} style={{ flex: 1, backgroundColor: '$background' }}>
+      <ScrollView ref={scrollViewRef} style={{ flex: 1, backgroundColor: theme.background.val }}>
         <SafeAreaView style={{ flex: 1 }}>
         <YStack flex={1}>
           {/* Header Section with Pokemon Image */}
           <YStack
-            backgroundColor="$background"
-            paddingHorizontal="$4"
-            alignItems="center"
             style={{
+              backgroundColor: theme.background.val,
+              paddingHorizontal: 16,
               paddingTop: 60,
+              alignItems: 'center',
             }}
           >
             {/* Background Circle */}
@@ -243,20 +245,19 @@ export default function PokemonDetailsScreen() {
             {/* Name and Number - Top */}
             <XStack 
               width="100%" 
-              style={{ justifyContent: 'space-between', alignItems: 'center' }}
-              marginBottom="$4"
+              style={{ justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}
             >
               <H2 
                 color="white" 
                 textTransform="capitalize"
-                fontSize="$9"
+                fontSize={32}
                 fontWeight="800"
               >
                 {currentPokemon.name}
               </H2>
               <Text 
                 color="rgba(255, 255, 255, 0.9)" 
-                fontSize="$5"
+                fontSize={18}
                 fontWeight="600"
               >
                 #{currentPokemon.id.toString().padStart(3, '0')}
@@ -281,9 +282,8 @@ export default function PokemonDetailsScreen() {
             style={{ 
               backgroundColor: 'white',
               marginTop: 0,
+              gap: 8,
             }}
-            paddingVertical="$4" 
-            gap="$4"
           >
             {/* Types */}
             <XStack style={{ justifyContent: 'center', alignItems: 'center' }}>

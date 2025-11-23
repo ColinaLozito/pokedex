@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { FlashList } from '@shopify/flash-list'
-import { Button, H2, Text, XStack, YStack, Image } from 'tamagui'
+import { Button, H2, Text, XStack, YStack, Image, useTheme } from 'tamagui'
 import { ChevronLeft } from '@tamagui/lucide-icons'
 import { fetchPokemonByType } from 'app/services/api'
 import { PokemonListItem } from 'app/services/api'
@@ -32,6 +32,7 @@ export default function TypeFilterScreen() {
   const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
   const addRecentSelection = usePokemonStore((state) => state.addRecentSelection)
+  const theme = useTheme()
   
   // Set toast controller
   useEffect(() => {
@@ -119,7 +120,7 @@ export default function TypeFilterScreen() {
       <SafeAreaView style={{ flex: 1, backgroundColor: typeColor }}>
         <YStack flex={1} justifyContent="center" alignItems="center">
           <ActivityIndicator size="large" color="white" />
-          <Text color="white" marginTop="$4">Loading Pokemon...</Text>
+          <Text color="white" style={{ marginTop: 16 }}>Loading Pokemon...</Text>
         </YStack>
       </SafeAreaView>
     )
@@ -128,11 +129,11 @@ export default function TypeFilterScreen() {
   if (error) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: typeColor }}>
-        <YStack flex={1} justifyContent="center" alignItems="center" padding="$4">
-          <Text fontSize="$6" color="white" textAlign="center">
+        <YStack flex={1} justifyContent="center" alignItems="center" style={{ padding: 16 }}>
+          <Text fontSize={28} color="white" style={{ textAlign: 'center' }}>
             {error}
           </Text>
-          <Button marginTop="$4" onPress={() => router.back()}>
+          <Button style={{ marginTop: 16 }} onPress={() => router.back()}>
             Go Back
           </Button>
         </YStack>
@@ -147,18 +148,23 @@ export default function TypeFilterScreen() {
         <XStack 
           style={{ 
             paddingHorizontal: 16, 
-            paddingVertical: 12,
+            paddingBottom: 12,
             alignItems: 'center',
             gap: 12,
           }}
         >
           <Button
-            size="$4"
+            size={40}
             circular
-            icon={ChevronLeft}
             onPress={() => router.back()}
-            backgroundColor="rgba(255, 255, 255, 0.2)"
-            color="white"
+            icon={ChevronLeft}
+            color={theme.text.val}
+            scaleIcon={1.7}
+            elevate
+            shadowColor={theme.shadowColor?.val as any || 'rgba(0, 0, 0, 0.1)'}
+            shadowOpacity={0.3}
+            shadowRadius={8}
+            opacity={0.6}
           />
           
           <XStack style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -173,8 +179,10 @@ export default function TypeFilterScreen() {
               <Image
                 source={typeIcon}
                 style={{
-                  width: 40,
-                  height: 40,
+                  position: 'absolute',
+                  right: -100,
+                  width: 200,
+                  height: 200,
                 }}
                 resizeMode="contain"
               />

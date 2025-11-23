@@ -103,8 +103,8 @@ export default function KidScreen() {
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={
               <YStack style={{ paddingTop: insets.top }}>
-                <H3>Select a Pokemon</H3>
-                <YStack height={10} />
+                <H3 color={theme.text.val}>Search for a Pokemon</H3>
+                <YStack height={24} />
                 <AutocompleteDropdownList
                   onSelectItem={handleSelectItem}
                   dataSet={dataSet}
@@ -115,6 +115,7 @@ export default function KidScreen() {
                 <RecentSelections />
                 <YStack height={20} />
                 <TypeGrid onTypeSelect={handleTypeSelect} />
+                <YStack height={40} />
               </YStack>
             }
           />

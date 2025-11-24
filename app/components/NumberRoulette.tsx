@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Text, YStack } from 'tamagui'
 
 interface NumberRouletteProps {
@@ -99,28 +99,21 @@ export default function NumberRoulette({
   
   return (
     <YStack
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 32,
-        backgroundColor: '#F5F5F5',
-        borderRadius: 16,
-        minHeight: 150,
-        width: '100%',
-        borderWidth: 2,
-        borderColor: '#E0E0E0',
-      }}
+      items='center'
+      justify='center'
+      p={32}
+      bg='#F5F5F5'
+      borderRadius={16}
+      minHeight={150}
+      width='100%'
+      borderWidth={2}
+      borderColor='#E0E0E0'
     >
       <Text
         fontSize={56}
         fontWeight="900"
         color="#333333"
         letterSpacing={6}
-        style={{
-          letterSpacing: 6,
-          fontFamily: 'monospace',
-          textAlign: 'center',
-        }}
       >
         #{String(currentNumber).padStart(4, '0')}
       </Text>
@@ -128,7 +121,8 @@ export default function NumberRoulette({
         <Text
           fontSize={20}
           color="#666666"
-          style={{ marginTop: 12, fontWeight: '600' }}
+          mt={12}
+          fontWeight='600'
         >
           Spinning...
         </Text>

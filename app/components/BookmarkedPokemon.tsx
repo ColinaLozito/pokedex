@@ -1,8 +1,8 @@
 import { Bookmark } from '@tamagui/lucide-icons'
+import { getPokemonSprite, getPokemonSpriteUrl } from 'app/helpers/pokemonSprites'
+import { CombinedPokemonDetail, PokemonDetail } from 'app/services/api'
 import { H4, useTheme, XStack, YStack } from 'tamagui'
 import PokemonCard from './PokemonCard'
-import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
-import { CombinedPokemonDetail, PokemonDetail } from 'app/services/api'
 
 interface BookmarkedPokemonProps {
   bookmarkedPokemonIds: number[]
@@ -55,14 +55,14 @@ export default function BookmarkedPokemon({
   })
 
   return (
-    <YStack style={{ gap: 12 }}>
-      <XStack style={{ gap: 8, alignItems: 'center' }}>
+    <YStack gap={12}>
+      <XStack gap={8} items='center'>
         <Bookmark size={20} color={theme.text.val} fill={theme.text.val} />
         <H4 color={theme.text.val}>Bookmarked</H4>
       </XStack>
-      <XStack style={{ flexWrap: 'wrap', justifyContent: 'space-between', gap: 8 }}>
+      <XStack flexWrap='wrap' justify='space-between' gap={8}>
         {bookmarkedPokemonData.map((pokemon) => (
-          <YStack key={pokemon.id} style={{ width: '48%' }}>
+          <YStack key={pokemon.id} width='48%'>
             <PokemonCard
               id={pokemon.id}
               name={pokemon.name}

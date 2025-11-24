@@ -12,41 +12,41 @@ export default function PokemonAttributes({ species, height, weight }: PokemonAt
   return (
     <Card>
       <Card.Header padded>
-        <XStack style={{ justifyContent: 'space-around', alignItems: 'flex-start' }}>
+        <XStack justify='space-around' items='flex-start'>
           {/* Species */}
           {species && (
             <>
-              <YStack style={{ flex: 1, alignItems: 'center' }}>
-                <Text fontSize={12} color={theme.text.val} style={{ marginBottom: 4 }}>
+              <YStack flex={1} items='center'>
+                <Text fontSize={12} color={theme.text.val} mb={4}>
                   Species
                 </Text>
-                <Text fontSize={14} fontWeight="600" style={{ textAlign: 'center' }} color={theme.text.val}>
+                <Text fontSize={14} fontWeight="600" textAlign='center' color={theme.text.val}>
                   {species}
                 </Text>
               </YStack>
-              <YStack style={{ width: 1, height: '100%', backgroundColor: '#E0E0E0', marginHorizontal: 8 }} />
+              <YStack width={1} height='100%' bg='#E0E0E0' mx={8} />
             </>
           )}
           
           {/* Height */}
-          <YStack style={{ flex: 1, alignItems: 'center' }}>
-            <Text fontSize={12} color={theme.text.val} style={{ marginBottom: 4 }}>
+          <YStack flex={1} items='center'>
+            <Text fontSize={12} color={theme.text.val} mb={4}>
               Height
             </Text>
-            <Text fontSize={14} fontWeight="600" style={{ textAlign: 'center' }} color={theme.text.val}>
+            <Text fontSize={14} fontWeight="600" textAlign='center' color={theme.text.val}>
               {(height / 10).toFixed(1)} m
             </Text>
           </YStack>
           
           {/* Vertical Divider */}
-          <YStack style={{ width: 1, height: '100%', backgroundColor: '#E0E0E0', marginHorizontal: 8 }} />
+          <YStack width={1} height='100%' bg='#E0E0E0' mx={8} />
           
           {/* Weight */}
-          <YStack style={{ flex: 1, alignItems: 'center' }}>
-            <Text fontSize={12} color={theme.text.val} style={{ marginBottom: 4 }}>
+          <YStack flex={1} items='center'>
+            <Text fontSize={12} color={theme.text.val} mb={4}>
               Weight
             </Text>
-            <Text fontSize={14} fontWeight="600" style={{ textAlign: 'center' }} color={theme.text.val}>
+            <Text fontSize={14} fontWeight="600" textAlign='center' color={theme.text.val}>
               {(weight / 10).toFixed(1)} kg
             </Text>
           </YStack>

@@ -1,5 +1,5 @@
 import { X } from '@tamagui/lucide-icons'
-import { pokemonTypeColors } from 'config/colors'
+import { getTypeColor } from 'app/helpers/getTypeColor'
 import { useRouter } from 'expo-router'
 import { GestureResponderEvent, Pressable } from 'react-native'
 import { Button, Card, Image, Text, XStack, YStack } from 'tamagui'
@@ -66,19 +66,7 @@ export default function PokemonCard({
     onRemove(id)
   }
 
-  // Get type color for background
-  const getTypeColor = () => {
-    if (primaryType) {
-      const typeColor = pokemonTypeColors[primaryType as keyof typeof pokemonTypeColors]
-      if (typeColor) {
-        return typeColor
-      }
-    }
-    // Fallback colors - neutral gray for recent, light gray for bookmark without type
-    return variant === 'recent' ? '#F5F5F5' : '#E0E0E0'
-  }
-
-  const backgroundColor = getTypeColor()
+  const backgroundColor = getTypeColor(primaryType, variant)
 
   return (
     <Pressable
@@ -93,17 +81,15 @@ export default function PokemonCard({
         elevate
         borderRadius={16}
         overflow="hidden"
-        style={{
-          backgroundColor,
-          height: 150,
-          width: '100%',
-        }}
+        bg={backgroundColor as any}
+        height={150}
+        width='100%'
       >
-        <YStack style={{ padding: 10, height: '100%', position: 'relative' }}>
+        <YStack p={10} height='100%' position='relative'>
           {/* Remove Button - Top Right */}
           {
             displayRemoveButton && (
-              <XStack style={{ position: 'absolute', top: 6, right: 6, zIndex: 10 }}>
+              <XStack position='absolute' top={6} right={6} zIndex={10}>
                 <Button
                   size="$1.5"
                   circular
@@ -117,19 +103,21 @@ export default function PokemonCard({
             )
           }
           {/* Top Section: Name and Number */}
-          <XStack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+          <XStack justify='space-between' items='center'>
             <Text 
-              fontSize={18} 
+              fontSize={14} 
               color="white" 
               textTransform="capitalize"
               numberOfLines={1}
               lineHeight={24}
+              fontWeight="800"
             >
               {name}
             </Text>
             <Text 
-              fontSize={16} 
+              fontSize={14} 
               color="white"
+              fontWeight="500"
             >
               #{id.toString().padStart(3, '0')}
             </Text>
@@ -137,47 +125,39 @@ export default function PokemonCard({
 
           {/* Middle Section: Pokemon Sprite with Circular Background */}
           <XStack 
-            style={{ 
-              flex: 1, 
-              justifyContent: 'flex-end', 
-              position: 'relative', 
-              minHeight: 60
-             }}
+            flex={1} 
+            justify='flex-end' 
+            position='relative' 
+            minHeight={60}
           >
             {/* Circular Background */}
             <YStack
-              style={{
-                position: 'absolute',
-                width: 150,
-                height: 150,
-                borderRadius: 100,
-                right: -15,
-                top: -10,
-                backgroundColor: 'rgba(255, 255, 255, 0.15)',
-              }}
+              position='absolute'
+              width={150}
+              height={150}
+              borderRadius={100}
+              right={-15}
+              top={-10}
+              bg='rgba(255, 255, 255, 0.15)'
             />
             
             {/* Pokemon Sprite */}
             {sprite ? (
               <Image
                 source={{ uri: sprite }}
-                style={{
-                  width: 90,
-                  height: 90,
-                  zIndex: 1,
-                }}
-                resizeMode="contain"
+                width={90}
+                height={90}
+                zIndex={1}
+                objectFit="contain"
               />
             ) : (
               <YStack
-                style={{
-                  width: 70,
-                  height: 70,
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+                width={70}
+                height={70}
+                bg='rgba(255, 255, 255, 0.2)'
+                borderRadius={8}
+                justify='center'
+                items='center'
               >
                 <Text fontSize="$1" color="rgba(255, 255, 255, 0.7)">
                   No Image
@@ -188,11 +168,11 @@ export default function PokemonCard({
 
           {/* Bottom Section: Type Chips */}
           {types && types.length > 0 ? (
-            <XStack style={{ marginTop: 8 }}>
+            <XStack mt={8}>
               <TypeChips types={types} size="small" gap={6} />
             </XStack>
           ) : 
-            <XStack style={{ marginTop: 8, marginLeft: 24 }}>
+            <XStack mt={8} ml={24}>
               <Text fontSize={24} color="rgba(255, 255, 255, 0.7)">??</Text>
             </XStack>
           }

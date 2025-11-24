@@ -1,7 +1,6 @@
 import typeSymbolsIcons from 'app/helpers/typeSymbolsIcons'
 import { pokemonTypeColors } from 'config/colors'
-import { Image } from 'react-native'
-import { Card, GetThemeValueForKey, H4, Text, useTheme, XStack, YStack } from 'tamagui'
+import { Card, GetThemeValueForKey, H4, Image, Text, useTheme, XStack, YStack } from 'tamagui'
 
 export interface TypeGridItem {
   id: number
@@ -54,7 +53,7 @@ export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
               >
                 <Card.Header padded>
                   <XStack 
-                    content="space-between" 
+                    justify="space-between" 
                     items="center"
                     gap={8}
                   >
@@ -63,6 +62,7 @@ export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
                         fontSize={16} 
                         textTransform="capitalize"
                         color="white"
+                        fontWeight="800"
                       >
                         {type.name}
                       </Text>
@@ -76,7 +76,7 @@ export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
                         height: 50,
                         opacity: 0.8,
                       }}
-                      resizeMode="contain"
+                      objectFit="contain"
                     />
                   </XStack>
                 </Card.Header>

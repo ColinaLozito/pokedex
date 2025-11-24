@@ -35,8 +35,8 @@ export default function EvolutionChain({
     return getPokemonSpriteUrl(pokemonId)
   }
   
-  // Render a single Pokemon card (for linear evolution)
-  const renderLinearPokemon = (node: EvolutionNode, isCurrent: boolean = false) => {
+  // Render a single Pokemon card (for branching evolution)
+  const renderPokemonSprite = (node: EvolutionNode, isCurrent: boolean = false, variantType: 'branching-variant' | 'branching-initial' | 'linear') => {
     const sprite = getSprite(node.id)
     return (
       <EvolutionSpriteContainer
@@ -45,37 +45,7 @@ export default function EvolutionChain({
         id={node.id}
         isCurrent={isCurrent}
         onPress={() => onPokemonPress(node.id)}
-        variant="linear"
-      />
-    )
-  }
-
-  // Render a single Pokemon card (for branching evolution - initial at top)
-  const renderBranchingInitial = (node: EvolutionNode, isCurrent: boolean = false) => {
-    const sprite = getSprite(node.id)
-    return (
-      <EvolutionSpriteContainer
-        sprite={sprite}
-        name={node.name}
-        id={node.id}
-        isCurrent={isCurrent}
-        onPress={() => onPokemonPress(node.id)}
-        variant="branching-initial"
-      />
-    )
-  }
-
-  // Render a single Pokemon card (for branching evolution - variants in grid)
-  const renderBranchingVariant = (node: EvolutionNode, isCurrent: boolean = false) => {
-    const sprite = getSprite(node.id)
-    return (
-      <EvolutionSpriteContainer
-        sprite={sprite}
-        name={node.name}
-        id={node.id}
-        isCurrent={isCurrent}
-        onPress={() => onPokemonPress(node.id)}
-        variant="branching-variant"
+        variant={variantType}
       />
     )
   }
@@ -94,20 +64,18 @@ export default function EvolutionChain({
     
     return (
       <XStack 
-        style={{ 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          flexWrap: 'wrap',
-          gap: 4,
-        }}
+        items='center'
+        justify='center'
+        flexWrap='wrap'
+        gap={4}
       >
         {nodes.map((evolutionNode, index) => (
-          <XStack key={`${evolutionNode.id}-${index}`} style={{ alignItems: 'center' }}>
-            {renderLinearPokemon(evolutionNode, evolutionNode.id === currentPokemonId)}
+          <XStack key={`${evolutionNode.id}-${index}`} items='center'>
+            {renderPokemonSprite(evolutionNode, evolutionNode.id === currentPokemonId, 'linear')}
             
             {/* Arrow between evolutions */}
             {index < nodes.length - 1 && (
-              <XStack style={{ marginHorizontal: 0, alignItems: 'center' }}>
+              <XStack justify='center' m={0}>
                 <Text 
                   fontSize={20} 
                   fontWeight="300"
@@ -129,28 +97,24 @@ export default function EvolutionChain({
     const variants = collectEvolutionVariants(node)
     
     return (
-      <YStack style={{ alignItems: 'center', gap: 12, width: '100%' }}>
+      <YStack items='center' gap={12} width='100%'>
         {/* Initial Pokemon at top (centered) */}
-        {renderBranchingInitial(node, node.id === currentPokemonId)}
+        {renderPokemonSprite(node, node.id === currentPokemonId, 'branching-initial')}
         
         {/* Evolution variants in 3-column grid */}
         {variants.length > 0 && (
           <XStack 
-            style={{ 
-              flexWrap: 'wrap', 
-              justifyContent: 'center',
-              width: '100%',
-            }}
+            flexWrap='wrap'
+            justify='center'
+            width='100%'
           >
             {variants.map((variant, index) => (
               <YStack 
                 key={`${variant.id}-${index}`} 
-                style={{ 
-                  width: '30%', // 3 columns (with gaps)
-                  alignItems: 'center',
-                }}
+                width='30%'
+                items='center'
               >
-                {renderBranchingVariant(variant, variant.id === currentPokemonId)}
+                {renderPokemonSprite(variant, variant.id === currentPokemonId, 'branching-variant')}
               </YStack>
             ))}
           </XStack>
@@ -160,8 +124,8 @@ export default function EvolutionChain({
   }
   
   return (
-    <YStack style={{ width: '100%' }}>
-      <H4 style={{ marginBottom: 24, textAlign: 'center' }} color={theme.text.val}>Evolution</H4>
+    <YStack width='100%'>
+      <H4 mb={24} text='center' color={theme.text.val}>Evolution</H4>
       
       {isBranching ? (
         // Branching evolution (variants)

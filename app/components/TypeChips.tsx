@@ -19,7 +19,7 @@ export default function TypeChips({ types, size = 'medium', gap = 8 }: TypeChips
   }
 
   return (
-    <XStack style={{ flexWrap: 'wrap', gap }}>
+    <XStack flexWrap='wrap' gap={gap}>
       {types.map((typeInfo) => (
         <TypeBadge
           key={typeInfo.slot}

@@ -1,8 +1,8 @@
-import { YStack, Image, XStack } from 'tamagui'
 import { ImageBackground } from 'react-native'
-import { ActionButton } from '../components/ActionButton'
+import { Image, XStack, YStack } from 'tamagui'
 import PokedexLogo from "../../assets/images/pokedex-logo.png"
 import PokedexWallpaper from "../../assets/images/pokedex-wallpaper.jpg"
+import { ActionButton } from '../components/ActionButton'
 
 import { router } from 'expo-router'
 
@@ -11,7 +11,7 @@ export default function HomeScreen() {
     <ImageBackground 
       source={PokedexWallpaper} 
       style={{ flex: 1 }}
-      resizeMode="cover"
+      objectFit="cover"
     >
       <YStack flex={1} style={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
         <YStack width={"100%"} height={90} style={{ position: "absolute", top: "35%" }}>

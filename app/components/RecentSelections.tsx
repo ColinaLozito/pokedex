@@ -1,8 +1,8 @@
-import { H4, useTheme, XStack, YStack } from 'tamagui'
-import PokemonCard from './PokemonCard'
-import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
+import { getPokemonSprite, getPokemonSpriteUrl } from 'app/helpers/pokemonSprites'
 import { CombinedPokemonDetail, PokemonDetail } from 'app/services/api'
 import { RecentSelection } from 'app/store/pokemonStore'
+import { H4, useTheme, XStack, YStack } from 'tamagui'
+import PokemonCard from './PokemonCard'
 
 interface RecentSelectionsProps {
   recentSelections: RecentSelection[]
@@ -55,9 +55,9 @@ export default function RecentSelections({
   return (
     <YStack gap="$3">
       <H4 color={theme.text.val}>Recent Selections</H4>
-      <XStack gap="$2" style={{ flexWrap: 'wrap', justifyContent: 'space-between' }}>
+      <XStack gap="$2" flexWrap='wrap' justify='space-between'>
         {recentPokemonData.map((pokemon) => (
-          <YStack key={pokemon.id} style={{ width: '48%' }}>
+          <YStack key={pokemon.id} width='48%'>
             <PokemonCard
               id={pokemon.id}
               name={pokemon.name}

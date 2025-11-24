@@ -67,39 +67,33 @@ export default function EvolutionSpriteContainer({
       })}
     >
       <YStack
-        style={{
-          alignItems: 'center',
-          padding: variantConfig.padding,
-          borderRadius: 12,
-          backgroundColor: isCurrent ? variantConfig.backgroundColor : 'transparent',
-          minWidth: variantConfig.minWidth,
-          maxWidth: variantConfig.maxWidth,
-          width: variant === 'branching-variant' ? '100%' : undefined,
-        }}
+        items='center'
+        p={variantConfig.padding}
+        borderRadius={12}
+        bg={isCurrent ? variantConfig.backgroundColor as any : undefined}
+        minWidth={variantConfig.minWidth ? parseInt(variantConfig.minWidth) : undefined}
+        maxWidth={variantConfig.maxWidth ? parseInt(variantConfig.maxWidth) : undefined}
+        width={variant === 'branching-variant' ? '100%' : undefined}
       >
         <Image
           source={{ uri: sprite }}
-          style={{
-            width: variantConfig.imageSize,
-            height: variantConfig.imageSize,
-          }}
-          resizeMode="contain"
+          width={variantConfig.imageSize}
+          height={variantConfig.imageSize}
+          objectFit="contain"
         />
         <Text
           fontSize={variantConfig.nameFontSize}
           fontWeight="700"
           textTransform="capitalize"
-          style={{
-            marginTop: variantConfig.nameMarginTop,
-            textAlign: 'center',
-          }}
+          mt={variantConfig.nameMarginTop}
+          text='center'
           color={theme.text.val}
         >
           {name}
         </Text>
         <Text
           fontSize={variantConfig.idFontSize}
-          style={{ marginTop: variantConfig.idMarginTop }}
+          mt={variantConfig.idMarginTop}
           color={theme.text.val}
         >
           #{id.toString().padStart(3, '0')}

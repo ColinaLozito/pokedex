@@ -14,9 +14,7 @@ export default function AutocompleteDropdownList({
     const theme = useTheme()
     const handleSelectItem = (item: AutocompleteDropdownItem | null) => {
         // Only trigger if item is valid and has an ID
-        if (!item || !item.id) {
-            return
-        }
+        if (!item || !item.id) return
         
         const id = parseInt(item.id, 10)
         if (id > 0) {

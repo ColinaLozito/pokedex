@@ -1,5 +1,5 @@
-import { Text, YStack } from 'tamagui'
 import { pokemonTypeColors } from 'config/colors'
+import { Text, YStack } from 'tamagui'
 
 interface TypeBadgeProps {
   typeName: string
@@ -36,12 +36,10 @@ export default function TypeBadge({ typeName, size = 'medium' }: TypeBadgeProps)
   return (
     <YStack
       elevation={1}
-      style={{
-        backgroundColor: typeColor,
-        paddingHorizontal: styles.paddingHorizontal,
-        paddingVertical: styles.paddingVertical,
-        borderRadius: styles.borderRadius,
-      }}
+      bg={typeColor as any}
+      p={styles.paddingHorizontal}
+      py={styles.paddingVertical}
+      borderRadius={styles.borderRadius}
     >
       <Text 
         color="white" 

@@ -1,16 +1,16 @@
-import { usePokemonDataStore, useCurrentPokemon } from 'app/store/pokemonDataStore'
+import { Bookmark, BookmarkCheck, ChevronLeft } from '@tamagui/lucide-icons'
+import EvolutionChain from 'app/components/EvolutionChain'
+import PokemonAbilities from 'app/components/PokemonAbilities'
+import PokemonAttributes from 'app/components/PokemonAttributes'
+import PokemonBaseStats from 'app/components/PokemonBaseStats'
+import TypeChips from 'app/components/TypeChips'
+import { useCurrentPokemon, usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { pokemonTypeColors } from 'config/colors'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useRef } from 'react'
 import { ActivityIndicator, Image, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button, H2, Text, XStack, YStack, useTheme } from 'tamagui'
-import { useRouter, useLocalSearchParams } from 'expo-router'
-import { Bookmark, ChevronLeft, BookmarkCheck } from '@tamagui/lucide-icons'
-import TypeChips from 'app/components/TypeChips'
-import EvolutionChain from 'app/components/EvolutionChain'
-import PokemonAttributes from 'app/components/PokemonAttributes'
-import PokemonBaseStats from 'app/components/PokemonBaseStats'
-import PokemonAbilities from 'app/components/PokemonAbilities'
 
 export default function PokemonDetailsScreen() {
   const theme = useTheme()
@@ -246,7 +246,7 @@ export default function PokemonDetailsScreen() {
                   width: 250,
                   height: 250,
                 }}
-                resizeMode="contain"
+                objectFit="contain"
               />
             )}
           </YStack>

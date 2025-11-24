@@ -1,19 +1,18 @@
+import { FlashList } from '@shopify/flash-list'
+import { ChevronLeft } from '@tamagui/lucide-icons'
+import { useToastController } from '@tamagui/toast'
+import PokemonCard from 'app/components/PokemonCard'
+import { getPokemonSprite, getPokemonSpriteUrl } from 'app/helpers/pokemonSprites'
+import typeSymbolsIcons from 'app/helpers/typeSymbolsIcons'
+import { fetchPokemonByType, PokemonListItem } from 'app/services/api'
+import { setToastController, usePokemonDataStore } from 'app/store/pokemonDataStore'
+import { usePokemonStore } from 'app/store/pokemonStore'
+import { pokemonTypeColors } from 'config/colors'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { FlashList } from '@shopify/flash-list'
-import { Button, H2, Text, XStack, YStack, Image, useTheme } from 'tamagui'
-import { ChevronLeft } from '@tamagui/lucide-icons'
-import { fetchPokemonByType } from 'app/services/api'
-import { PokemonListItem } from 'app/services/api'
-import { pokemonTypeColors } from 'config/colors'
-import typeSymbolsIcons from 'app/helpers/typeSymbolsIcons'
-import PokemonCard from 'app/components/PokemonCard'
-import { usePokemonDataStore, setToastController } from 'app/store/pokemonDataStore'
-import { usePokemonStore } from 'app/store/pokemonStore'
-import { useToastController } from '@tamagui/toast'
-import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
+import { Button, H2, Image, Text, useTheme, XStack, YStack } from 'tamagui'
 
 export default function TypeFilterScreen() {
   const router = useRouter()
@@ -195,7 +194,7 @@ export default function TypeFilterScreen() {
                   width: 200,
                   height: 200,
                 }}
-                resizeMode="contain"
+                objectFit="contain"
               />
             )}
           </XStack>

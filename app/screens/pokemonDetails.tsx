@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import { ActivityIndicator, Image, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button, H2, Text, XStack, YStack, useTheme } from 'tamagui'
-import { useRouter } from 'expo-router'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import { Bookmark, ChevronLeft, BookmarkCheck } from '@tamagui/lucide-icons'
 import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
 import TypeChips from 'app/components/TypeChips'
@@ -16,6 +16,7 @@ import PokemonAbilities from 'app/components/PokemonAbilities'
 export default function PokemonDetailsScreen() {
   const theme = useTheme()
   const router = useRouter()
+  const params = useLocalSearchParams<{ source?: 'parent' | 'kid' }>()
   const scrollViewRef = useRef<ScrollView>(null)
   const { currentPokemon } = useCurrentPokemon()
   const loading = usePokemonDataStore((state) => state.loading)
@@ -25,8 +26,15 @@ export default function PokemonDetailsScreen() {
   const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
   const setCurrentPokemonId = usePokemonDataStore((state) => state.setCurrentPokemonId)
   const currentPokemonId = usePokemonDataStore((state) => state.currentPokemonId)
-  const toggleBookmark = usePokemonDataStore((state) => state.toggleBookmark)
-  const bookmarkedPokemonIds = usePokemonDataStore((state) => state.bookmarkedPokemonIds)
+  
+  // Determine bookmark system based on source (default to 'kid' if not specified)
+  const bookmarkSource = params.source || 'kid'
+  const toggleBookmark = usePokemonDataStore((state) => 
+    bookmarkSource === 'parent' ? state.toggleParentBookmark : state.toggleBookmark
+  )
+  const bookmarkedPokemonIds = usePokemonDataStore((state) => 
+    bookmarkSource === 'parent' ? state.parentBookmarkedPokemonIds : state.bookmarkedPokemonIds
+  )
   
   // Check if current Pokemon is bookmarked (reactive)
   const isBookmarked = currentPokemon ? bookmarkedPokemonIds.includes(currentPokemon.id) : false

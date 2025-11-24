@@ -31,6 +31,10 @@ export default function TypeFilterScreen() {
   const setCurrentPokemonId = usePokemonDataStore((state) => state.setCurrentPokemonId)
   const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
+  // Subscribe to store changes to trigger re-renders when Pokemon data is updated
+  // This ensures cards update when returning from pokemonDetails screen
+  usePokemonDataStore((state) => state.pokemonDetails)
+  usePokemonDataStore((state) => state.basicPokemonCache)
   const addRecentSelection = usePokemonStore((state) => state.addRecentSelection)
   const theme = useTheme()
   
@@ -77,7 +81,10 @@ export default function TypeFilterScreen() {
       await fetchPokemonDetail(id)
       addRecentSelection(selectedPokemon)
       setCurrentPokemonId(id)
-      router.push('/screens/pokemonDetails')
+      router.push({
+        pathname: '/screens/pokemonDetails',
+        params: { source: 'kid' }
+      })
     } catch (error) {
       console.error('Failed to fetch Pokémon details:', error)
     }
@@ -94,7 +101,7 @@ export default function TypeFilterScreen() {
   // Get type symbol icon
   const typeIcon = typeSymbolsIcons[typeName.toLowerCase() as keyof typeof typeSymbolsIcons]
   
-  // Prepare Pokemon data for cards
+  // Prepare Pokemon data for cards - this will re-compute when store updates
   const pokemonData = pokemonList.map((pokemon) => {
     const fullData = getPokemonDetail(pokemon.id)
     const basicData = getBasicPokemon(pokemon.id)
@@ -118,7 +125,7 @@ export default function TypeFilterScreen() {
   if (loading) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: typeColor }}>
-        <YStack flex={1} justifyContent="center" alignItems="center">
+        <YStack flex={1} style={{ justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="white" />
           <Text color="white" style={{ marginTop: 16 }}>Loading Pokemon...</Text>
         </YStack>
@@ -129,7 +136,7 @@ export default function TypeFilterScreen() {
   if (error) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: typeColor }}>
-        <YStack flex={1} justifyContent="center" alignItems="center" style={{ padding: 16 }}>
+        <YStack flex={1} style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
           <Text fontSize={28} color="white" style={{ textAlign: 'center' }}>
             {error}
           </Text>

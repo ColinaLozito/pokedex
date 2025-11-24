@@ -5,7 +5,7 @@ export const baseColors = {
   secondary: '#3B4CCA',  // general secondary accent (blue like pokeball)
   border: '#E0E0E0',     // general border
   disabled: '#C4C4C4',   // disabled state
-  red: '#FF4D4F',
+  red: '#FF0000',
 }
 
 export const pokemonTypeColors = {

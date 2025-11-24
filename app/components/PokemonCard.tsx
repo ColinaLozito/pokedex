@@ -24,6 +24,7 @@ interface PokemonCardProps {
   }>
   onRemove: (id: number) => void
   onSelect?: (id: number) => void
+  bookmarkSource?: 'parent' | 'kid' // Source for bookmark system when navigating
 }
 
 export default function PokemonCard({ 
@@ -35,7 +36,8 @@ export default function PokemonCard({
   types,
   displayRemoveButton = false,
   onRemove,
-  onSelect 
+  onSelect,
+  bookmarkSource = 'kid' // Default to 'kid' if not specified
 }: PokemonCardProps) {
   const router = useRouter()
   const toast = useToastController()
@@ -59,7 +61,10 @@ export default function PokemonCard({
     try {
       await fetchPokemonDetail(id)
       setCurrentPokemonId(id)
-      router.push('/screens/pokemonDetails')
+      router.push({
+        pathname: '/screens/pokemonDetails',
+        params: { source: bookmarkSource }
+      })
     } catch (error) {
       console.error('Failed to fetch Pokémon details:', error)
       // Error toast is already shown by the store
@@ -96,12 +101,11 @@ export default function PokemonCard({
     >
       <Card
         elevate
-        size="$3"
-        borderRadius="$4"
+        borderRadius={16}
         overflow="hidden"
         style={{
           backgroundColor,
-          height: 140,
+          height: 150,
           width: '100%',
         }}
       >
@@ -125,19 +129,17 @@ export default function PokemonCard({
           {/* Top Section: Name and Number */}
           <XStack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
             <Text 
-              fontSize="$3" 
-              fontWeight="700" 
+              fontSize={18} 
               color="white" 
               textTransform="capitalize"
-              numberOfLines={2}
-              lineHeight="$5"
+              numberOfLines={1}
+              lineHeight={24}
             >
               {name}
             </Text>
             <Text 
-              fontSize="$2" 
-              fontWeight="600" 
-              color="rgba(255, 255, 255, 0.85)"
+              fontSize={16} 
+              color="white"
             >
               #{id.toString().padStart(3, '0')}
             </Text>
@@ -170,8 +172,8 @@ export default function PokemonCard({
               <Image
                 source={{ uri: sprite }}
                 style={{
-                  width: 70,
-                  height: 70,
+                  width: 90,
+                  height: 90,
                   zIndex: 1,
                 }}
                 resizeMode="contain"
@@ -195,11 +197,15 @@ export default function PokemonCard({
           </XStack>
 
           {/* Bottom Section: Type Chips */}
-          {types && types.length > 0 && (
+          {types && types.length > 0 ? (
             <XStack style={{ marginTop: 8 }}>
               <TypeChips types={types} size="small" gap={6} />
             </XStack>
-          )}
+          ) : 
+            <XStack style={{ marginTop: 8, marginLeft: 24 }}>
+              <Text fontSize={24} color="rgba(255, 255, 255, 0.7)">??</Text>
+            </XStack>
+          }
         </YStack>
       </Card>
     </Pressable>

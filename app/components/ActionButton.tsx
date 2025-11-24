@@ -11,7 +11,7 @@ export function ActionButton({ text, onPress }: ActionButtonProps) {
       onPress={onPress}
       borderWidth ={2}
       borderColor="$red"
-      width="50%"
+      width="45%"
       height={70}
       style={{
         borderRadius: 16,

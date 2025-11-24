@@ -26,15 +26,19 @@ export default function TypeFilterScreen() {
   
   const typeId = params.typeId ? parseInt(params.typeId, 10) : null
   const typeName = params.typeName || 'Unknown'
-  
-  const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
-  const setCurrentPokemonId = usePokemonDataStore((state) => state.setCurrentPokemonId)
-  const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
-  const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
+
+  const {
+    fetchPokemonDetail,
+    setCurrentPokemonId,
+    getBasicPokemon,
+    getPokemonDetail,
+  } = usePokemonDataStore((state) => state)
+
   // Subscribe to store changes to trigger re-renders when Pokemon data is updated
   // This ensures cards update when returning from pokemonDetails screen
   usePokemonDataStore((state) => state.pokemonDetails)
   usePokemonDataStore((state) => state.basicPokemonCache)
+  
   const addRecentSelection = usePokemonStore((state) => state.addRecentSelection)
   const theme = useTheme()
   

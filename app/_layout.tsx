@@ -9,7 +9,15 @@ import { Provider } from './components/Provider'
 import { usePokemonStore } from './store/pokemonStore'
 import { usePokemonDataStore } from './store/pokemonDataStore'
 import { fetchTypeList } from './services/api'
-import Montserrat from '../assets/fonts/Montserrat.ttf'
+import MontserratThin from '../assets/fonts/Montserrat-Thin.ttf'
+import MontserratExtraLight from '../assets/fonts/Montserrat-ExtraLight.ttf'
+import MontserratLight from '../assets/fonts/Montserrat-Light.ttf'
+import MontserratRegular from '../assets/fonts/Montserrat-Regular.ttf'
+import MontserratMedium from '../assets/fonts/Montserrat-Medium.ttf'
+import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf'
+import MontserratBold from '../assets/fonts/Montserrat-Bold.ttf'
+import MontserratExtraBold from '../assets/fonts/Montserrat-ExtraBold.ttf'
+import MontserratBlack from '../assets/fonts/Montserrat-Black.ttf'
 import { ChevronLeft } from '@tamagui/lucide-icons'
 
 export {
@@ -27,9 +35,17 @@ SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
-    Montserrat: Montserrat,
+    'Montserrat-Thin': MontserratThin,
+    'Montserrat-ExtraLight': MontserratExtraLight,
+    'Montserrat-Light': MontserratLight,
+    'Montserrat-Regular': MontserratRegular,
+    'Montserrat-Medium': MontserratMedium,
+    'Montserrat-SemiBold': MontserratSemiBold,
+    'Montserrat-Bold': MontserratBold,
+    'Montserrat-ExtraBold': MontserratExtraBold,
+    'Montserrat-Black': MontserratBlack,
   })
-  
+
   useEffect(() => {
     /* (async () => {
       await AsyncStorage.clear()
@@ -64,17 +80,13 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 
     // Only fetch if typeList is empty (not cached)
     if (typeList.length === 0) {
-      console.log('Type list is empty, fetching from API...')
       fetchTypeList()
         .then((list) => {
-          console.log('Successfully fetched and storing type list')
           setTypeList(list)
         })
         .catch((error) => {
           console.error('Failed to fetch type list:', error)
         })
-    } else {
-      console.log('Type list already cached, skipping API fetch')
     }
   }, [fetchPokemonListAction, typeList.length, setTypeList])
 

@@ -6,7 +6,6 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button, H2, Text, XStack, YStack, useTheme } from 'tamagui'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { Bookmark, ChevronLeft, BookmarkCheck } from '@tamagui/lucide-icons'
-import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
 import TypeChips from 'app/components/TypeChips'
 import EvolutionChain from 'app/components/EvolutionChain'
 import PokemonAttributes from 'app/components/PokemonAttributes'
@@ -16,9 +15,12 @@ import PokemonAbilities from 'app/components/PokemonAbilities'
 export default function PokemonDetailsScreen() {
   const theme = useTheme()
   const router = useRouter()
-  const params = useLocalSearchParams<{ source?: 'parent' | 'kid' }>()
   const scrollViewRef = useRef<ScrollView>(null)
+  const params = useLocalSearchParams<{ source?: 'parent' | 'kid' }>()
+  
   const { currentPokemon } = useCurrentPokemon()
+
+  // Use individual selectors to avoid infinite loops
   const loading = usePokemonDataStore((state) => state.loading)
   const error = usePokemonDataStore((state) => state.error)
   const clearError = usePokemonDataStore((state) => state.clearError)
@@ -56,11 +58,8 @@ export default function PokemonDetailsScreen() {
 
   // Handle evolution Pokemon press - update current Pokemon in same screen
   const handleEvolutionPress = async (pokemonId: number) => {
-    console.log(`[EVOLUTION PRESS] Switching to Pokemon ID: ${pokemonId}`)
-    
     // Don't do anything if it's already the current Pokemon
     if (pokemonId === currentPokemonId) {
-      console.log('[EVOLUTION PRESS] Already viewing this Pokemon')
       return
     }
     
@@ -69,41 +68,10 @@ export default function PokemonDetailsScreen() {
       await fetchPokemonDetail(pokemonId)
       // Set as current Pokemon - this will trigger re-render and scroll to top
       setCurrentPokemonId(pokemonId)
-      console.log(`[EVOLUTION PRESS] Successfully switched to Pokemon ID: ${pokemonId}`)
     } catch (error) {
       console.error('Failed to fetch evolution Pokemon details:', error)
       // Error toast is already shown by the store
     }
-  }
-
-  // Helper function to get sprite for evolution Pokemon
-  // Uses direct URL (no fetch needed) or cached data if available
-  const getEvolutionSprite = (pokemonId: number): string => {
-    const basicPokemon = getBasicPokemon(pokemonId)
-    
-    // If we have cached data, use it; otherwise use direct URL
-    if (basicPokemon) {
-      return getPokemonSprite(basicPokemon, pokemonId)
-    }
-    
-    // Direct URL - no fetch needed!
-    return getPokemonSpriteUrl(pokemonId)
-  }
-
-  // Debug: Log current Pokemon data
-  if (currentPokemon) {
-    console.log('[DETAIL SCREEN] Current Pokemon:', currentPokemon.name)
-    console.log('[DETAIL SCREEN] Evolution Chain:', JSON.stringify(currentPokemon.evolutionChain, null, 2))
-    
-    // Check store for each evolution
-    currentPokemon.evolutionChain?.forEach((evo, index) => {
-      const cachedPokemon = getBasicPokemon(evo.id)
-      console.log(`[DETAIL SCREEN] Evolution ${index + 1} - ${evo.name}:`, {
-        id: evo.id,
-        inStore: !!cachedPokemon,
-        sprite: cachedPokemon ? getEvolutionSprite(evo.id) : 'NOT IN STORE'
-      })
-    })
   }
 
   // Get the best available sprite
@@ -177,8 +145,6 @@ export default function PokemonDetailsScreen() {
   }
 
   const mainSprite = getMainSprite()
-
-  console.log("mainSprite", mainSprite)
 
   return (
     <YStack flex={1} style={{ backgroundColor: getPrimaryTypeColor() }}>
@@ -313,6 +279,7 @@ export default function PokemonDetailsScreen() {
                     evolutionChainTree={currentPokemon.evolutionChainTree}
                     currentPokemonId={currentPokemon.id}
                     onPokemonPress={handleEvolutionPress}
+                    getBasicPokemon={getBasicPokemon}
                   />
                 </YStack>
               ) : (

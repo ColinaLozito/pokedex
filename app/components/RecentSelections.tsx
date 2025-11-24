@@ -1,26 +1,28 @@
-import { usePokemonStore } from 'app/store/pokemonStore'
-import { usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { H4, useTheme, XStack, YStack } from 'tamagui'
 import PokemonCard from './PokemonCard'
 import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
+import { CombinedPokemonDetail, PokemonDetail } from 'app/services/api'
+import { RecentSelection } from 'app/store/pokemonStore'
 
 interface RecentSelectionsProps {
+  recentSelections: RecentSelection[]
+  getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
+  getBasicPokemon: (id: number) => PokemonDetail | undefined
+  onRemove: (id: number) => void
   onSelect?: (id: number) => void
 }
 
-export default function RecentSelections({ onSelect }: RecentSelectionsProps) {
-  const recentSelections = usePokemonStore((state) => state.recentSelections)
-  const removeRecentSelection = usePokemonStore((state) => state.removeRecentSelection)
-  const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
-  const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
+export default function RecentSelections({ 
+  recentSelections,
+  getPokemonDetail,
+  getBasicPokemon,
+  onRemove,
+  onSelect 
+}: RecentSelectionsProps) {
   const theme = useTheme()
 
   if (recentSelections.length === 0) {
     return null
-  }
-
-  const handleRemove = (pokemonId: number) => {
-    removeRecentSelection(pokemonId)
   }
 
   // Get Pokemon data with sprites for each recent selection
@@ -63,7 +65,7 @@ export default function RecentSelections({ onSelect }: RecentSelectionsProps) {
               variant="recent"
               primaryType={pokemon.primaryType}
               types={pokemon.types}
-              onRemove={handleRemove}
+              onRemove={onRemove}
               onSelect={onSelect}
               displayRemoveButton={true}
             />
@@ -73,4 +75,3 @@ export default function RecentSelections({ onSelect }: RecentSelectionsProps) {
     </YStack>
   )
 }
-

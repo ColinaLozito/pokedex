@@ -1,10 +1,10 @@
 import js from '@eslint/js'
-import globals from 'globals'
-import tseslint from 'typescript-eslint'
+import prettierConfig from 'eslint-config-prettier'
+import prettierPlugin from 'eslint-plugin-prettier'
 import pluginReact from 'eslint-plugin-react'
 import pluginReactHooks from 'eslint-plugin-react-hooks'
-import prettierPlugin from 'eslint-plugin-prettier'
-import prettierConfig from 'eslint-config-prettier'
+import globals from 'globals'
+import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   {
@@ -52,12 +52,15 @@ export default tseslint.config(
       'max-len': [
         'warn',
         {
-          code: 120,
+          code: 100,
+          tabWidth: 2,
           ignoreComments: true,
           ignoreStrings: true,
           ignoreTemplateLiterals: true,
+          ignoreUrls: true,
+          ignoreRegExpLiterals: true,
         },
-      ]
+      ],
 
     },
   }

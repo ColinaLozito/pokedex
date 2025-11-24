@@ -85,7 +85,6 @@ export const usePokemonDataStore = create<PokemonDataState>()(
         
         // Don't fetch if already loaded
         if (state.pokemonList.length > 0) {
-          console.log('Pokemon list already loaded, skipping fetch')
           return
         }
 
@@ -94,7 +93,6 @@ export const usePokemonDataStore = create<PokemonDataState>()(
         try {
           const list = await fetchPokemonList()
           set({ pokemonList: list, loading: false })
-          console.log(`Pokemon list loaded: ${list.length} Pokemon`)
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Failed to fetch Pokemon list'
           set({ error: errorMessage, loading: false })
@@ -114,13 +112,11 @@ export const usePokemonDataStore = create<PokemonDataState>()(
 
         // Check if already cached
         if (state.pokemonDetails[id]) {
-          console.log(`Using cached data for Pokemon ID: ${id}`)
           return state.pokemonDetails[id]
         }
 
         // Check if already fetching this ID
         if (state.fetchingIds.has(id)) {
-          console.log(`Already fetching Pokemon ID: ${id}, waiting...`)
           // Wait for the existing fetch to complete
           return new Promise((resolve, reject) => {
             const checkInterval = setInterval(() => {
@@ -145,8 +141,6 @@ export const usePokemonDataStore = create<PokemonDataState>()(
         }))
 
         try {
-          console.log(`\n🔍 Fetching complete details for Pokemon ID: ${id}`)
-          
           // Pass existing basic cache and callback to store evolution Pokemon
           const currentState = get()
           const cacheEvolutionPokemon = (pokemonId: number, data: PokemonDetail) => {
@@ -174,8 +168,6 @@ export const usePokemonDataStore = create<PokemonDataState>()(
             fetchingIds: new Set([...state.fetchingIds].filter(fId => fId !== id))
           }))
 
-          console.log(`✅ Cached Pokemon: ${detail.name} (ID: ${id})`)
-          console.log(`✅ Total basic Pokemon cached: ${Object.keys(get().basicPokemonCache).length}`)
           return detail
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : `Failed to fetch Pokemon ${id}`
@@ -204,12 +196,10 @@ export const usePokemonDataStore = create<PokemonDataState>()(
 
         // Check cache first
         if (state.basicPokemonCache[id]) {
-          console.log(`Using cached basic data for Pokemon ID: ${id}`)
           return state.basicPokemonCache[id]
         }
 
         try {
-          console.log(`Fetching basic Pokemon data for ID: ${id}`)
           const basicData = await fetchPokemonById(id)
           
           // Store in basic cache
@@ -220,7 +210,6 @@ export const usePokemonDataStore = create<PokemonDataState>()(
             }
           }))
 
-          console.log(`✅ Cached basic Pokemon: ${basicData.name} (ID: ${id})`)
           return basicData
         } catch (error) {
           console.error(`Error fetching basic Pokemon ${id}:`, error)
@@ -275,9 +264,6 @@ export const usePokemonDataStore = create<PokemonDataState>()(
           const newBookmarkedIds = isCurrentlyBookmarked
             ? state.bookmarkedPokemonIds.filter((bookmarkId) => bookmarkId !== id)
             : [...state.bookmarkedPokemonIds, id]
-          
-          console.log(`[BOOKMARK] ${isCurrentlyBookmarked ? 'Removed' : 'Added'} Pokemon ID: ${id}`)
-          console.log('[BOOKMARK] Updated bookmarks:', newBookmarkedIds)
           
           return { bookmarkedPokemonIds: newBookmarkedIds }
         })
@@ -367,7 +353,6 @@ export const usePokemonDataStore = create<PokemonDataState>()(
         
         // Check if we need to reset (new day)
         if (state.isNewDay()) {
-          console.log('[DAILY POKEMON] New day detected, generating new daily Pokemon')
           const newId = state.generateRandomPokemonId()
           set({
             dailyPokemonId: newId,

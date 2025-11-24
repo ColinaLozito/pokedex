@@ -1,9 +1,6 @@
-import { usePokemonDataStore, setToastController } from 'app/store/pokemonDataStore'
 import { useRouter } from 'expo-router'
-import { useEffect } from 'react'
 import { X } from '@tamagui/lucide-icons'
 import { Button, Card, Text, XStack, YStack, Image } from 'tamagui'
-import { useToastController } from '@tamagui/toast'
 import { pokemonTypeColors } from 'config/colors'
 import { Pressable } from 'react-native'
 import TypeChips from './TypeChips'
@@ -25,6 +22,8 @@ interface PokemonCardProps {
   onRemove: (id: number) => void
   onSelect?: (id: number) => void
   bookmarkSource?: 'parent' | 'kid' // Source for bookmark system when navigating
+  // Optional: If not provided, onSelect must handle navigation
+  onNavigate?: (id: number, source: 'parent' | 'kid') => void
 }
 
 export default function PokemonCard({ 
@@ -37,18 +36,10 @@ export default function PokemonCard({
   displayRemoveButton = false,
   onRemove,
   onSelect,
-  bookmarkSource = 'kid' // Default to 'kid' if not specified
+  bookmarkSource = 'kid', // Default to 'kid' if not specified
+  onNavigate
 }: PokemonCardProps) {
   const router = useRouter()
-  const toast = useToastController()
-  
-  const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
-  const setCurrentPokemonId = usePokemonDataStore((state) => state.setCurrentPokemonId)
-  
-  // Set toast controller
-  useEffect(() => {
-    setToastController(toast)
-  }, [toast])
 
   const handleCardPress = async () => {
     // Use custom handler if provided
@@ -57,18 +48,17 @@ export default function PokemonCard({
       return
     }
 
-    // Default behavior: fetch and navigate
-    try {
-      await fetchPokemonDetail(id)
-      setCurrentPokemonId(id)
-      router.push({
-        pathname: '/screens/pokemonDetails',
-        params: { source: bookmarkSource }
-      })
-    } catch (error) {
-      console.error('Failed to fetch Pokémon details:', error)
-      // Error toast is already shown by the store
+    // Use navigation handler if provided
+    if (onNavigate) {
+      onNavigate(id, bookmarkSource)
+      return
     }
+
+    // Fallback: direct navigation (not recommended, but kept for backward compatibility)
+    router.push({
+      pathname: '/screens/pokemonDetails',
+      params: { source: bookmarkSource, id: id.toString() }
+    })
   }
 
   const handleRemove = (e: any) => {

@@ -1,5 +1,4 @@
 import typeSymbolsIcons from 'app/helpers/typeSymbolsIcons'
-import { usePokemonStore } from 'app/store/pokemonStore'
 import { pokemonTypeColors } from 'config/colors'
 import { Image } from 'react-native'
 import { Card, GetThemeValueForKey, H4, Text, useTheme, XStack, YStack } from 'tamagui'
@@ -10,11 +9,11 @@ export interface TypeGridItem {
 }
 
 interface TypeGridProps {
+  typeList: TypeGridItem[]
   onTypeSelect?: (typeId: number, typeName: string) => void
 }
 
-export default function TypeGrid({ onTypeSelect }: TypeGridProps) {
-  const typeList = usePokemonStore((state) => state.typeList)
+export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
   const theme = useTheme()
   
   if (typeList.length === 0) {
@@ -22,7 +21,6 @@ export default function TypeGrid({ onTypeSelect }: TypeGridProps) {
   }
 
   const handleTypePress = (typeId: number, typeName: string) => {
-    console.log('Type selected:', typeName, typeId)
     onTypeSelect?.(typeId, typeName)
   }
 

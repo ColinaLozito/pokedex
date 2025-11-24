@@ -1,5 +1,4 @@
-import { usePokemonDataStore } from 'app/store/pokemonDataStore'
-import { EvolutionChainLink } from 'app/services/api'
+import { EvolutionChainLink, PokemonDetail } from 'app/services/api'
 import { extractPokemonId } from 'app/helpers/extractPokemonId'
 import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
 import { Pressable } from 'react-native'
@@ -9,6 +8,7 @@ interface EvolutionChainProps {
   evolutionChainTree: EvolutionChainLink
   currentPokemonId: number
   onPokemonPress: (id: number) => void
+  getBasicPokemon?: (id: number) => PokemonDetail | undefined
 }
 
 interface EvolutionNode {
@@ -64,10 +64,10 @@ function collectEvolutionVariants(node: EvolutionNode): EvolutionNode[] {
 export default function EvolutionChain({ 
   evolutionChainTree, 
   currentPokemonId,
-  onPokemonPress 
+  onPokemonPress,
+  getBasicPokemon
 }: EvolutionChainProps) {
   const theme = useTheme()
-  const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   
   // Build the evolution tree
   const rootNode = buildEvolutionTree(evolutionChainTree)
@@ -77,7 +77,7 @@ export default function EvolutionChain({
   
   // Get sprite for a Pokemon (with cache fallback)
   const getSprite = (pokemonId: number): string => {
-    const cached = getBasicPokemon(pokemonId)
+    const cached = getBasicPokemon?.(pokemonId)
     if (cached) {
       return getPokemonSprite(cached, pokemonId)
     }

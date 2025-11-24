@@ -19,12 +19,21 @@ export default function KidScreen() {
   const toast = useToastController()
   
   // Use new data store for Pokemon list and details
+  // Use individual selectors to avoid infinite loops (functions are stable, state values trigger re-renders)
   const pokemonList = usePokemonDataStore((state) => state.pokemonList)
   const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
   const setCurrentPokemonId = usePokemonDataStore((state) => state.setCurrentPokemonId)
+  const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
+  const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
+  const bookmarkedPokemonIds = usePokemonDataStore((state) => state.bookmarkedPokemonIds)
   
   // Keep recent selections in old store for now
+  const recentSelections = usePokemonStore((state) => state.recentSelections)
+  const removeRecentSelection = usePokemonStore((state) => state.removeRecentSelection)
   const addRecentSelection = usePokemonStore((state) => state.addRecentSelection)
+  const typeList = usePokemonStore((state) => state.typeList)
+  
+  const toggleBookmark = usePokemonDataStore((state) => state.toggleBookmark)
   
   // Set toast controller for the store
   useEffect(() => {
@@ -32,10 +41,6 @@ export default function KidScreen() {
   }, [toast])
   
   const handleSelectItem = async (id: number) => {
-    console.log('=== HANDLE SELECT ITEM ===')
-    console.log('Selected Pokemon ID:', id)
-    console.log('Type of ID:', typeof id)
-    
     // Validate ID
     if (!id || id === 0 || isNaN(id)) {
       console.error('Invalid Pokemon ID received:', id)
@@ -45,16 +50,13 @@ export default function KidScreen() {
     
     // Find the selected Pokémon in list
     const selectedPokemon = pokemonList.find((p) => p.id === id)
-    console.log('Found Pokemon in list:', selectedPokemon)
 
     // Fetch complete Pokemon details (uses cache if available)
     try {
-      console.log(`Attempting to fetch Pokemon ID: ${id}`)
       await fetchPokemonDetail(id)
       
       // Only add to recent selections AFTER successful fetch
       if (selectedPokemon) {
-        console.log('Fetch successful, adding to recent selections')
         addRecentSelection(selectedPokemon)
       }
       
@@ -73,7 +75,6 @@ export default function KidScreen() {
   }
 
   const handleTypeSelect = (typeId: number, typeName: string) => {
-    console.log('Type selected:', typeName, 'with ID:', typeId)
     router.push({
       pathname: '/screens/typeFilter',
       params: {
@@ -84,7 +85,7 @@ export default function KidScreen() {
   }
 
   const dataSet = pokemonList.map((pokemon) => ({
-    id: pokemon.id.toString(),
+          id: pokemon.id.toString(), 
     title: pokemon.name,
   }))
   
@@ -108,16 +109,32 @@ export default function KidScreen() {
               <YStack style={{ paddingTop: insets.top }}>
                 <H3 color={theme.text.val}>Search for a Pokemon</H3>
                 <YStack height={24} />
-                <AutocompleteDropdownList
+                 <AutocompleteDropdownList
                   onSelectItem={handleSelectItem}
                   dataSet={dataSet}
                 />
                 <YStack height={10} />
-                <BookmarkedPokemon />
+                <BookmarkedPokemon
+                  bookmarkedPokemonIds={bookmarkedPokemonIds}
+                  getPokemonDetail={getPokemonDetail}
+                  getBasicPokemon={getBasicPokemon}
+                  onRemove={toggleBookmark}
+                  onSelect={handleSelectItem}
+                  bookmarkSource="kid"
+                />
                 <YStack height={20} />
-                <RecentSelections />
+                <RecentSelections
+                  recentSelections={recentSelections}
+                  getPokemonDetail={getPokemonDetail}
+                  getBasicPokemon={getBasicPokemon}
+                  onRemove={removeRecentSelection}
+                  onSelect={handleSelectItem}
+                />
                 <YStack height={20} />
-                <TypeGrid onTypeSelect={handleTypeSelect} />
+                <TypeGrid
+                  typeList={typeList}
+                  onTypeSelect={handleTypeSelect}
+                />
                 <YStack height={40} />
               </YStack>
             }

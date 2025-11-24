@@ -1,16 +1,16 @@
+import { Bookmark, BookmarkCheck } from '@tamagui/lucide-icons'
+import { useToastController } from '@tamagui/toast'
+import BookmarkedPokemon from 'app/components/BookmarkedPokemon'
+import NumberRoulette from 'app/components/NumberRoulette'
+import PokemonCard from 'app/components/PokemonCard'
+import { getPokemonSprite, getPokemonSpriteUrl } from 'app/helpers/pokemonSprites'
+import { setToastController, usePokemonDataStore } from 'app/store/pokemonDataStore'
+import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, ImageBackground, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button, Card, H2, Text, YStack, useTheme } from 'tamagui'
-import { useRouter } from 'expo-router'
-import { Bookmark, BookmarkCheck } from '@tamagui/lucide-icons'
-import { usePokemonDataStore, setToastController } from 'app/store/pokemonDataStore'
-import { useToastController } from '@tamagui/toast'
-import PokemonCard from 'app/components/PokemonCard'
-import NumberRoulette from 'app/components/NumberRoulette'
-import BookmarkedPokemon from 'app/components/BookmarkedPokemon'
-import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
-import PokeballWallpaper from '../../assets/images/horizontal-pokeball-wallpaper.jpg'
+import PokeballWallpaper from '../../assets/images/pokeball-patten.png'
 
 export default function ParentScreen() {
   const router = useRouter()
@@ -132,7 +132,10 @@ export default function ParentScreen() {
   
   const sprite = getSprite()
   // Make bookmark state reactive by subscribing to the array directly
-  const bookmarked = selectedPokemonId ? parentBookmarkedPokemonIds.includes(selectedPokemonId) : false
+  const bookmarked = 
+    selectedPokemonId ? 
+    parentBookmarkedPokemonIds.includes(selectedPokemonId) : 
+    false
   
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
@@ -166,7 +169,7 @@ export default function ParentScreen() {
           {selectedPokemonId && currentPokemon && (
             <Card elevate>
               <Card.Header padded>
-              <ImageBackground source={PokeballWallpaper} style={{ width: '100%', height: 'auto', overflow: 'hidden', borderRadius: 16 }}>
+              <ImageBackground source={PokeballWallpaper} imageStyle={{ width: '100%', height: 'auto', overflow: 'hidden', borderRadius: 16 }} style={{ width: '100%', height: 'auto', overflow: 'hidden', borderRadius: 16 }}>
                 <YStack style={{ gap: 12, alignItems: 'center', width: '100%', paddingTop: 24 }}>
                   <YStack style={{ width: '70%' }}>
                     <PokemonCard

@@ -13,15 +13,11 @@ export function ActionButton({ text, onPress }: ActionButtonProps) {
       borderColor="$red"
       width="45%"
       height={70}
-      style={{
-        borderRadius: 16,
-        backgroundColor: 'transparent',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
       pressStyle={{ scale: 0.95 }}
     >
-      <Text color="$red" style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>{text}</Text>
+      <Text color="$color.red" fontSize={18} fontWeight="500">
+        {text}
+      </Text>
     </Button>
   )
 }

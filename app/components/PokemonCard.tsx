@@ -1,8 +1,8 @@
-import { useRouter } from 'expo-router'
 import { X } from '@tamagui/lucide-icons'
-import { Button, Card, Text, XStack, YStack, Image } from 'tamagui'
 import { pokemonTypeColors } from 'config/colors'
-import { Pressable } from 'react-native'
+import { useRouter } from 'expo-router'
+import { GestureResponderEvent, Pressable } from 'react-native'
+import { Button, Card, Image, Text, XStack, YStack } from 'tamagui'
 import TypeChips from './TypeChips'
 
 interface PokemonCardProps {
@@ -61,7 +61,7 @@ export default function PokemonCard({
     })
   }
 
-  const handleRemove = (e: any) => {
+  const handleRemove = (e: GestureResponderEvent) => {
     e.stopPropagation()
     onRemove(id)
   }

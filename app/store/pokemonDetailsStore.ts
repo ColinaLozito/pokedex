@@ -17,6 +17,13 @@ interface PokemonDetailsState {
   clearCurrentPokemon: () => void
 }
 
+export interface EvolutionNode {
+  id: number
+  name: string
+  sprite: string
+  evolvesTo: EvolutionNode[]
+}
+
 export const usePokemonDetailsStore = create<PokemonDetailsState>((set, get) => ({
   // Initial state
   currentPokemon: null,

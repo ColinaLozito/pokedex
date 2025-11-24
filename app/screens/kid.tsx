@@ -1,16 +1,16 @@
+import { useToastController } from '@tamagui/toast'
 import AutocompleteDropdownList from 'app/components/AutocompleteDropdown'
-import RecentSelections from 'app/components/RecentSelections'
 import BookmarkedPokemon from 'app/components/BookmarkedPokemon'
+import RecentSelections from 'app/components/RecentSelections'
 import TypeGrid from 'app/components/TypeGrid'
+import { setToastController, usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { usePokemonStore } from 'app/store/pokemonStore'
-import { usePokemonDataStore, setToastController } from 'app/store/pokemonDataStore'
 import { useRouter } from 'expo-router'
 import { useEffect } from 'react'
 import { FlatList } from 'react-native'
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { H3, useTheme, YStack } from 'tamagui'
-import { useToastController } from '@tamagui/toast'
 
 export default function KidScreen() {
   const router = useRouter()
@@ -85,7 +85,7 @@ export default function KidScreen() {
   }
 
   const dataSet = pokemonList.map((pokemon) => ({
-          id: pokemon.id.toString(), 
+    id: pokemon.id.toString(), 
     title: pokemon.name,
   }))
   

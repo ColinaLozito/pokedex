@@ -1,8 +1,8 @@
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import type { PokemonListItem, CombinedPokemonDetail, PokemonDetail } from '../services/api'
-import { fetchPokemonList, fetchCompletePokemonDetail, fetchPokemonById } from '../services/api'
+import { create } from 'zustand'
+import { createJSONStorage, persist } from 'zustand/middleware'
+import type { CombinedPokemonDetail, PokemonDetail, PokemonListItem } from '../services/api'
+import { fetchCompletePokemonDetail, fetchPokemonById, fetchPokemonList } from '../services/api'
 
 // Toast controller will be set from the app
 let toastController: any = null
@@ -56,6 +56,11 @@ interface PokemonDataState {
   setDailyPokemonId: (id: number) => void // Set daily Pokemon ID (from roulette)
   rerollDailyPokemon: () => Promise<number> // Reroll to new random Pokemon (legacy)
   getRerollCount: () => number // Get today's reroll count
+  
+  // Helper methods
+  getTodayDateString: () => string // Get today's date string (YYYY-MM-DD)
+  isNewDay: () => boolean // Check if it's a new day
+  generateRandomPokemonId: () => number // Generate a random Pokemon ID (1-1000)
 }
 
 export const usePokemonDataStore = create<PokemonDataState>()(

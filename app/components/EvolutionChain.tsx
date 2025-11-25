@@ -1,235 +1,70 @@
-import { usePokemonDataStore } from 'app/store/pokemonDataStore'
-import { EvolutionChainLink } from 'app/services/api'
-import { extractPokemonId } from 'app/helpers/extractPokemonId'
-import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
-import { Pressable } from 'react-native'
-import { Text, XStack, YStack, Image, H4, useTheme } from 'tamagui'
+import EvolutionSpriteContainer from 'app/components/EvolutionSpriteContainer'
+import type { EvolutionChainLink, PokemonDetail } from 'app/services/types'
+import { buildEvolutionTree, collectEvolutionVariants, isBranchingEvolution, type EvolutionNode } from 'app/utils/evolutionTree'
+import { getPokemonSprite, getPokemonSpriteUrl } from 'app/utils/pokemonSprites'
+import { useCallback, useMemo } from 'react'
+import { H4, Text, useTheme, XStack, YStack } from 'tamagui'
 
 interface EvolutionChainProps {
   evolutionChainTree: EvolutionChainLink
   currentPokemonId: number
   onPokemonPress: (id: number) => void
-}
-
-interface EvolutionNode {
-  id: number
-  name: string
-  sprite: string
-  evolvesTo: EvolutionNode[]
-}
-
-/**
- * Convert EvolutionChainLink tree to a structured node tree
- */
-function buildEvolutionTree(chain: EvolutionChainLink): EvolutionNode {
-  const id = extractPokemonId(chain.species.url)
-  
-  return {
-    id,
-    name: chain.species.name,
-    sprite: getPokemonSpriteUrl(id),
-    evolvesTo: chain.evolves_to.map(buildEvolutionTree)
-  }
-}
-
-/**
- * Check if evolution chain is branching (has multiple paths)
- * For branching: initial Pokemon has more than 1 direct evolution
- */
-function isBranchingEvolution(chain: EvolutionChainLink): boolean {
-  // If first Pokemon has more than 1 evolution, it's branching (like Eevee, Tyrogue)
-  return chain.evolves_to.length > 1
-}
-
-/**
- * Collect all evolution variants from a branching node
- */
-function collectEvolutionVariants(node: EvolutionNode): EvolutionNode[] {
-  const variants: EvolutionNode[] = []
-  
-  // Collect all direct evolutions
-  node.evolvesTo.forEach(evolution => {
-    variants.push(evolution)
-    // Also collect any further evolutions (in case of multi-stage branching)
-    if (evolution.evolvesTo.length > 0) {
-      evolution.evolvesTo.forEach(subEvolution => {
-        variants.push(subEvolution)
-      })
-    }
-  })
-  
-  return variants
+  getBasicPokemon?: (id: number) => PokemonDetail | undefined
 }
 
 export default function EvolutionChain({ 
   evolutionChainTree, 
   currentPokemonId,
-  onPokemonPress 
+  onPokemonPress,
+  getBasicPokemon
 }: EvolutionChainProps) {
   const theme = useTheme()
-  const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   
-  // Build the evolution tree
-  const rootNode = buildEvolutionTree(evolutionChainTree)
+  // Build the evolution tree (memoized to avoid recalculation)
+  const rootNode = useMemo(() => buildEvolutionTree(evolutionChainTree), [evolutionChainTree])
   
-  // Check if it's branching
-  const isBranching = isBranchingEvolution(evolutionChainTree)
+  // Check if it's branching (memoized to avoid recalculation)
+  const isBranching = useMemo(() => isBranchingEvolution(evolutionChainTree), [evolutionChainTree])
   
-  // Get sprite for a Pokemon (with cache fallback)
-  const getSprite = (pokemonId: number): string => {
-    const cached = getBasicPokemon(pokemonId)
-    if (cached) {
-      return getPokemonSprite(cached, pokemonId)
+  // Get sprite for a Pokemon (with cache fallback and error handling)
+  const getSprite = useCallback((pokemonId: number): string => {
+    // Validate Pokemon ID
+    if (!pokemonId || pokemonId <= 0 || !Number.isInteger(pokemonId)) {
+      // Return a fallback sprite URL for invalid IDs
+      return getPokemonSpriteUrl(1) // Default to Bulbasaur
     }
+    
+    // Try to get cached data
+    const cached = getBasicPokemon?.(pokemonId)
+    if (cached) {
+      // Validate cached data has required structure
+      if (typeof cached === 'object' && cached !== null) {
+        const sprite = getPokemonSprite(cached, pokemonId)
+        // Validate sprite URL is not empty
+        if (sprite && sprite.trim().length > 0) {
+          return sprite
+        }
+      }
+    }
+    
+    // Fallback to direct URL based on ID
     return getPokemonSpriteUrl(pokemonId)
-  }
+  }, [getBasicPokemon])
   
-  // Render a single Pokemon card (for linear evolution)
-  const renderLinearPokemon = (node: EvolutionNode, isCurrent: boolean = false) => {
+  // Render a single Pokemon card (for branching evolution)
+  const renderPokemonSprite = useCallback((node: EvolutionNode, isCurrent: boolean = false, variantType: 'branching-variant' | 'branching-initial' | 'linear') => {
     const sprite = getSprite(node.id)
-    
     return (
-      <Pressable
+      <EvolutionSpriteContainer
+        sprite={sprite}
+        name={node.name}
+        id={node.id}
+        isCurrent={isCurrent}
         onPress={() => onPokemonPress(node.id)}
-        style={({ pressed }) => ({
-          opacity: pressed ? 0.7 : 1,
-        })}
-      >
-        <YStack
-          style={{
-            alignItems: 'center',
-            padding: 8,
-            borderRadius: 12,
-            backgroundColor: isCurrent ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
-            minWidth: "20%",
-            maxWidth: "100%",
-          }}
-        >
-          <Image
-            source={{ uri: sprite }}
-            style={{
-              width: 90,
-              height: 90,
-            }}
-            resizeMode="contain"
-          />
-          <Text 
-            fontSize={12} 
-            fontWeight="700" 
-            textTransform="capitalize"
-            style={{ marginTop: 8, textAlign: 'center' }}
-            color={theme.text.val}
-          >
-            {node.name}
-          </Text>
-          <Text 
-            fontSize={14} 
-            style={{ marginTop: 4 }}
-            color={theme.text.val}
-          >
-            #{node.id.toString().padStart(3, '0')}
-          </Text>
-        </YStack>
-      </Pressable>
+        variant={variantType}
+      />
     )
-  }
-  
-  // Render a single Pokemon card (for branching evolution - initial at top)
-  const renderBranchingInitial = (node: EvolutionNode, isCurrent: boolean = false) => {
-    const sprite = getSprite(node.id)
-    
-    return (
-      <Pressable
-        onPress={() => onPokemonPress(node.id)}
-        style={({ pressed }) => ({
-          opacity: pressed ? 0.7 : 1,
-        })}
-      >
-        <YStack
-          style={{
-            alignItems: 'center',
-            padding: 12,
-            borderRadius: 12,
-            backgroundColor: isCurrent ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
-          }}
-        >
-          <Image
-            source={{ uri: sprite }}
-            style={{
-              width: 90,
-              height: 90,
-            }}
-            resizeMode="contain"
-          />
-          <Text 
-            fontSize={14} 
-            fontWeight="700" 
-            textTransform="capitalize"
-            style={{ marginTop: 12, textAlign: 'center' }}
-            color={theme.text.val}
-          >
-            {node.name}
-          </Text>
-          <Text 
-            fontSize={16} 
-            style={{ marginTop: 6 }}
-            color={theme.text.val}
-          >
-            #{node.id.toString().padStart(3, '0')}
-          </Text>
-        </YStack>
-      </Pressable>
-    )
-  }
-  
-  // Render a single Pokemon card (for branching evolution - variants in grid)
-  const renderBranchingVariant = (node: EvolutionNode, isCurrent: boolean = false) => {
-    const sprite = getSprite(node.id)
-    
-    return (
-      <Pressable
-        onPress={() => onPokemonPress(node.id)}
-        style={({ pressed }) => ({
-          opacity: pressed ? 0.7 : 1,
-        })}
-      >
-        <YStack
-          style={{
-            alignItems: 'center',
-            padding: 8,
-            borderRadius: 12,
-            backgroundColor: isCurrent ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
-            width: '100%',
-          }}
-        >
-          <Image
-            source={{ uri: sprite }}
-            style={{
-              width: 70,
-              height: 70,
-            }}
-            resizeMode="contain"
-          />
-          <Text 
-            fontSize={14} 
-            fontWeight="700" 
-            textTransform="capitalize"
-            style={{ marginTop: 6, textAlign: 'center' }}
-            color={theme.text.val}
-          >
-            {node.name}
-          </Text>
-          <Text 
-            fontSize={14} 
-            style={{ marginTop: 4 }}
-            color={theme.text.val}
-          >
-            #{node.id.toString().padStart(3, '0')}
-          </Text>
-        </YStack>
-      </Pressable>
-    )
-  }
+  }, [getSprite, onPokemonPress])
   
   // VARIANT 1: Linear Evolution - Each Pokemon in column (image, name, ID) with arrows between
   const renderLinearEvolution = (node: EvolutionNode): React.ReactNode => {
@@ -245,23 +80,21 @@ export default function EvolutionChain({
     
     return (
       <XStack 
-        style={{ 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          flexWrap: 'wrap',
-          gap: 4,
-        }}
+        items='center'
+        justify='center'
+        flexWrap='wrap'
+        gap={4}
       >
         {nodes.map((evolutionNode, index) => (
-          <XStack key={`${evolutionNode.id}-${index}`} style={{ alignItems: 'center' }}>
-            {renderLinearPokemon(evolutionNode, evolutionNode.id === currentPokemonId)}
+          <XStack key={`${evolutionNode.id}-${index}`} items='center'>
+            {renderPokemonSprite(evolutionNode, evolutionNode.id === currentPokemonId, 'linear')}
             
             {/* Arrow between evolutions */}
             {index < nodes.length - 1 && (
-              <XStack style={{ marginHorizontal: 0, alignItems: 'center' }}>
+              <XStack justify='center' m={0}>
                 <Text 
                   fontSize={20} 
-                  fontWeight="300"
+                  fontWeight={300}
                   color={theme.text.val}
                 >
                   →
@@ -280,28 +113,24 @@ export default function EvolutionChain({
     const variants = collectEvolutionVariants(node)
     
     return (
-      <YStack style={{ alignItems: 'center', gap: 12, width: '100%' }}>
+      <YStack items='center' gap={12} width='100%'>
         {/* Initial Pokemon at top (centered) */}
-        {renderBranchingInitial(node, node.id === currentPokemonId)}
+        {renderPokemonSprite(node, node.id === currentPokemonId, 'branching-initial')}
         
         {/* Evolution variants in 3-column grid */}
         {variants.length > 0 && (
           <XStack 
-            style={{ 
-              flexWrap: 'wrap', 
-              justifyContent: 'center',
-              width: '100%',
-            }}
+            flexWrap='wrap'
+            justify='center'
+            width='100%'
           >
             {variants.map((variant, index) => (
               <YStack 
                 key={`${variant.id}-${index}`} 
-                style={{ 
-                  width: '30%', // 3 columns (with gaps)
-                  alignItems: 'center',
-                }}
+                width='30%'
+                items='center'
               >
-                {renderBranchingVariant(variant, variant.id === currentPokemonId)}
+                {renderPokemonSprite(variant, variant.id === currentPokemonId, 'branching-variant')}
               </YStack>
             ))}
           </XStack>
@@ -311,8 +140,8 @@ export default function EvolutionChain({
   }
   
   return (
-    <YStack style={{ width: '100%' }}>
-      <H4 style={{ marginBottom: 24, textAlign: 'center' }} color={theme.text.val}>Evolution</H4>
+    <YStack width='100%'>
+      <H4 mb={24} text='center' color={theme.text.val}>Evolution</H4>
       
       {isBranching ? (
         // Branching evolution (variants)

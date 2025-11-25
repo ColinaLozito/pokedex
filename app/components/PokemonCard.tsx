@@ -1,12 +1,18 @@
-import { usePokemonDataStore, setToastController } from 'app/store/pokemonDataStore'
-import { useRouter } from 'expo-router'
-import { useEffect } from 'react'
 import { X } from '@tamagui/lucide-icons'
-import { Button, Card, Text, XStack, YStack, Image } from 'tamagui'
-import { useToastController } from '@tamagui/toast'
-import { pokemonTypeColors } from 'config/colors'
-import { Pressable } from 'react-native'
+import { getTypeColor } from 'app/utils/getTypeColor'
+import { useRouter } from 'expo-router'
+import { useCallback, useMemo, useState } from 'react'
+import { GestureResponderEvent, Pressable } from 'react-native'
+import { Button, Card, GetThemeValueForKey, Image, Text, XStack, YStack } from 'tamagui'
 import TypeChips from './TypeChips'
+
+// Constants for PokemonCard styling
+const POKEMON_CARD_COLORS = {
+  buttonBackground: 'rgba(0, 0, 0, 0.2)',
+  circularBackground: 'rgba(255, 255, 255, 0.15)',
+  noImageBackground: 'rgba(255, 255, 255, 0.2)',
+  mutedText: 'rgba(255, 255, 255, 0.7)',
+} as const
 
 interface PokemonCardProps {
   id: number
@@ -25,6 +31,8 @@ interface PokemonCardProps {
   onRemove: (id: number) => void
   onSelect?: (id: number) => void
   bookmarkSource?: 'parent' | 'kid' // Source for bookmark system when navigating
+  // Optional: If not provided, onSelect must handle navigation
+  onNavigate?: (id: number, source: 'parent' | 'kid') => void
 }
 
 export default function PokemonCard({ 
@@ -37,58 +45,40 @@ export default function PokemonCard({
   displayRemoveButton = false,
   onRemove,
   onSelect,
-  bookmarkSource = 'kid' // Default to 'kid' if not specified
+  bookmarkSource = 'kid', // Default to 'kid' if not specified
+  onNavigate
 }: PokemonCardProps) {
   const router = useRouter()
-  const toast = useToastController()
-  
-  const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
-  const setCurrentPokemonId = usePokemonDataStore((state) => state.setCurrentPokemonId)
-  
-  // Set toast controller
-  useEffect(() => {
-    setToastController(toast)
-  }, [toast])
+  const [imageError, setImageError] = useState(false)
 
-  const handleCardPress = async () => {
+  const handleCardPress = useCallback(async () => {
     // Use custom handler if provided
     if (onSelect) {
       onSelect(id)
       return
     }
 
-    // Default behavior: fetch and navigate
-    try {
-      await fetchPokemonDetail(id)
-      setCurrentPokemonId(id)
-      router.push({
-        pathname: '/screens/pokemonDetails',
-        params: { source: bookmarkSource }
-      })
-    } catch (error) {
-      console.error('Failed to fetch Pokémon details:', error)
-      // Error toast is already shown by the store
+    // Use navigation handler if provided
+    if (onNavigate) {
+      onNavigate(id, bookmarkSource)
+      return
     }
-  }
 
-  const handleRemove = (e: any) => {
+    // Fallback: direct navigation (not recommended, but kept for backward compatibility)
+    router.push({
+      pathname: '/screens/pokemonDetails',
+      params: { source: bookmarkSource, id: id.toString() }
+    })
+  }, [id, onSelect, onNavigate, bookmarkSource, router])
+
+  const handleRemove = useCallback((e: GestureResponderEvent) => {
     e.stopPropagation()
     onRemove(id)
-  }
+  }, [id, onRemove])
 
-  // Get type color for background
-  const getTypeColor = () => {
-    if (primaryType) {
-      const typeColor = pokemonTypeColors[primaryType as keyof typeof pokemonTypeColors]
-      if (typeColor) {
-        return typeColor
-      }
-    }
-    // Fallback colors - neutral gray for recent, light gray for bookmark without type
-    return variant === 'recent' ? '#F5F5F5' : '#E0E0E0'
-  }
-
-  const backgroundColor = getTypeColor()
+  const backgroundColor = useMemo(() => (
+    getTypeColor(primaryType, variant)
+  ) as GetThemeValueForKey<"backgroundColor">, [primaryType, variant])
 
   return (
     <Pressable
@@ -103,23 +93,21 @@ export default function PokemonCard({
         elevate
         borderRadius={16}
         overflow="hidden"
-        style={{
-          backgroundColor,
-          height: 150,
-          width: '100%',
-        }}
+        bg={backgroundColor}
+        height={150}
+        width='100%'
       >
-        <YStack style={{ padding: 10, height: '100%', position: 'relative' }}>
+        <YStack p={10} height='100%' position='relative'>
           {/* Remove Button - Top Right */}
           {
             displayRemoveButton && (
-              <XStack style={{ position: 'absolute', top: 6, right: 6, zIndex: 10 }}>
+              <XStack position='absolute' top={6} right={6} zIndex={10}>
                 <Button
-                  size="$1.5"
+                  size={24}
                   circular
                   icon={X}
                   chromeless
-                  style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+                  backgroundColor={POKEMON_CARD_COLORS.buttonBackground}
                   color="white"
                   onPress={handleRemove}
                 />
@@ -127,19 +115,21 @@ export default function PokemonCard({
             )
           }
           {/* Top Section: Name and Number */}
-          <XStack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+          <XStack justify='space-between' items='center'>
             <Text 
-              fontSize={18} 
+              fontSize={14} 
               color="white" 
               textTransform="capitalize"
               numberOfLines={1}
               lineHeight={24}
+              fontWeight={800}
             >
               {name}
             </Text>
             <Text 
-              fontSize={16} 
+              fontSize={14} 
               color="white"
+              fontWeight={500}
             >
               #{id.toString().padStart(3, '0')}
             </Text>
@@ -147,49 +137,42 @@ export default function PokemonCard({
 
           {/* Middle Section: Pokemon Sprite with Circular Background */}
           <XStack 
-            style={{ 
-              flex: 1, 
-              justifyContent: 'flex-end', 
-              position: 'relative', 
-              minHeight: 60
-             }}
+            flex={1} 
+            justify='flex-end' 
+            position='relative' 
+            minHeight={60}
           >
             {/* Circular Background */}
             <YStack
-              style={{
-                position: 'absolute',
-                width: 150,
-                height: 150,
-                borderRadius: 100,
-                right: -15,
-                top: -10,
-                backgroundColor: 'rgba(255, 255, 255, 0.15)',
-              }}
+              position='absolute'
+              width={150}
+              height={150}
+              borderRadius={100}
+              right={-15}
+              top={-10}
+              bg={POKEMON_CARD_COLORS.circularBackground}
             />
             
             {/* Pokemon Sprite */}
-            {sprite ? (
+            {sprite && !imageError ? (
               <Image
                 source={{ uri: sprite }}
-                style={{
-                  width: 90,
-                  height: 90,
-                  zIndex: 1,
-                }}
-                resizeMode="contain"
+                width={90}
+                height={90}
+                zIndex={1}
+                objectFit="contain"
+                onError={() => setImageError(true)}
               />
             ) : (
               <YStack
-                style={{
-                  width: 70,
-                  height: 70,
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+                width={70}
+                height={70}
+                bg={POKEMON_CARD_COLORS.noImageBackground}
+                borderRadius={8}
+                justify='center'
+                items='center'
               >
-                <Text fontSize="$1" color="rgba(255, 255, 255, 0.7)">
+                <Text fontSize={12} color={POKEMON_CARD_COLORS.mutedText}>
                   No Image
                 </Text>
               </YStack>
@@ -198,12 +181,12 @@ export default function PokemonCard({
 
           {/* Bottom Section: Type Chips */}
           {types && types.length > 0 ? (
-            <XStack style={{ marginTop: 8 }}>
+            <XStack mt={8}>
               <TypeChips types={types} size="small" gap={6} />
             </XStack>
           ) : 
-            <XStack style={{ marginTop: 8, marginLeft: 24 }}>
-              <Text fontSize={24} color="rgba(255, 255, 255, 0.7)">??</Text>
+            <XStack mt={8} ml={24}>
+              <Text fontSize={24} color={POKEMON_CARD_COLORS.mutedText}>??</Text>
             </XStack>
           }
         </YStack>

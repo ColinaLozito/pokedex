@@ -1,4 +1,4 @@
-import { Card, H4, Text, XStack, YStack, useTheme } from 'tamagui'
+import { Card, GetThemeValueForKey, H4, Text, XStack, YStack, useTheme } from 'tamagui'
 
 interface StatInfo {
   base_stat: number
@@ -19,11 +19,11 @@ export default function PokemonBaseStats({ stats, primaryTypeColor }: PokemonBas
   return (
     <Card>
       <Card.Header padded>
-        <H4 style={{ marginBottom: 12 }} color={theme.text.val}>Base Stats</H4>
-        <YStack style={{ gap: 12 }}>
+        <H4 mb={12} color={theme.text.val}>Base Stats</H4>
+        <YStack gap={12}>
           {stats.map((statInfo) => (
-            <YStack key={statInfo.stat.name} style={{ gap: 4 }}>
-              <XStack style={{ justifyContent: 'space-between' }}>
+            <YStack key={statInfo.stat.name} gap={4}>
+              <XStack justify="space-between">
                 <Text 
                   fontSize={14} 
                   textTransform="capitalize"
@@ -31,24 +31,20 @@ export default function PokemonBaseStats({ stats, primaryTypeColor }: PokemonBas
                 >
                   {statInfo.stat.name.replace('-', ' ')}
                 </Text>
-                <Text fontSize={14} fontWeight="600" color={theme.text.val}>
+                <Text fontSize={14} fontWeight={600} color={theme.text.val}>
                   {statInfo.base_stat}
                 </Text>
               </XStack>
               <YStack
-                style={{
-                  height: 6,
-                  backgroundColor: theme.gray5?.val || '#F5F5F5',
-                  borderRadius: 8,
-                  overflow: 'hidden',
-                }}
+                height={6}
+                bg={theme.gray5?.val || '#F5F5F5'}
+                borderRadius={8}
+                overflow='hidden'
               >
                 <YStack
-                  style={{
-                    height: '100%',
-                    width: `${(statInfo.base_stat / 255) * 100}%`,
-                    backgroundColor: primaryTypeColor,
-                  }}
+                  height='100%'
+                  width={`${(statInfo.base_stat / 255) * 100}%`}
+                  bg={primaryTypeColor as GetThemeValueForKey<"backgroundColor">}
                 />
               </YStack>
             </YStack>

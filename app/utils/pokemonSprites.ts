@@ -1,3 +1,5 @@
+import type { CombinedPokemonDetail, PokemonDetail } from '../services/types'
+
 /**
  * Base URL for Pokemon official artwork sprites
  * Pattern: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{id}.png
@@ -23,7 +25,10 @@ export function getPokemonSpriteUrl(id: number): string {
  * @param pokemonId - Pokemon ID as fallback
  * @returns Sprite URL, preferring official artwork, falling back to ID-based URL
  */
-export function getPokemonSprite(pokemonData: any, pokemonId: number): string {
+export function getPokemonSprite(
+  pokemonData: PokemonDetail | CombinedPokemonDetail | undefined,
+  pokemonId: number
+): string {
   // If we have Pokemon data, try to get sprite from it
   if (pokemonData?.sprites) {
     const sprite = 

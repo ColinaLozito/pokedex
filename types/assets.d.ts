@@ -1,62 +1,66 @@
-// Type declarations for asset imports in React Native/Expo
-
+// Better type definitions for React Native/Expo assets
 declare module '*.png' {
-  const value: any
+  import { ImageSourcePropType } from 'react-native'
+  const value: ImageSourcePropType
   export default value
 }
 
 declare module '*.jpg' {
-  const value: any
+  import { ImageSourcePropType } from 'react-native'
+  const value: ImageSourcePropType
   export default value
 }
 
 declare module '*.jpeg' {
-  const value: any
+  import { ImageSourcePropType } from 'react-native'
+  const value: ImageSourcePropType
   export default value
 }
 
 declare module '*.gif' {
-  const value: any
-  export default value
-}
-
-declare module '*.svg' {
-  const value: any
+  import { ImageSourcePropType } from 'react-native'
+  const value: ImageSourcePropType
   export default value
 }
 
 declare module '*.webp' {
-  const value: any
+  import { ImageSourcePropType } from 'react-native'
+  const value: ImageSourcePropType
+  export default value
+}
+
+declare module '*.svg' {
+  const value: number // SVG imports return a number (require() result)
   export default value
 }
 
 declare module '*.ttf' {
-  const value: any
+  const value: number // Font imports return a number (require() result)
   export default value
 }
 
 declare module '*.otf' {
-  const value: any
+  const value: number
   export default value
 }
 
 declare module '*.woff' {
-  const value: any
+  const value: number
   export default value
 }
 
 declare module '*.woff2' {
-  const value: any
+  const value: number
   export default value
 }
 
 declare module '*.eot' {
-  const value: any
+  const value: number
   export default value
 }
 
 declare module '@tamagui/font-inter/otf/*' {
-  const value: any
+  const value: number
   export default value
 }
 

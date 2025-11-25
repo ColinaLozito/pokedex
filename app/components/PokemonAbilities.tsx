@@ -18,10 +18,10 @@ export default function PokemonAbilities({ abilities }: PokemonAbilitiesProps) {
   return (
     <Card>
       <Card.Header padded>
-        <H4 style={{ marginBottom: 8 }} color={theme.text.val}>Abilities</H4>
-        <YStack style={{ gap: 8 }}>
+        <H4 mb={8} color={theme.text.val}>Abilities</H4>
+        <YStack gap={8}>
           {abilities.map((abilityInfo, index) => (
-            <XStack key={index} style={{ gap: 8, alignItems: 'center' }}>
+            <XStack key={index} gap={8} items='center'>
               <Text 
                 fontSize={16} 
                 textTransform="capitalize"
@@ -33,12 +33,10 @@ export default function PokemonAbilities({ abilities }: PokemonAbilitiesProps) {
                 <Text 
                   fontSize={12} 
                   color={theme.gray10?.val || '#737373'}
-                  style={{
-                    backgroundColor: theme.gray4?.val || '#E5E5E5',
-                    paddingHorizontal: 8,
-                    paddingVertical: 4,
-                    borderRadius: 6,
-                  }}
+                  bg={theme.gray4?.val || '#E5E5E5'}
+                  px={8}
+                  py={4}
+                  borderRadius={6}
                 >
                   Hidden
                 </Text>

@@ -1,43 +1,59 @@
-import { usePokemonDataStore, useCurrentPokemon } from 'app/store/pokemonDataStore'
-import { pokemonTypeColors } from 'config/colors'
-import { useEffect, useRef } from 'react'
-import { ActivityIndicator, Image, ScrollView } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { Button, H2, Text, XStack, YStack, useTheme } from 'tamagui'
-import { useRouter, useLocalSearchParams } from 'expo-router'
-import { Bookmark, ChevronLeft, BookmarkCheck } from '@tamagui/lucide-icons'
-import { getPokemonSpriteUrl, getPokemonSprite } from 'app/helpers/pokemonSprites'
-import TypeChips from 'app/components/TypeChips'
+import BookmarkButton from 'app/components/BookmarkButton'
+import EmptyStateScreen from 'app/components/EmptyStateScreen'
+import ErrorScreen from 'app/components/ErrorScreen'
 import EvolutionChain from 'app/components/EvolutionChain'
+import PokemonAbilities from 'app/components/PokemonAbilities'
 import PokemonAttributes from 'app/components/PokemonAttributes'
 import PokemonBaseStats from 'app/components/PokemonBaseStats'
-import PokemonAbilities from 'app/components/PokemonAbilities'
+import TypeChips from 'app/components/TypeChips'
+import { useLoadingModal } from 'app/hooks/useLoadingModal'
+import { useCurrentPokemon } from 'app/store/hooks/usePokemonData'
+import { usePokemonDataStore } from 'app/store/pokemonDataStore'
+import { usePokemonGeneralStore } from 'app/store/pokemonGeneralStore'
+import { pokemonTypeColors } from 'config/colors'
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { ScrollView } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { GetThemeValueForKey, H2, Image, Text, XStack, YStack, useTheme } from 'tamagui'
 
 export default function PokemonDetailsScreen() {
   const theme = useTheme()
   const router = useRouter()
-  const params = useLocalSearchParams<{ source?: 'parent' | 'kid' }>()
   const scrollViewRef = useRef<ScrollView>(null)
+  const params = useLocalSearchParams<{ source?: 'parent' | 'kid' }>()
+  
   const { currentPokemon } = useCurrentPokemon()
+
+  // Use individual selectors to avoid infinite loops
   const loading = usePokemonDataStore((state) => state.loading)
   const error = usePokemonDataStore((state) => state.error)
   const clearError = usePokemonDataStore((state) => state.clearError)
   const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
-  const setCurrentPokemonId = usePokemonDataStore((state) => state.setCurrentPokemonId)
   const currentPokemonId = usePokemonDataStore((state) => state.currentPokemonId)
   
   // Determine bookmark system based on source (default to 'kid' if not specified)
   const bookmarkSource = params.source || 'kid'
-  const toggleBookmark = usePokemonDataStore((state) => 
-    bookmarkSource === 'parent' ? state.toggleParentBookmark : state.toggleBookmark
-  )
-  const bookmarkedPokemonIds = usePokemonDataStore((state) => 
-    bookmarkSource === 'parent' ? state.parentBookmarkedPokemonIds : state.bookmarkedPokemonIds
-  )
+  
+  // Select both bookmark functions and arrays separately (stable selectors)
+  const toggleBookmark = usePokemonGeneralStore((state) => state.toggleBookmark)
+  const toggleParentBookmark = usePokemonGeneralStore((state) => state.toggleParentBookmark)
+  const bookmarkedPokemonIds = usePokemonGeneralStore((state) => state.bookmarkedPokemonIds)
+  const parentBookmarkedPokemonIds = usePokemonGeneralStore(
+    (state) => state.parentBookmarkedPokemonIds)
+  
+  // Choose the correct bookmark function and array based on source
+  const activeToggleBookmark = bookmarkSource === 'parent' ? toggleParentBookmark : toggleBookmark
+  const activeBookmarkedPokemonIds = bookmarkSource === 'parent' ? parentBookmarkedPokemonIds : bookmarkedPokemonIds
   
   // Check if current Pokemon is bookmarked (reactive)
-  const isBookmarked = currentPokemon ? bookmarkedPokemonIds.includes(currentPokemon.id) : false
+  const isBookmarked = currentPokemon 
+    ? activeBookmarkedPokemonIds.includes(currentPokemon.id) 
+    : false
+  
+  // Show loading modal when loading
+  useLoadingModal(loading, 'Loading Pokémon...')
   
   // Clear error when component mounts or when navigating back
   useEffect(() => {
@@ -55,246 +71,164 @@ export default function PokemonDetailsScreen() {
   }, [currentPokemonId])
 
   // Handle evolution Pokemon press - update current Pokemon in same screen
-  const handleEvolutionPress = async (pokemonId: number) => {
-    console.log(`[EVOLUTION PRESS] Switching to Pokemon ID: ${pokemonId}`)
-    
+  const handleEvolutionPress = useCallback(async (pokemonId: number) => {
     // Don't do anything if it's already the current Pokemon
     if (pokemonId === currentPokemonId) {
-      console.log('[EVOLUTION PRESS] Already viewing this Pokemon')
       return
     }
     
     try {
-      // Fetch the Pokemon details (uses cache if available)
+      // Fetch the Pokemon details - automatically sets currentPokemonId
+      // This will trigger re-render and scroll to top via the useEffect that watches currentPokemonId
       await fetchPokemonDetail(pokemonId)
-      // Set as current Pokemon - this will trigger re-render and scroll to top
-      setCurrentPokemonId(pokemonId)
-      console.log(`[EVOLUTION PRESS] Successfully switched to Pokemon ID: ${pokemonId}`)
-    } catch (error) {
-      console.error('Failed to fetch evolution Pokemon details:', error)
+    } catch (_error) {
       // Error toast is already shown by the store
     }
-  }
+  }, [currentPokemonId, fetchPokemonDetail])
 
-  // Helper function to get sprite for evolution Pokemon
-  // Uses direct URL (no fetch needed) or cached data if available
-  const getEvolutionSprite = (pokemonId: number): string => {
-    const basicPokemon = getBasicPokemon(pokemonId)
-    
-    // If we have cached data, use it; otherwise use direct URL
-    if (basicPokemon) {
-      return getPokemonSprite(basicPokemon, pokemonId)
-    }
-    
-    // Direct URL - no fetch needed!
-    return getPokemonSpriteUrl(pokemonId)
-  }
-
-  // Debug: Log current Pokemon data
-  if (currentPokemon) {
-    console.log('[DETAIL SCREEN] Current Pokemon:', currentPokemon.name)
-    console.log('[DETAIL SCREEN] Evolution Chain:', JSON.stringify(currentPokemon.evolutionChain, null, 2))
-    
-    // Check store for each evolution
-    currentPokemon.evolutionChain?.forEach((evo, index) => {
-      const cachedPokemon = getBasicPokemon(evo.id)
-      console.log(`[DETAIL SCREEN] Evolution ${index + 1} - ${evo.name}:`, {
-        id: evo.id,
-        inStore: !!cachedPokemon,
-        sprite: cachedPokemon ? getEvolutionSprite(evo.id) : 'NOT IN STORE'
-      })
-    })
-  }
-
-  // Get the best available sprite
-  const getMainSprite = () => {
-    if (!currentPokemon) return null
-    
-    return (
-      currentPokemon.sprites.other?.['official-artwork']?.front_default ||
-      currentPokemon.sprites.other?.home?.front_default ||
-      currentPokemon.sprites.front_default
-    )
-  }
-
-  // Get type color for background
-  const getPrimaryTypeColor = () => {
+  // Get type color for background (memoized to avoid recalculation)
+  const primaryTypeColor = useMemo(() => {
     if (!currentPokemon || currentPokemon.types.length === 0) {
       return theme.background.val
     }
     const primaryType = currentPokemon.types[0].type.name
     return pokemonTypeColors[primaryType as keyof typeof pokemonTypeColors] || theme.background.val
-  }
+  }, [currentPokemon, theme.background.val])
 
-  // Loading state
-  if (loading) {
+  // Render Pokemon header (name and ID)
+  const renderPokemonHeader = useCallback(() => {
+    if (!currentPokemon) return null
+
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
-        <YStack flex={1} style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color={theme.color.val} />
-          <Text style={{ marginTop: 16 }} color={theme.text.val}>Loading Pokémon...</Text>
-        </YStack>
-      </SafeAreaView>
+      <XStack
+        width="100%"
+        justify="space-between"
+        items="center"
+        marginBottom={16}
+      >
+        <H2
+          color="white"
+          textTransform="capitalize"
+          fontSize={32}
+          fontWeight={800}
+        >
+          {currentPokemon.name}
+        </H2>
+        <Text
+          color="rgba(255, 255, 255, 0.9)"
+          fontSize={18}
+          fontWeight={600}
+        >
+          #{currentPokemon.id.toString().padStart(3, '0')}
+        </Text>
+      </XStack>
     )
-  }
+  }, [currentPokemon])
+
+  // Render header section with Pokemon image
+  const renderHeaderSection = useCallback(() => {
+    if (!currentPokemon) return null
+
+    // Use memoized primaryTypeColor from component scope
+    const headerPrimaryTypeColor = primaryTypeColor as GetThemeValueForKey<"backgroundColor">
+
+    const sprite =
+      currentPokemon.sprites.other?.['official-artwork']?.front_default ||
+      currentPokemon.sprites.other?.home?.front_default ||
+      currentPokemon.sprites.front_default
+    
+    return (
+      <YStack
+        bg={(theme.background.val || '#FFFFFF') as GetThemeValueForKey<"backgroundColor">}
+        paddingHorizontal={16}
+        paddingTop={60}
+        items="center"
+      >
+        {/* Background Circle */}
+        <XStack
+          position="absolute"
+          top={-650}
+          left={-300}
+          zIndex={0}
+          borderRadius={1000}
+          width={1000}
+          height={1000}
+          bg={headerPrimaryTypeColor}
+          opacity={0.9}
+        />
+        {/* Name and Number - Top */}
+        {renderPokemonHeader()}
+
+        {/* Large Pokemon Image */}
+        {sprite && (
+          <Image
+            source={{ uri: sprite }}
+            width={250}
+            height={250}
+            objectFit="contain"
+          />
+        )}
+        <BookmarkButton
+          isBookmarked={isBookmarked}
+          onPress={() => activeToggleBookmark(currentPokemon.id)}
+          size={40}
+          scaleIcon={1.5}
+          opacity={0.6}
+          position="absolute"
+          right={16}
+          bottom={200}
+        />
+      </YStack>
+    )
+  }, [
+    currentPokemon,
+    theme.background.val,
+    isBookmarked,
+    activeToggleBookmark,
+    renderPokemonHeader,
+    primaryTypeColor,
+  ])
 
   // Error state - Only show if there's an error AND no current Pokemon
   // This prevents the error screen from blocking the UI after a failed fetch
   if (error && !currentPokemon) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
-        <YStack flex={1} style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
-          <Text fontSize={20} style={{ color: theme.red10?.val || '#EF4444', textAlign: 'center' }}>
-            {error}
-          </Text>
-          <YStack style={{ height: 20 }} />
-          <Text 
-            fontSize={16} 
-            style={{ color: theme.blue10?.val || '#3B82F6', textDecorationLine: 'underline' }}
-            onPress={() => router.back()}
-          >
-            ← Go Back
-          </Text>
-        </YStack>
-      </SafeAreaView>
+      <ErrorScreen
+        error={error}
+        onGoBack={() => router.back()}
+      />
     )
   }
 
   // No data state
   if (!currentPokemon) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
-        <YStack flex={1} style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
-          <Text fontSize={20} style={{ textAlign: 'center' }} color={theme.text.val}>
-            No Pokémon data available
-          </Text>
-          <Text fontSize={14} style={{ color: theme.gray10?.val || '#737373', marginTop: 8 }}>
-            Please select a Pokémon first
-          </Text>
-        </YStack>
-      </SafeAreaView>
+      <EmptyStateScreen
+        title="No Pokémon data available"
+        subtitle="Please select a Pokémon first"
+      />
     )
   }
 
-  const mainSprite = getMainSprite()
-
-  console.log("mainSprite", mainSprite)
-
   return (
-    <YStack flex={1} style={{ backgroundColor: getPrimaryTypeColor() }}>
-      <XStack 
-        position="absolute" 
-        style={{ 
-            top: 48, 
-            right: 0,
-            paddingHorizontal: 16,
-            zIndex: 10000, 
-            justifyContent: 'space-between', 
-            alignItems: 'center', gap: 8,
-            width: '100%',
-      }}
+    <YStack flex={1} bg={primaryTypeColor as GetThemeValueForKey<"backgroundColor">}>
+      <ScrollView 
+        ref={scrollViewRef} 
+        style={{ flex: 1, backgroundColor: theme.background.val }}
       >
-        {/* Back Button */}
-        <Button
-          size={40}
-          circular
-          onPress={() => router.back()}
-          icon={ChevronLeft}
-          color={theme.text.val}
-          scaleIcon={1.7}
-          elevate
-          shadowColor={theme.shadowColor?.val as any || 'rgba(0, 0, 0, 0.1)'}
-          shadowOpacity={0.3}
-          shadowRadius={8}
-          opacity={0.6}
-        />
-
-        {/* Bookmark Button */}
-        <Button
-          size={40}
-          circular
-          onPress={() => toggleBookmark(currentPokemon.id)}
-          icon={isBookmarked ? BookmarkCheck : Bookmark}
-          color={theme.text.val}
-          scaleIcon={1.5}
-          elevate
-          shadowColor={theme.shadowColor?.val as any || 'rgba(0, 0, 0, 0.1)'}
-          shadowOpacity={0.3}
-          shadowRadius={8}
-          opacity={0.6}
-        />
-      </XStack>
-
-      <ScrollView ref={scrollViewRef} style={{ flex: 1, backgroundColor: theme.background.val }}>
         <SafeAreaView style={{ flex: 1 }}>
         <YStack flex={1}>
           {/* Header Section with Pokemon Image */}
-          <YStack
-            style={{
-              backgroundColor: theme.background.val,
-              paddingHorizontal: 16,
-              paddingTop: 60,
-              alignItems: 'center',
-            }}
-          >
-            {/* Background Circle */}
-            <XStack 
-             style={{
-              position: 'absolute',
-              top: -650,
-              left: -300,
-              zIndex: 0,
-              backgroundColor: getPrimaryTypeColor(),
-              borderRadius: 1000,
-              width: 1000,
-              height: 1000,
-             }}
-            />
-            {/* Name and Number - Top */}
-            <XStack 
-              width="100%" 
-              style={{ justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}
-            >
-              <H2 
-                color="white" 
-                textTransform="capitalize"
-                fontSize={32}
-                fontWeight="800"
-              >
-                {currentPokemon.name}
-              </H2>
-              <Text 
-                color="rgba(255, 255, 255, 0.9)" 
-                fontSize={18}
-                fontWeight="600"
-              >
-                #{currentPokemon.id.toString().padStart(3, '0')}
-              </Text>
-            </XStack>
-            
-            {/* Large Pokemon Image */}
-            {mainSprite && (
-              <Image
-                source={{ uri: mainSprite }}
-                style={{
-                  width: 250,
-                  height: 250,
-                }}
-                resizeMode="contain"
-              />
-            )}
-          </YStack>
+          {renderHeaderSection()}
 
           {/* Details Section - White Background */}
           <YStack 
-            style={{ 
-              backgroundColor: 'white',
-              marginTop: 0,
-              gap: 8,
-            }}
+            bg="white"
+            marginTop={0}
+            gap={8}
           >
             {/* Types */}
-            <XStack style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <XStack justify="center" items="center" width="100%">
               <TypeChips types={currentPokemon.types} size="medium" gap={8} />
             </XStack>
 
@@ -313,17 +247,16 @@ export default function PokemonDetailsScreen() {
                     evolutionChainTree={currentPokemon.evolutionChainTree}
                     currentPokemonId={currentPokemon.id}
                     onPokemonPress={handleEvolutionPress}
+                    getBasicPokemon={getBasicPokemon}
                   />
                 </YStack>
-              ) : (
-                <></>
-              )
+              ) : null
             )}
 
             {/* Base Stats */}
             <PokemonBaseStats
               stats={currentPokemon.stats}
-              primaryTypeColor={getPrimaryTypeColor()}
+              primaryTypeColor={primaryTypeColor}
             />
 
             {/* Abilities */}

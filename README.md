@@ -11,6 +11,17 @@ This Pokédex application provides two distinct user experiences:
 The app fetches data from the [PokéAPI](https://pokeapi.co/) and provides a smooth, performant experience with offline capabilities through persistent storage.
 The pokemons are stored locally while the user inspect them the first time
 
+
+## Demo videos
+
+https://github.com/user-attachments/assets/d66391bb-43b5-420c-a01a-b9fb4f0bcb96
+
+https://github.com/user-attachments/assets/c429cc41-910a-4363-b712-f032220afce0
+
+https://github.com/user-attachments/assets/7d2d91ef-3d8a-443e-8c8f-a1d07c74d227
+
+
+
 ## ✨ Features
 
 ### Parent Screen

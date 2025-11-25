@@ -1,11 +1,12 @@
 import { useToastController } from '@tamagui/toast'
 import AutocompleteDropdownList from 'app/components/AutocompleteDropdown'
 import BookmarkedPokemon from 'app/components/BookmarkedPokemon'
-import LoadingScreen from 'app/components/LoadingScreen'
 import RecentSelections from 'app/components/RecentSelections'
 import TypeGrid from 'app/components/TypeGrid'
+import { useLoadingModal } from 'app/hooks/useLoadingModal'
 import { usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { usePokemonGeneralStore } from 'app/store/pokemonGeneralStore'
+import { NAVIGATION_DELAY } from 'app/utils/modalConstants'
 import { setToastController } from 'app/utils/toast'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -37,6 +38,7 @@ export default function KidScreen() {
   
   // Local loading state for when fetching a new Pokemon
   const [isFetchingPokemon, setIsFetchingPokemon] = useState(false)
+  const [pendingNavigationId, setPendingNavigationId] = useState<number | null>(null)
   
   // Use general store for lists, bookmarks, and preferences
   const pokemonList = usePokemonGeneralStore((state) => state.pokemonList)
@@ -79,17 +81,26 @@ export default function KidScreen() {
         addRecentSelection(selectedPokemon)
       }
       
-      // Navigate to details screen
-      router.push({
-        pathname: '/screens/pokemonDetails',
-        params: { source: 'kid' }
-      })
+      // If loading modal was shown, wait for it to dismiss before navigating
+      if (!isCached) {
+        setPendingNavigationId(id)
+      } else {
+        // If cached, navigate immediately
+        router.push({
+          pathname: '/screens/pokemonDetails',
+          params: { source: 'kid' }
+        })
+      }
     } catch (_error) {
       // Error is already set in the store and toast is shown
       // Don't navigate or add to history if fetch failed
-    } finally {
-      // Always clear loading state
       setIsFetchingPokemon(false)
+      setPendingNavigationId(null)
+    } finally {
+      // Clear loading state (this will trigger modal dismissal)
+      if (!isCached) {
+        setIsFetchingPokemon(false)
+      }
     }
   }, [pokemonList, fetchPokemonDetail, addRecentSelection, router, toast, getPokemonDetail])
 
@@ -114,17 +125,24 @@ export default function KidScreen() {
     theme.background?.val || '#FFFFFF'
   ) as GetThemeValueForKey<"backgroundColor">, [theme.background?.val])
   
-  // Show loading screen when fetching a new Pokemon (only when we initiated the fetch)
-  if (isFetchingPokemon) {
-    return (
-      <LoadingScreen
-        message="Loading Pokemon..."
-        backgroundColor={theme.background?.val || '#FFFFFF'}
-        indicatorColor={theme.color?.val}
-        textColor={theme.text?.val}
-      />
-    )
-  }
+  // Show loading modal when fetching a new Pokemon
+  useLoadingModal(isFetchingPokemon, 'LOADING POKEMON')
+  
+  // Navigate to pokemon details after loading modal dismisses
+  useEffect(() => {
+    if (!isFetchingPokemon && pendingNavigationId !== null) {
+      // Wait a bit for modal to fully dismiss before navigating
+      const timer = setTimeout(() => {
+        router.push({
+          pathname: '/screens/pokemonDetails',
+          params: { source: 'kid' }
+        })
+        setPendingNavigationId(null)
+      }, NAVIGATION_DELAY)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [isFetchingPokemon, pendingNavigationId, router])
   
   return (
     <AutocompleteDropdownContextProvider headerOffset={insets.top}>

@@ -2,11 +2,11 @@ import BookmarkButton from 'app/components/BookmarkButton'
 import EmptyStateScreen from 'app/components/EmptyStateScreen'
 import ErrorScreen from 'app/components/ErrorScreen'
 import EvolutionChain from 'app/components/EvolutionChain'
-import LoadingScreen from 'app/components/LoadingScreen'
 import PokemonAbilities from 'app/components/PokemonAbilities'
 import PokemonAttributes from 'app/components/PokemonAttributes'
 import PokemonBaseStats from 'app/components/PokemonBaseStats'
 import TypeChips from 'app/components/TypeChips'
+import { useLoadingModal } from 'app/hooks/useLoadingModal'
 import { useCurrentPokemon } from 'app/store/hooks/usePokemonData'
 import { usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { usePokemonGeneralStore } from 'app/store/pokemonGeneralStore'
@@ -51,6 +51,9 @@ export default function PokemonDetailsScreen() {
   const isBookmarked = currentPokemon 
     ? activeBookmarkedPokemonIds.includes(currentPokemon.id) 
     : false
+  
+  // Show loading modal when loading
+  useLoadingModal(loading, 'Loading Pokémon...')
   
   // Clear error when component mounts or when navigating back
   useEffect(() => {
@@ -185,11 +188,6 @@ export default function PokemonDetailsScreen() {
     renderPokemonHeader,
     primaryTypeColor,
   ])
-
-  // Loading state
-  if (loading) {
-    return <LoadingScreen message="Loading Pokémon..." />
-  }
 
   // Error state - Only show if there's an error AND no current Pokemon
   // This prevents the error screen from blocking the UI after a failed fetch

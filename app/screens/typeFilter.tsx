@@ -1,11 +1,12 @@
 import { FlashList } from '@shopify/flash-list'
 import { useToastController } from '@tamagui/toast'
 import ErrorScreen from 'app/components/ErrorScreen'
-import LoadingScreen from 'app/components/LoadingScreen'
 import PokemonCard from 'app/components/PokemonCard'
+import { useLoadingModal } from 'app/hooks/useLoadingModal'
 import type { PokemonListItem } from 'app/services/types'
 import { usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { usePokemonGeneralStore } from 'app/store/pokemonGeneralStore'
+import { NAVIGATION_DELAY } from 'app/utils/modalConstants'
 import { setToastController } from 'app/utils/toast'
 import typeSymbolsIcons from 'app/utils/typeSymbolsIcons'
 import { pokemonTypeColors } from 'config/colors'
@@ -25,11 +26,15 @@ export default function TypeFilterScreen() {
   const [filteredList, setFilteredList] = useState<PokemonListItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  // Add these new states for Pokemon selection loading
+  const [isFetchingPokemon, setIsFetchingPokemon] = useState(false)
+  const [pendingNavigationId, setPendingNavigationId] = useState<number | null>(null)
   
   const typeId = params.typeId ? parseInt(params.typeId, 10) : null
   const typeName = params.typeName || 'Unknown'
 
   const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
+  const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
   const fetchPokemonByTypeAndGetDisplayData = usePokemonGeneralStore(
     (state) => state.fetchPokemonByTypeAndGetDisplayData
   )
@@ -42,6 +47,25 @@ export default function TypeFilterScreen() {
   const basicPokemonCache = usePokemonDataStore((state) => state.basicPokemonCache)
   
   const addRecentSelection = usePokemonGeneralStore((state) => state.addRecentSelection)
+  
+  // Show loading modal when loading (for initial list or individual Pokemon)
+  useLoadingModal(loading || isFetchingPokemon, 'LOADING POKEMON', [loading, isFetchingPokemon])
+  
+  // Navigate to pokemon details after loading modal dismisses
+  useEffect(() => {
+    if (!isFetchingPokemon && pendingNavigationId !== null) {
+      // Wait a bit for modal to fully dismiss before navigating
+      const timer = setTimeout(() => {
+        router.push({
+          pathname: '/screens/pokemonDetails',
+          params: { source: 'kid' }
+        })
+        setPendingNavigationId(null)
+      }, NAVIGATION_DELAY)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [isFetchingPokemon, pendingNavigationId, router])
   
   // Set toast controller
   useEffect(() => {
@@ -91,18 +115,40 @@ export default function TypeFilterScreen() {
       return
     }
     
+    // Check if Pokemon is already cached
+    const isCached = getPokemonDetail(id) !== undefined
+
+    // Only show loading if Pokemon is not cached (needs to be fetched)
+    if (!isCached) {
+      setIsFetchingPokemon(true)
+    }
+    
     try {
       // Fetch Pokemon details - automatically sets currentPokemonId
       await fetchPokemonDetail(id)
       addRecentSelection(selectedPokemon)
-      router.push({
-        pathname: '/screens/pokemonDetails',
-        params: { source: 'kid' }
-      })
+      
+      // If loading modal was shown, wait for it to dismiss before navigating
+      if (!isCached) {
+        setPendingNavigationId(id)
+      } else {
+        // If cached, navigate immediately
+        router.push({
+          pathname: '/screens/pokemonDetails',
+          params: { source: 'kid' }
+        })
+      }
     } catch (_error) {
       // Error is handled by the store
+      setIsFetchingPokemon(false)
+      setPendingNavigationId(null)
+    } finally {
+      // Clear loading state (this will trigger modal dismissal)
+      if (!isCached) {
+        setIsFetchingPokemon(false)
+      }
     }
-  }, [filteredList, fetchPokemonDetail, addRecentSelection, router])
+  }, [filteredList, fetchPokemonDetail, addRecentSelection, router, getPokemonDetail])
   
   // Get type color (memoized)
   const typeColor = useMemo(() => 
@@ -115,17 +161,6 @@ export default function TypeFilterScreen() {
     typeSymbolsIcons[typeName.toLowerCase() as keyof typeof typeSymbolsIcons],
     [typeName]
   )
-  
-  if (loading) {
-    return (
-      <LoadingScreen
-        message="Loading Pokemon..."
-        backgroundColor={typeColor}
-        indicatorColor="white"
-        textColor="white"
-      />
-    )
-  }
   
   if (error) {
     return (

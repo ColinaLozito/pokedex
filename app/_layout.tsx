@@ -141,6 +141,22 @@ function RootLayoutNav() {
             headerTransparent: true,
           }}
         />
+        <Stack.Screen
+          name="modals/roulette"
+          options={{
+            presentation: 'transparentModal',
+            headerShown: false,
+            animation: 'fade',
+          }}
+        />
+        <Stack.Screen
+          name="modals/loading"
+          options={{
+            presentation: 'transparentModal',
+            headerShown: false,
+            animation: 'fade',
+          }}
+        />
       </Stack>
     </ThemeProvider>
   )

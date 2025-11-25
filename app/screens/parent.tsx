@@ -1,16 +1,17 @@
 import { useToastController } from '@tamagui/toast'
 import BookmarkButton from 'app/components/BookmarkButton'
 import BookmarkedPokemon from 'app/components/BookmarkedPokemon'
-import LoadingScreen from 'app/components/LoadingScreen'
-import NumberRoulette from 'app/components/NumberRoulette'
 import PokemonCard from 'app/components/PokemonCard'
+import { useLoadingModal } from 'app/hooks/useLoadingModal'
+import { useModal } from 'app/hooks/useModal'
 import { useDailyPokemonStore } from 'app/store/dailyPokemonStore'
 import { usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { usePokemonGeneralStore } from 'app/store/pokemonGeneralStore'
+import { generateRandomPokemonId } from 'app/utils/dateUtils'
 import { getPokemonSprite, getPokemonSpriteUrl } from 'app/utils/pokemonSprites'
 import { setToastController } from 'app/utils/toast'
 import { useRouter } from 'expo-router'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ImageBackground, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button, Card, H2, Text, YStack, useTheme } from 'tamagui'
@@ -24,8 +25,14 @@ export default function ParentScreen() {
   const [isSpinning, setIsSpinning] = useState(false)
   const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
-  const [showRoulette, setShowRoulette] = useState(false)
   const [initialLoad, setInitialLoad] = useState(true)
+  const [rouletteSession, setRouletteSession] = useState(0)
+  const { showRoulette, dismiss } = useModal()
+  // Keep previous Pokemon data to show while loading new one
+  const previousPokemonRef = useRef<ReturnType<typeof getPokemonDetail> | null>(null)
+  
+  // Show loading modal when fetching Pokemon
+  useLoadingModal(loading && !!selectedPokemonId, 'LOADING POKEMON', [selectedPokemonId])
   
   // Use individual selectors to avoid infinite loops (functions are stable)
   const getDailyPokemon = useDailyPokemonStore((state) => state.getDailyPokemon)
@@ -91,16 +98,25 @@ export default function ParentScreen() {
     } finally {
       setLoading(false)
       setIsSpinning(false)
-      setShowRoulette(false)
+      dismiss()
     }
-  }, [fetchPokemonDetail, setDailyPokemonId, toast])
+  }, [fetchPokemonDetail, setDailyPokemonId, toast, dismiss])
   
   // Start roulette
   const handleStartRoulette = useCallback(() => {
-    // Don't clear selectedPokemonId - keep current Pokemon visible during spin
-    setShowRoulette(true)
+    const newPokemonId = generateRandomPokemonId()
+    const nextSession = rouletteSession + 1
+    setRouletteSession(nextSession)
     setIsSpinning(true)
-  }, [])
+    showRoulette({
+      sessionKey: nextSession,
+      finalNumber: newPokemonId,
+      duration: 3000,
+      min: 1,
+      max: 1000,
+      onComplete: handleRouletteComplete,
+    })
+  }, [rouletteSession, showRoulette, handleRouletteComplete])
   
   
   // Handle remove (not used, but required by PokemonCard)
@@ -155,14 +171,24 @@ export default function ParentScreen() {
   const currentPokemon = selectedPokemonId ? getPokemonDetail(selectedPokemonId) : null
   const rerollCount = getRerollCount()
   
+  // Update previous Pokemon ref when currentPokemon changes
+  useEffect(() => {
+    if (currentPokemon) {
+      previousPokemonRef.current = currentPokemon
+    }
+  }, [currentPokemon])
+  
+  // Use current Pokemon if available, otherwise use previous one (for smooth transition)
+  const displayPokemon = currentPokemon || previousPokemonRef.current
+  
   // Get sprite (memoized to avoid recalculation)
   const sprite = useMemo(() => {
-    if (!currentPokemon || !selectedPokemonId) return null
+    if (!displayPokemon || !selectedPokemonId) return null
     const basicData = getBasicPokemon(selectedPokemonId)
-    return getPokemonSprite(currentPokemon, selectedPokemonId) || 
+    return getPokemonSprite(displayPokemon, selectedPokemonId) || 
            (basicData ? getPokemonSprite(basicData, selectedPokemonId) : 
             getPokemonSpriteUrl(selectedPokemonId))
-  }, [currentPokemon, selectedPokemonId, getBasicPokemon])
+  }, [displayPokemon, selectedPokemonId, getBasicPokemon])
   
   // Make bookmark state reactive by subscribing to the array directly (memoized)
   const bookmarked = useMemo(() =>
@@ -172,9 +198,13 @@ export default function ParentScreen() {
     [selectedPokemonId, parentBookmarkedPokemonIds]
   )
 
-  // Render Pokemon Card section
+  // Render Pokemon Card section - always render container when selectedPokemonId exists
   const renderPokemonCard = useCallback(() => {
-    if (!currentPokemon || !selectedPokemonId) return null
+    // Always render container if selectedPokemonId exists, even if Pokemon is loading
+    if (!selectedPokemonId) return null
+    
+    // If no Pokemon data available yet (first load), don't render
+    if (!displayPokemon) return null
 
     return (
       <Card elevate>
@@ -202,12 +232,12 @@ export default function ParentScreen() {
             >
               <YStack width='70%'>
                 <PokemonCard
-                  id={currentPokemon.id}
-                  name={currentPokemon.name}
+                  id={displayPokemon.id}
+                  name={displayPokemon.name}
                   sprite={sprite}
                   variant="recent"
-                  primaryType={currentPokemon.types[0]?.type.name}
-                  types={currentPokemon.types}
+                  primaryType={displayPokemon.types?.[0]?.type.name || 'normal'}
+                  types={displayPokemon.types || []}
                   onRemove={handleRemove}
                   onSelect={handlePokemonPress}
                   displayRemoveButton={false}
@@ -228,8 +258,8 @@ export default function ParentScreen() {
       </Card>
     )
   }, [
-    currentPokemon,
     selectedPokemonId,
+    displayPokemon,
     sprite,
     bookmarked,
     handleRemove,
@@ -238,39 +268,24 @@ export default function ParentScreen() {
   ])
 
   // Show full-screen loading during initial load
+  useLoadingModal(initialLoad && !selectedPokemonId, 'LOADING', [selectedPokemonId])
+
   if (initialLoad && !selectedPokemonId) {
-    return <LoadingScreen message="Loading..." />
+    return null
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
-      <ScrollView>
-        <YStack flex={1} gap={16} p={16} pt={48}>
+    <>
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
+        <ScrollView>
+          <YStack flex={1} gap={16} p={16} pt={48}>
           {/* Header */}
           <H2 mb={16} color={theme.text.val}>
             Pokemon of the day
           </H2>
           
-          {/* Number Roulette Card - Show when spinning */}
-          {isSpinning && showRoulette && (
-            <Card elevate bordered>
-              <Card.Header padded>
-                <YStack width="100%" minH={150}>
-                  <NumberRoulette
-                    key={`roulette-${isSpinning}-${showRoulette}`}
-                    onComplete={handleRouletteComplete}
-                    duration={3000}
-                    min={1}
-                    max={1000}
-                    start={true}
-                  />
-                </YStack>
-              </Card.Header>
-            </Card>
-          )}
-          
-          {/* Pokemon Card - Show when Pokemon is selected */}
-          {selectedPokemonId && currentPokemon && renderPokemonCard()}
+          {/* Pokemon Card - Always show container when Pokemon is selected */}
+          {selectedPokemonId && renderPokemonCard()}
           
           {/* Start Roulette Button - Show only when no Pokemon selected and initial load is complete */}
           {!selectedPokemonId && !isSpinning && !initialLoad && renderStartRouletteCard()}
@@ -298,10 +313,6 @@ export default function ParentScreen() {
             </Text>
           )}
           
-          {loading && selectedPokemonId && (
-            <LoadingScreen message="Loading Pokemon..." />
-          )}
-          
           {/* Parent Bookmarked Pokemon Section */}
           <BookmarkedPokemon
             bookmarkedPokemonIds={parentBookmarkedPokemonIds}
@@ -311,8 +322,9 @@ export default function ParentScreen() {
             onSelect={handlePokemonPress}
             bookmarkSource="parent"
           />
-    </YStack>
-      </ScrollView>
-    </SafeAreaView>
+          </YStack>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   )
 }

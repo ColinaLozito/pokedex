@@ -7,6 +7,7 @@ interface NumberRouletteProps {
   min?: number // Minimum number (default 1)
   max?: number // Maximum number (default 1000)
   start?: boolean // Whether to start spinning
+  finalNumber?: number // Target number to stop at (optional, defaults to random)
 }
 
 export default function NumberRoulette({ 
@@ -14,7 +15,8 @@ export default function NumberRoulette({
   duration = 3000,
   min = 1,
   max = 1000,
-  start = true
+  start = true,
+  finalNumber,
 }: NumberRouletteProps) {
   const theme = useTheme()
   const [currentNumber, setCurrentNumber] = useState<number>(min)
@@ -23,11 +25,16 @@ export default function NumberRoulette({
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const startTimeRef = useRef<number | null>(null)
   const isSpinningRef = useRef(false)
+  const finalNumberRef = useRef<number | undefined>(finalNumber)
   
   // Update ref when callback changes
   useEffect(() => {
     onCompleteRef.current = onComplete
   }, [onComplete])
+  
+  useEffect(() => {
+    finalNumberRef.current = finalNumber
+  }, [finalNumber])
   
   useEffect(() => {
     if (!start) {
@@ -58,6 +65,10 @@ export default function NumberRoulette({
       setIsSpinning(true)
       setCurrentNumber(min)
       startTimeRef.current = Date.now()
+      const targetNumber =
+        finalNumberRef.current !== undefined
+          ? finalNumberRef.current
+          : Math.floor(Math.random() * (max - min + 1)) + min
       
       const spin = () => {
         if (!startTimeRef.current || !isSpinningRef.current) return
@@ -66,12 +77,16 @@ export default function NumberRoulette({
         const progress = Math.min(elapsed / duration, 1)
         
         if (progress >= 1) {
-          // Animation complete - select final random number
-          const finalNumber = Math.floor(Math.random() * (max - min + 1)) + min
-          setCurrentNumber(finalNumber)
+          // Animation complete - show provided final number (or generated fallback)
+          setCurrentNumber(targetNumber)
           isSpinningRef.current = false
           setIsSpinning(false)
-          onCompleteRef.current(finalNumber)
+          
+          // Add 1 second delay after final number is shown before calling onComplete
+          timeoutRef.current = setTimeout(() => {
+            onCompleteRef.current(targetNumber)
+            timeoutRef.current = null
+          }, 1000) // 1 second delay
         } else {
           // During animation - show random numbers
           // Slow down as we approach the end (ease-out effect)

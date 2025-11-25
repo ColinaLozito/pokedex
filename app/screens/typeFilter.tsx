@@ -1,52 +1,50 @@
 import { FlashList } from '@shopify/flash-list'
-import { ChevronLeft } from '@tamagui/lucide-icons'
 import { useToastController } from '@tamagui/toast'
+import ErrorScreen from 'app/components/ErrorScreen'
+import LoadingScreen from 'app/components/LoadingScreen'
 import PokemonCard from 'app/components/PokemonCard'
-import { getPokemonSprite, getPokemonSpriteUrl } from 'app/helpers/pokemonSprites'
-import typeSymbolsIcons from 'app/helpers/typeSymbolsIcons'
-import { fetchPokemonByType, PokemonListItem } from 'app/services/api'
-import { setToastController, usePokemonDataStore } from 'app/store/pokemonDataStore'
+import type { PokemonListItem } from 'app/services/types'
+import { usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { usePokemonStore } from 'app/store/pokemonStore'
+import { setToastController } from 'app/utils/toast'
+import typeSymbolsIcons from 'app/utils/typeSymbolsIcons'
 import { pokemonTypeColors } from 'config/colors'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
-import { ActivityIndicator } from 'react-native'
+import { useEffect, useMemo, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Button, H2, Image, Text, useTheme, XStack, YStack } from 'tamagui'
+import { H2, Image, XStack, YStack } from 'tamagui'
 
 export default function TypeFilterScreen() {
   const router = useRouter()
   const toast = useToastController()
   const params = useLocalSearchParams<{ typeId: string; typeName: string }>()
   
-  const [pokemonList, setPokemonList] = useState<PokemonListItem[]>([])
+  const [filteredList, setFilteredList] = useState<PokemonListItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
   const typeId = params.typeId ? parseInt(params.typeId, 10) : null
   const typeName = params.typeName || 'Unknown'
 
-  const {
-    fetchPokemonDetail,
-    setCurrentPokemonId,
-    getBasicPokemon,
-    getPokemonDetail,
-  } = usePokemonDataStore((state) => state)
+  const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
+  const fetchPokemonByTypeAndGetDisplayData = usePokemonDataStore(
+    (state) => state.fetchPokemonByTypeAndGetDisplayData
+  )
+  const getPokemonDisplayData = usePokemonDataStore((state) => state.getPokemonDisplayData)
 
   // Subscribe to store changes to trigger re-renders when Pokemon data is updated
   // This ensures cards update when returning from pokemonDetails screen
-  usePokemonDataStore((state) => state.pokemonDetails)
-  usePokemonDataStore((state) => state.basicPokemonCache)
+  const pokemonDetails = usePokemonDataStore((state) => state.pokemonDetails)
+  const basicPokemonCache = usePokemonDataStore((state) => state.basicPokemonCache)
   
   const addRecentSelection = usePokemonStore((state) => state.addRecentSelection)
-  const theme = useTheme()
   
   // Set toast controller
   useEffect(() => {
     setToastController(toast)
   }, [toast])
   
-  // Fetch Pokemon by type
+  // Fetch Pokemon by type (just the filtered list)
   useEffect(() => {
     const loadPokemon = async () => {
       if (!typeId) {
@@ -58,8 +56,9 @@ export default function TypeFilterScreen() {
       try {
         setLoading(true)
         setError(null)
-        const pokemon = await fetchPokemonByType(typeId)
-        setPokemonList(pokemon)
+        const data = await fetchPokemonByTypeAndGetDisplayData(typeId, typeName)
+        // Store the filtered list for reactivity
+        setFilteredList(data.map((item) => ({ id: item.id, name: item.name })))
       } catch (err) {
         console.error('Failed to fetch Pokemon by type:', err)
         setError('Failed to load Pokemon')
@@ -70,20 +69,29 @@ export default function TypeFilterScreen() {
     }
     
     loadPokemon()
-  }, [typeId, toast])
+  }, [typeId, typeName, fetchPokemonByTypeAndGetDisplayData, toast])
+  
+  // Re-compute display data reactively when store cache updates
+  // Note: We include pokemonDetails and basicPokemonCache to trigger re-computation
+  // when store updates, even though getPokemonDisplayData reads from store directly
+  const pokemonData = useMemo(() => {
+    if (filteredList.length === 0) return []
+    return getPokemonDisplayData(filteredList, typeName)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredList, typeName, getPokemonDisplayData, pokemonDetails, basicPokemonCache])
   
   // Handle Pokemon card selection
   const handlePokemonSelect = async (id: number) => {
-    const selectedPokemon = pokemonList.find((p) => p.id === id)
+    const selectedPokemon = filteredList.find((p) => p.id === id)
     
     if (!selectedPokemon) {
       return
     }
     
     try {
+      // Fetch Pokemon details - automatically sets currentPokemonId
       await fetchPokemonDetail(id)
       addRecentSelection(selectedPokemon)
-      setCurrentPokemonId(id)
       router.push({
         pathname: '/screens/pokemonDetails',
         params: { source: 'kid' }
@@ -93,61 +101,32 @@ export default function TypeFilterScreen() {
     }
   }
   
-  // Handle remove (not used in this context, but required by PokemonCard)
-  const handleRemove = () => {
-    // No-op for type filter screen
-  }
-  
   // Get type color
   const typeColor = pokemonTypeColors[typeName.toLowerCase() as keyof typeof pokemonTypeColors] || '#A8A77A'
   
   // Get type symbol icon
   const typeIcon = typeSymbolsIcons[typeName.toLowerCase() as keyof typeof typeSymbolsIcons]
   
-  // Prepare Pokemon data for cards - this will re-compute when store updates
-  const pokemonData = pokemonList.map((pokemon) => {
-    const fullData = getPokemonDetail(pokemon.id)
-    const basicData = getBasicPokemon(pokemon.id)
-    const types = fullData?.types || basicData?.types || undefined
-    const primaryType = types?.[0]?.type?.name || typeName.toLowerCase()
-    const sprite = fullData 
-      ? getPokemonSprite(fullData, pokemon.id)
-      : (basicData 
-        ? getPokemonSprite(basicData, pokemon.id)
-        : getPokemonSpriteUrl(pokemon.id))
-    
-    return {
-      id: pokemon.id,
-      name: pokemon.name,
-      sprite,
-      primaryType,
-      types
-    }
-  })
-  
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: typeColor }}>
-        <YStack flex={1} style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="white" />
-          <Text color="white" style={{ marginTop: 16 }}>Loading Pokemon...</Text>
-        </YStack>
-      </SafeAreaView>
+      <LoadingScreen
+        message="Loading Pokemon..."
+        backgroundColor={typeColor}
+        indicatorColor="white"
+        textColor="white"
+      />
     )
   }
   
   if (error) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: typeColor }}>
-        <YStack flex={1} style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
-          <Text fontSize={28} color="white" style={{ textAlign: 'center' }}>
-            {error}
-          </Text>
-          <Button style={{ marginTop: 16 }} onPress={() => router.back()}>
-            Go Back
-          </Button>
-        </YStack>
-      </SafeAreaView>
+      <ErrorScreen
+        error={error}
+        onGoBack={() => router.back()}
+        backgroundColor={typeColor}
+        errorColor="white"
+        goBackColor="white"
+      />
     )
   }
   
@@ -156,28 +135,12 @@ export default function TypeFilterScreen() {
       <YStack flex={1}>
         {/* Header */}
         <XStack 
-          style={{ 
-            paddingHorizontal: 16, 
-            paddingBottom: 12,
-            alignItems: 'center',
-            gap: 12,
-          }}
+          gap={12}
+          items="center"
+          px={16}
+          pb={12}
         >
-          <Button
-            size={40}
-            circular
-            onPress={() => router.back()}
-            icon={ChevronLeft}
-            color={theme.text.val}
-            scaleIcon={1.7}
-            elevate
-            shadowColor={theme.shadowColor?.val as any || 'rgba(0, 0, 0, 0.1)'}
-            shadowOpacity={0.3}
-            shadowRadius={8}
-            opacity={0.6}
-          />
-          
-          <XStack style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <XStack flex={1} items="center" justify="center">
             <H2 
               color="white" 
               textTransform="capitalize"
@@ -188,12 +151,11 @@ export default function TypeFilterScreen() {
             {typeIcon && (
               <Image
                 source={typeIcon}
-                style={{
-                  position: 'absolute',
-                  right: -100,
-                  width: 200,
-                  height: 200,
-                }}
+                position="absolute"
+                right={-90}
+                width={200}
+                height={200}
+                zIndex={-1}
                 objectFit="contain"
               />
             )}
@@ -203,14 +165,12 @@ export default function TypeFilterScreen() {
         {/* Pokemon Grid */}
         <YStack 
           flex={1} 
-          style={{ 
-            backgroundColor: 'white',
-            borderTopLeftRadius: 24,
-            borderTopRightRadius: 24,
-            marginTop: 8,
-            paddingTop: 16,
-            paddingHorizontal: 8,
-          }}
+            bg="white"
+            borderTopLeftRadius={24}
+            borderTopRightRadius={24}
+            mt={8}
+            pt={16}
+            px={8}
         >
           <FlashList
             data={pokemonData}
@@ -224,7 +184,7 @@ export default function TypeFilterScreen() {
                   variant="recent"
                   primaryType={item.primaryType}
                   types={item.types}
-                  onRemove={handleRemove}
+                  onRemove={() => {}}
                   onSelect={handlePokemonSelect}
                   displayRemoveButton={false}
                 />

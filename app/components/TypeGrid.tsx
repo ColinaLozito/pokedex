@@ -1,4 +1,4 @@
-import typeSymbolsIcons from 'app/helpers/typeSymbolsIcons'
+import typeSymbolsIcons from 'app/utils/typeSymbolsIcons'
 import { pokemonTypeColors } from 'config/colors'
 import { Card, GetThemeValueForKey, H4, Image, Text, useTheme, XStack, YStack } from 'tamagui'
 

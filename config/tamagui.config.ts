@@ -1,7 +1,7 @@
 import { defaultConfig } from '@tamagui/config/v4'
 import { createTamagui, createTokens } from 'tamagui'
-import { montserrat } from './fonts'
 import { baseColors, pokemonTypeColors } from './colors'
+import { montserrat } from './fonts'
 
 const defaultTokens = defaultConfig.tokens
 
@@ -20,6 +20,10 @@ export const config = createTamagui({
     ...defaultConfig.fonts,
     body: montserrat,
     heading: montserrat,
+  },
+  settings: {
+    ...defaultConfig.settings,
+    onlyAllowShorthands:false
   },
 })
 

@@ -1,21 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import type { CombinedPokemonDetail, PokemonDetail, PokemonListItem } from '../services/api'
-import { fetchCompletePokemonDetail, fetchPokemonById, fetchPokemonList } from '../services/api'
-
-// Toast controller will be set from the app
-let toastController: any = null
-
-export const setToastController = (controller: any) => {
-  toastController = controller
-}
-
-const showToast = (title: string, message?: string) => {
-  if (toastController) {
-    toastController.show(title, { message })
-  }
-}
+import {
+  fetchCompletePokemonDetail,
+  fetchPokemonById,
+  fetchPokemonByType,
+  fetchPokemonList,
+} from '../services/api'
+import type { CombinedPokemonDetail, PokemonDetail, PokemonListItem } from '../services/types'
+import { getPokemonDisplayData } from '../utils/pokemonDisplayUtils'
+import { showToast } from '../utils/toast'
 
 interface PokemonDataState {
   // State
@@ -28,12 +22,6 @@ interface PokemonDataState {
   loading: boolean
   error: string | null
   fetchingIds: Set<number> // Track which IDs are currently being fetched to prevent duplicates
-  
-  // Parent screen state
-  dailyPokemonId: number | null // Daily random Pokemon ID
-  dailyPokemonDate: string | null // Date string (YYYY-MM-DD) when daily Pokemon was set
-  rerollCount: number // Number of rerolls today
-  rerollDate: string | null // Date string (YYYY-MM-DD) for reroll tracking
 
   // Actions
   fetchPokemonListAction: () => Promise<void>
@@ -51,16 +39,27 @@ interface PokemonDataState {
   isParentBookmarked: (id: number) => boolean
   getParentBookmarkedPokemon: () => CombinedPokemonDetail[]
   
-  // Parent screen actions
-  getDailyPokemon: () => Promise<number> // Get or generate daily Pokemon ID
-  setDailyPokemonId: (id: number) => void // Set daily Pokemon ID (from roulette)
-  rerollDailyPokemon: () => Promise<number> // Reroll to new random Pokemon (legacy)
-  getRerollCount: () => number // Get today's reroll count
-  
   // Helper methods
-  getTodayDateString: () => string // Get today's date string (YYYY-MM-DD)
-  isNewDay: () => boolean // Check if it's a new day
-  generateRandomPokemonId: () => number // Generate a random Pokemon ID (1-1000)
+  getPokemonDisplayData: (
+    pokemonList: PokemonListItem[],
+    fallbackType?: string
+  ) => Array<{
+    id: number
+    name: string
+    sprite: string | null
+    primaryType: string
+    types?: Array<{ slot: number; type: { name: string; url: string } }>
+  }> // Transform Pokemon list to display-ready data with sprites and types
+  fetchPokemonByTypeAndGetDisplayData: (
+    typeId: number,
+    typeName: string
+  ) => Promise<Array<{
+    id: number
+    name: string
+    sprite: string | null
+    primaryType: string
+    types?: Array<{ slot: number; type: { name: string; url: string } }>
+  }>> // Fetch Pokemon by type and return display-ready data
 }
 
 export const usePokemonDataStore = create<PokemonDataState>()(
@@ -76,10 +75,6 @@ export const usePokemonDataStore = create<PokemonDataState>()(
       loading: false,
       error: null,
       fetchingIds: new Set(),
-      dailyPokemonId: null,
-      dailyPokemonDate: null,
-      rerollCount: 0,
-      rerollDate: null,
 
       /**
        * Fetch the complete Pokemon list (lightweight)
@@ -117,6 +112,10 @@ export const usePokemonDataStore = create<PokemonDataState>()(
 
         // Check if already cached
         if (state.pokemonDetails[id]) {
+          // Also set as current Pokemon if not already set
+          if (state.currentPokemonId !== id) {
+            set({ currentPokemonId: id })
+          }
           return state.pokemonDetails[id]
         }
 
@@ -163,12 +162,13 @@ export const usePokemonDataStore = create<PokemonDataState>()(
             cacheEvolutionPokemon
           )
           
-          // Store in cache
+          // Store in cache and set as current Pokemon
           set(state => ({
             pokemonDetails: {
               ...state.pokemonDetails,
               [id]: detail
             },
+            currentPokemonId: id,
             loading: false,
             fetchingIds: new Set([...state.fetchingIds].filter(fId => fId !== id))
           }))
@@ -325,115 +325,40 @@ export const usePokemonDataStore = create<PokemonDataState>()(
       },
       
       /**
-       * Helper: Get today's date string (YYYY-MM-DD)
+       * Transform Pokemon list to display-ready data with sprites and types
        */
-      getTodayDateString: (): string => {
-        const now = new Date()
-        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-      },
-      
-      /**
-       * Helper: Check if it's a new day
-       */
-      isNewDay: (): boolean => {
+      getPokemonDisplayData: (
+        pokemonList: PokemonListItem[],
+        fallbackType?: string
+      ) => {
         const state = get()
-        const today = state.getTodayDateString()
-        return state.dailyPokemonDate !== today
+        return getPokemonDisplayData(
+          pokemonList,
+          state.pokemonDetails,
+          state.basicPokemonCache,
+          fallbackType
+        )
       },
-      
+
       /**
-       * Generate random Pokemon ID (1-1000)
+       * Fetch Pokemon by type and return display-ready data
+       * This combines fetching and enriching in a single operation
        */
-      generateRandomPokemonId: (): number => {
-        return Math.floor(Math.random() * 1000) + 1
-      },
-      
-      /**
-       * Get or generate daily Pokemon ID
-       * Resets if it's a new day
-       */
-      getDailyPokemon: async (): Promise<number> => {
+      fetchPokemonByTypeAndGetDisplayData: async (
+        typeId: number,
+        typeName: string
+      ) => {
+        // Fetch the filtered list from API
+        const filteredList = await fetchPokemonByType(typeId)
         const state = get()
-        const today = state.getTodayDateString()
         
-        // Check if we need to reset (new day)
-        if (state.isNewDay()) {
-          const newId = state.generateRandomPokemonId()
-          set({
-            dailyPokemonId: newId,
-            dailyPokemonDate: today,
-            rerollCount: 0,
-            rerollDate: today
-          })
-          return newId
-        }
-        
-        // If we have a daily Pokemon for today, return it
-        if (state.dailyPokemonId && state.dailyPokemonDate === today) {
-          return state.dailyPokemonId
-        }
-        
-        // Generate new daily Pokemon
-        const newId = state.generateRandomPokemonId()
-        set({
-          dailyPokemonId: newId,
-          dailyPokemonDate: today,
-          rerollCount: 0,
-          rerollDate: today
-        })
-        return newId
-      },
-      
-      /**
-       * Set daily Pokemon ID (used when roulette completes)
-       * Increments reroll count if same day
-       */
-      setDailyPokemonId: (id: number) => {
-        const state = get()
-        const today = state.getTodayDateString()
-        
-        // Reset reroll count if new day
-        if (state.rerollDate !== today) {
-          set({
-            rerollCount: 1,
-            rerollDate: today,
-            dailyPokemonId: id,
-            dailyPokemonDate: today
-          })
-        } else {
-          // Increment reroll count
-          set({
-            rerollCount: state.rerollCount + 1,
-            dailyPokemonId: id,
-            dailyPokemonDate: today
-          })
-        }
-      },
-      
-      /**
-       * Reroll to a new random Pokemon (legacy - kept for compatibility)
-       * Increments reroll count if same day
-       */
-      rerollDailyPokemon: async (): Promise<number> => {
-        const state = get()
-        const newId = state.generateRandomPokemonId()
-        state.setDailyPokemonId(newId)
-        return newId
-      },
-      
-      /**
-       * Get today's reroll count
-       */
-      getRerollCount: (): number => {
-        const state = get()
-        const today = state.getTodayDateString()
-        
-        // Reset if new day
-        if (state.rerollDate !== today) {
-          return 0
-        }
-        
-        return state.rerollCount
+        // Enrich with cached data and return
+        return getPokemonDisplayData(
+          filteredList,
+          state.pokemonDetails,
+          state.basicPokemonCache,
+          typeName
+        )
       },
     }),
     {
@@ -447,46 +372,8 @@ export const usePokemonDataStore = create<PokemonDataState>()(
         currentPokemonId: state.currentPokemonId,
         bookmarkedPokemonIds: state.bookmarkedPokemonIds,
         parentBookmarkedPokemonIds: state.parentBookmarkedPokemonIds,
-        dailyPokemonId: state.dailyPokemonId,
-        dailyPokemonDate: state.dailyPokemonDate,
-        rerollCount: state.rerollCount,
-        rerollDate: state.rerollDate
       })
     }
   )
 )
-
-/**
- * Hook to get Pokemon list
- */
-export const usePokemonList = () => {
-  const list = usePokemonDataStore(state => state.pokemonList)
-  const fetchList = usePokemonDataStore(state => state.fetchPokemonListAction)
-  return { list, fetchList }
-}
-
-/**
- * Hook to get Pokemon detail with auto-fetch
- */
-export const usePokemonDetail = (id: number | null) => {
-  const detail = usePokemonDataStore(state => 
-    id !== null ? state.pokemonDetails[id] : undefined
-  )
-  const fetchDetail = usePokemonDataStore(state => state.fetchPokemonDetail)
-  const loading = usePokemonDataStore(state => state.loading)
-  const error = usePokemonDataStore(state => state.error)
-  
-  return { detail, fetchDetail, loading, error }
-}
-
-/**
- * Hook to get current Pokemon
- */
-export const useCurrentPokemon = () => {
-  const currentId = usePokemonDataStore(state => state.currentPokemonId)
-  const currentPokemon = usePokemonDataStore(state => state.getCurrentPokemon())
-  const setCurrentId = usePokemonDataStore(state => state.setCurrentPokemonId)
-  
-  return { currentId, currentPokemon, setCurrentId }
-}
 

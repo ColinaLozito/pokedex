@@ -1,8 +1,7 @@
 import EvolutionSpriteContainer from 'app/components/EvolutionSpriteContainer'
-import { buildEvolutionTree, collectEvolutionVariants, isBranchingEvolution } from 'app/helpers/evolutionTree'
-import { getPokemonSprite, getPokemonSpriteUrl } from 'app/helpers/pokemonSprites'
-import { EvolutionChainLink, PokemonDetail } from 'app/services/api'
-import { EvolutionNode } from 'app/store/pokemonDetailsStore'
+import type { EvolutionChainLink, PokemonDetail } from 'app/services/types'
+import { buildEvolutionTree, collectEvolutionVariants, isBranchingEvolution, type EvolutionNode } from 'app/utils/evolutionTree'
+import { getPokemonSprite, getPokemonSpriteUrl } from 'app/utils/pokemonSprites'
 import { H4, Text, useTheme, XStack, YStack } from 'tamagui'
 
 interface EvolutionChainProps {

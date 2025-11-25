@@ -1,5 +1,5 @@
 import { X } from '@tamagui/lucide-icons'
-import { getTypeColor } from 'app/helpers/getTypeColor'
+import { getTypeColor } from 'app/utils/getTypeColor'
 import { useRouter } from 'expo-router'
 import { GestureResponderEvent, Pressable } from 'react-native'
 import { Button, Card, Image, Text, XStack, YStack } from 'tamagui'

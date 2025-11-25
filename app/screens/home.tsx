@@ -11,7 +11,7 @@ export default function HomeScreen() {
     <ImageBackground 
       source={PokedexWallpaper} 
       style={{ flex: 1 }}
-      objectFit="cover"
+      resizeMode="cover"
     >
       <YStack flex={1} style={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
         <YStack width={"100%"} height={90} style={{ position: "absolute", top: "35%" }}>

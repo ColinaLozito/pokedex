@@ -3,8 +3,9 @@ import AutocompleteDropdownList from 'app/components/AutocompleteDropdown'
 import BookmarkedPokemon from 'app/components/BookmarkedPokemon'
 import RecentSelections from 'app/components/RecentSelections'
 import TypeGrid from 'app/components/TypeGrid'
-import { setToastController, usePokemonDataStore } from 'app/store/pokemonDataStore'
+import { usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { usePokemonStore } from 'app/store/pokemonStore'
+import { setToastController } from 'app/utils/toast'
 import { useRouter } from 'expo-router'
 import { useEffect } from 'react'
 import { FlatList } from 'react-native'
@@ -22,7 +23,6 @@ export default function KidScreen() {
   // Use individual selectors to avoid infinite loops (functions are stable, state values trigger re-renders)
   const pokemonList = usePokemonDataStore((state) => state.pokemonList)
   const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
-  const setCurrentPokemonId = usePokemonDataStore((state) => state.setCurrentPokemonId)
   const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
   const bookmarkedPokemonIds = usePokemonDataStore((state) => state.bookmarkedPokemonIds)
@@ -43,7 +43,6 @@ export default function KidScreen() {
   const handleSelectItem = async (id: number) => {
     // Validate ID
     if (!id || id === 0 || isNaN(id)) {
-      console.error('Invalid Pokemon ID received:', id)
       toast.show('Invalid Selection', { message: 'Please select a valid Pokemon' })
       return
     }
@@ -52,15 +51,13 @@ export default function KidScreen() {
     const selectedPokemon = pokemonList.find((p) => p.id === id)
 
     // Fetch complete Pokemon details (uses cache if available)
+    // This automatically sets currentPokemonId in the store
     try {
       await fetchPokemonDetail(id)
-      
       // Only add to recent selections AFTER successful fetch
       if (selectedPokemon) {
         addRecentSelection(selectedPokemon)
       }
-      
-      setCurrentPokemonId(id)
       
       // Navigate to details screen
       router.push({
@@ -84,7 +81,7 @@ export default function KidScreen() {
     })
   }
 
-  const dataSet = pokemonList.map((pokemon) => ({
+  const pokemonListDataSet = pokemonList.map((pokemon) => ({
     id: pokemon.id.toString(), 
     title: pokemon.name,
   }))
@@ -111,7 +108,7 @@ export default function KidScreen() {
                 <YStack height={24} />
                  <AutocompleteDropdownList
                   onSelectItem={handleSelectItem}
-                  dataSet={dataSet}
+                  dataSet={pokemonListDataSet}
                 />
                 <YStack height={10} />
                 <BookmarkedPokemon

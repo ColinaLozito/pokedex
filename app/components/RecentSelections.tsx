@@ -1,6 +1,6 @@
-import { getPokemonSprite, getPokemonSpriteUrl } from 'app/helpers/pokemonSprites'
-import { CombinedPokemonDetail, PokemonDetail } from 'app/services/api'
+import type { CombinedPokemonDetail, PokemonDetail } from 'app/services/types'
 import { RecentSelection } from 'app/store/pokemonStore'
+import { getPokemonSprite, getPokemonSpriteUrl } from 'app/utils/pokemonSprites'
 import { H4, useTheme, XStack, YStack } from 'tamagui'
 import PokemonCard from './PokemonCard'
 

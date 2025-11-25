@@ -1,7 +1,13 @@
-import { EvolutionChainLink } from "app/services/api"
-import { EvolutionNode } from "app/store/pokemonDetailsStore"
+import type { EvolutionChainLink } from "app/services/types"
 import { extractPokemonId } from "./extractPokemonId"
 import { getPokemonSpriteUrl } from "./pokemonSprites"
+
+export interface EvolutionNode {
+  id: number
+  name: string
+  sprite: string
+  evolvesTo: EvolutionNode[]
+}
 
 /**
  * Convert EvolutionChainLink tree to a structured node tree
@@ -41,4 +47,26 @@ function collectAllDescendants(node: EvolutionNode): EvolutionNode[] {
  */
 export function collectEvolutionVariants(node: EvolutionNode): EvolutionNode[] {
   return collectAllDescendants(node)
+}
+
+/**
+ * Extract evolution chain into a flat array of Pokemon
+ * Returns array of { name, url } for each Pokemon in the chain
+ */
+export function extractEvolutionChain(chain: EvolutionChainLink): { name: string; url: string }[] {
+  const pokemon: { name: string; url: string }[] = []
+  
+  const traverse = (link: EvolutionChainLink) => {
+    pokemon.push({
+      name: link.species.name,
+      url: link.species.url
+    })
+    
+    if (link.evolves_to && link.evolves_to.length > 0) {
+      link.evolves_to.forEach(traverse)
+    }
+  }
+  
+  traverse(chain)
+  return pokemon
 }

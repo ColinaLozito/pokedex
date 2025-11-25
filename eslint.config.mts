@@ -48,7 +48,12 @@ export default tseslint.config(
       'react/react-in-jsx-scope': 'off', // React 17+ JSX transform
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-require-imports': 'off', // Allow require() for assets
-      'prettier/prettier': 'error',
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto',
+        },
+      ],
       'max-len': [
         'warn',
         {
@@ -61,7 +66,6 @@ export default tseslint.config(
           ignoreRegExpLiterals: true,
         },
       ],
-
     },
   }
 )

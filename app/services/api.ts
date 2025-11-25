@@ -1,152 +1,33 @@
 // PokéAPI service layer
 // This file will contain all API calls to PokéAPI
 
-import { extractPokemonId, extractTypeId } from "app/helpers/extractPokemonId"
+import { extractEvolutionChain } from "app/utils/evolutionTree"
+import { extractPokemonId, extractTypeId } from "app/utils/extractPokemonId"
+import type {
+  CombinedPokemonDetail,
+  EvolutionChain,
+  PokemonDetail,
+  PokemonListItem,
+  PokemonSpecies,
+  TypeListItem,
+  TypeResponse,
+} from './types'
 
 const BASE_URL = 'https://pokeapi.co/api/v2/'
 
-export interface PokemonResponse {
-  id: number
-  name: string
-  [key: string]: any
-}
-
-export interface PokemonListItem {
-  id: number
-  name: string
-}
-
-export interface TypeListItem {
-  id: number
-  name: string
-}
-
-export interface PokemonDetail {
-  id: number
-  name: string
-  height: number
-  weight: number
-  sprites: {
-    front_default: string | null
-    front_shiny: string | null
-    other?: {
-      'official-artwork'?: {
-        front_default: string | null
-      }
-      home?: {
-        front_default: string | null
-      }
-    }
-  }
-  types: Array<{
-    slot: number
-    type: {
-      name: string
-      url: string
-    }
-  }>
-  stats: Array<{
-    base_stat: number
-    stat: {
-      name: string
-      url: string
-    }
-  }>
-  abilities: Array<{
-    ability: {
-      name: string
-      url: string
-    }
-    is_hidden: boolean
-  }>
-}
-
-export interface PokemonSpecies {
-  id: number
-  name: string
-  evolution_chain: {
-    url: string
-  }
-  flavor_text_entries: Array<{
-    flavor_text: string
-    language: {
-      name: string
-      url: string
-    }
-    version: {
-      name: string
-      url: string
-    }
-  }>
-  genera: Array<{
-    genus: string
-    language: {
-      name: string
-      url: string
-    }
-  }>
-  habitat: {
-    name: string
-    url: string
-  } | null
-  is_legendary: boolean
-  is_mythical: boolean
-}
-
-export interface EvolutionChainLink {
-  species: {
-    name: string
-    url: string
-  }
-  evolves_to: EvolutionChainLink[]
-}
-
-export interface EvolutionChain {
-  id: number
-  chain: EvolutionChainLink
-}
-
-export interface EvolutionPokemon {
-  id: number
-  name: string
-  // Note: sprite will be retrieved from store when rendering
-}
-
-export interface CombinedPokemonDetail {
-  // From /pokemon/{id}
-  id: number
-  name: string
-  height: number
-  weight: number
-  sprites: PokemonDetail['sprites']
-  types: PokemonDetail['types']
-  stats: PokemonDetail['stats']
-  abilities: PokemonDetail['abilities']
-  
-  // From /pokemon-species/{id}
-  speciesInfo: {
-    genus: string
-    flavorText: string
-    habitat: string | null
-    isLegendary: boolean
-    isMythical: boolean
-  }
-  
-  // Evolution chain (flat array for backward compatibility)
-  evolutionChain: EvolutionPokemon[]
-  
-  // Full evolution chain tree structure
-  evolutionChainTree?: EvolutionChainLink
-}
-
-/**
- * Fetch a random Pokémon
- */
-export async function fetchRandomPokemon(): Promise<PokemonResponse> {
-  // This will be implemented to fetch a random Pokémon
-  // For now, return a placeholder
-  throw new Error('Not implemented yet')
-}
+// Re-export types for backward compatibility
+export type {
+  CombinedPokemonDetail,
+  EvolutionChain,
+  EvolutionChainLink,
+  EvolutionPokemon,
+  PokemonDetail,
+  PokemonListItem,
+  PokemonResponse,
+  PokemonSpecies,
+  TypeListItem,
+  TypeResponse
+} from './types'
 
 /**
  * Fetch a Pokémon by ID with full details
@@ -207,28 +88,6 @@ export async function fetchEvolutionChain(url: string): Promise<EvolutionChain> 
     throw error
   }
 }
-
-/**
- * Extract evolution chain into a flat array of Pokemon
- */
-function extractEvolutionChain(chain: EvolutionChainLink): { name: string; url: string }[] {
-  const pokemon: { name: string; url: string }[] = []
-  
-  const traverse = (link: EvolutionChainLink) => {
-    pokemon.push({
-      name: link.species.name,
-      url: link.species.url
-    })
-    
-    if (link.evolves_to && link.evolves_to.length > 0) {
-      link.evolves_to.forEach(traverse)
-    }
-  }
-  
-  traverse(chain)
-  return pokemon
-}
-
 
 /**
  * Fetch complete Pokemon details including species and evolution chain
@@ -338,10 +197,12 @@ export async function fetchPokemonList(): Promise<PokemonListItem[]> {
     const data = await response.json()
 
     // Transform the results to extract ID from URL
-    const transformedList: PokemonListItem[] = (data.results || []).map((pokemon: { name: string; url: string }) => ({
-      id: extractPokemonId(pokemon.url),
-      name: pokemon.name,
-    }))
+    const transformedList: PokemonListItem[] = (data.results || []).map(
+      (pokemon: { name: string; url: string }) => ({
+        id: extractPokemonId(pokemon.url),
+        name: pokemon.name,
+      })
+    )
     
     return transformedList
   } catch (error) {
@@ -360,10 +221,12 @@ export async function fetchTypeList(): Promise<TypeListItem[]> {
     const data = await response.json()
     
     // Transform the results to extract ID from URL
-    const transformedList: TypeListItem[] = (data.results || []).map((type: { name: string; url: string }) => ({
-      id: extractTypeId(type.url),
-      name: type.name,
-    }))
+    const transformedList: TypeListItem[] = (data.results || []).map(
+      (type: { name: string; url: string }) => ({
+        id: extractTypeId(type.url),
+        name: type.name,
+      })
+    )
     
     // Filter out "unknown" and "shadow" types (special types not commonly used)
     const filteredList = transformedList.filter(
@@ -377,26 +240,14 @@ export async function fetchTypeList(): Promise<TypeListItem[]> {
   }
 }
 
-/**
- * Type response from PokéAPI
- */
-export interface TypeResponse {
-  id: number
-  name: string
-  pokemon: Array<{
-    pokemon: {
-      name: string
-      url: string
-    }
-    slot: number
-  }>
-}
 
 /**
  * Fetch Pokemon by type ID or name
  * Returns list of Pokemon with their IDs
  */
-export async function fetchPokemonByType(typeIdOrName: number | string): Promise<PokemonListItem[]> {
+export async function fetchPokemonByType(
+  typeIdOrName: number | string
+): Promise<PokemonListItem[]> {
   try {
     const response = await fetch(`${BASE_URL}type/${typeIdOrName}`)
     

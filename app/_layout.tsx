@@ -1,28 +1,25 @@
-import { useEffect } from 'react'
-import { useColorScheme } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { router, SplashScreen, Stack } from 'expo-router'
-import { Button, useTheme, XStack } from 'tamagui'
-import { Provider } from './components/Provider'
-import { usePokemonStore } from './store/pokemonStore'
-import { usePokemonDataStore } from './store/pokemonDataStore'
-import { fetchTypeList } from './services/api'
-import MontserratThin from '../assets/fonts/Montserrat-Thin.ttf'
-import MontserratExtraLight from '../assets/fonts/Montserrat-ExtraLight.ttf'
-import MontserratLight from '../assets/fonts/Montserrat-Light.ttf'
-import MontserratRegular from '../assets/fonts/Montserrat-Regular.ttf'
-import MontserratMedium from '../assets/fonts/Montserrat-Medium.ttf'
-import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf'
+import { SplashScreen, Stack } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
+import { useEffect } from 'react'
+import MontserratBlack from '../assets/fonts/Montserrat-Black.ttf'
 import MontserratBold from '../assets/fonts/Montserrat-Bold.ttf'
 import MontserratExtraBold from '../assets/fonts/Montserrat-ExtraBold.ttf'
-import MontserratBlack from '../assets/fonts/Montserrat-Black.ttf'
-import { ChevronLeft } from '@tamagui/lucide-icons'
+import MontserratExtraLight from '../assets/fonts/Montserrat-ExtraLight.ttf'
+import MontserratLight from '../assets/fonts/Montserrat-Light.ttf'
+import MontserratMedium from '../assets/fonts/Montserrat-Medium.ttf'
+import MontserratRegular from '../assets/fonts/Montserrat-Regular.ttf'
+import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf'
+import MontserratThin from '../assets/fonts/Montserrat-Thin.ttf'
+import { Provider } from './components/Provider'
+import { fetchTypeList } from './services/api'
+import { usePokemonDataStore } from './store/pokemonDataStore'
+import { usePokemonStore } from './store/pokemonStore'
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+  ErrorBoundary
 } from 'expo-router'
 
 export const unstable_settings = {
@@ -94,11 +91,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme()
-  const theme = useTheme()
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={DefaultTheme}>
       <StatusBar style="dark" />
       <Stack>
         <Stack.Screen
@@ -113,10 +108,7 @@ function RootLayoutNav() {
           options={{
             title: '',
             headerShown: false,
-            headerStyle: {
-              backgroundColor: theme.background.val,
-            },
-            headerTintColor: theme.color.val,
+            headerTransparent: true,
           }}
         />
 
@@ -126,21 +118,6 @@ function RootLayoutNav() {
             title: '',
             headerShown: true,
             headerTransparent: true,
-            header: () => <XStack style={{ paddingHorizontal: 16, paddingTop: 50 }}>
-              <Button
-                size={40}
-                circular
-                onPress={() => router.back()}
-                icon={ChevronLeft}
-                color={theme.text.val}
-                scaleIcon={1.7}
-                elevate
-                shadowColor={theme.shadowColor?.val as any || 'rgba(0, 0, 0, 0.1)'}
-                shadowOpacity={0.3}
-                shadowRadius={8}
-                opacity={0.6}
-              />
-            </XStack>,
           }}
         />
 
@@ -150,35 +127,22 @@ function RootLayoutNav() {
             title: '',
             headerShown: true,
             headerTransparent: true,
-            header: () => <XStack style={{ paddingHorizontal: 16, paddingTop: 50 }}>
-              <Button
-                size={40}
-                circular
-                onPress={() => router.back()}
-                icon={ChevronLeft}
-                color={theme.text.val}
-                scaleIcon={1.7}
-                elevate
-                shadowColor={theme.shadowColor?.val as any || 'rgba(0, 0, 0, 0.1)'}
-                shadowOpacity={0.3}
-                shadowRadius={8}
-                opacity={0.6}
-              />
-            </XStack>,
           }}
         />
         <Stack.Screen
           name="screens/pokemonDetails"
           options={{
             title: '',
-            headerShown: false,
+            headerShown: true,
+            headerTransparent: true,
           }}
         />
         <Stack.Screen
           name="screens/typeFilter"
           options={{
             title: '',
-            headerShown: false,
+            headerShown: true,
+            headerTransparent: true,
           }}
         />
       </Stack>

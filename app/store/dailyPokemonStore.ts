@@ -19,6 +19,7 @@ interface DailyPokemonState {
   setDailyPokemonId: (id: number) => void // Set daily Pokemon ID (from roulette)
   rerollDailyPokemon: () => Promise<number> // Reroll to new random Pokemon (legacy)
   getRerollCount: () => number // Get today's reroll count
+  setRerollCount: () => void // Set reroll count
 }
 
 export const useDailyPokemonStore = create<DailyPokemonState>()(
@@ -71,25 +72,32 @@ export const useDailyPokemonStore = create<DailyPokemonState>()(
        * Increments reroll count if same day
        */
       setDailyPokemonId: (id: number) => {
-        const state = get()
         const today = getTodayDateString()
 
-        // Reset reroll count if new day
+        set({
+          dailyPokemonId: id,
+          dailyPokemonDate: today,
+        })
+      },
+
+      
+      /**
+       * Set reroll count
+      */
+      setRerollCount: () => {
+        const state = get()
+        const today = getTodayDateString()
+        
         if (state.rerollDate !== today) {
           set({
-            rerollCount: 1,
+            rerollCount: 0,
             rerollDate: today,
-            dailyPokemonId: id,
-            dailyPokemonDate: today,
-          })
-        } else {
-          // Increment reroll count
-          set({
-            rerollCount: state.rerollCount + 1,
-            dailyPokemonId: id,
-            dailyPokemonDate: today,
           })
         }
+        
+        set({
+          rerollCount: state.rerollCount + 1,
+        })
       },
 
       /**

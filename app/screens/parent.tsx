@@ -1,7 +1,5 @@
 import { useToastController } from '@tamagui/toast'
-import BookmarkButton from 'app/components/BookmarkButton'
 import BookmarkedPokemon from 'app/components/BookmarkedPokemon'
-import PokemonCard from 'app/components/PokemonCard'
 import { useLoadingModal } from 'app/hooks/useLoadingModal'
 import { useModal } from 'app/hooks/useModal'
 import { useDailyPokemonStore } from 'app/store/dailyPokemonStore'
@@ -12,10 +10,10 @@ import { getPokemonSprite, getPokemonSpriteUrl } from 'app/utils/pokemonSprites'
 import { setToastController } from 'app/utils/toast'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ImageBackground, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Button, Card, H2, Text, YStack, useTheme } from 'tamagui'
-import PokeballWallpaper from '../../assets/images/pokeball-patten.png'
+import { Button, H2, Text, YStack, useTheme } from 'tamagui'
+import DailyPokemonCard from '../components/DailyPokemonCard'
 
 export default function ParentScreen() {
   const router = useRouter()
@@ -31,57 +29,40 @@ export default function ParentScreen() {
   // Keep previous Pokemon data to show while loading new one
   const previousPokemonRef = useRef<ReturnType<typeof getPokemonDetail> | null>(null)
   
-  // Show loading modal when fetching Pokemon
-  useLoadingModal(loading && !!selectedPokemonId, 'LOADING POKEMON', [selectedPokemonId])
-  
   // Use individual selectors to avoid infinite loops (functions are stable)
-  const getDailyPokemon = useDailyPokemonStore((state) => state.getDailyPokemon)
   const setDailyPokemonId = useDailyPokemonStore((state) => state.setDailyPokemonId)
   const getRerollCount = useDailyPokemonStore((state) => state.getRerollCount)
   const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
   const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   const toggleParentBookmark = usePokemonGeneralStore((state) => state.toggleParentBookmark)
+  const setRerollCount = useDailyPokemonStore((state) => state.setRerollCount)
   const parentBookmarkedPokemonIds = usePokemonGeneralStore(
     (state) => state.parentBookmarkedPokemonIds)
+  
+  // Show loading modal ONLY when user explicitly selects a Pokemon (via roulette)
+  // NOT during initial load or when Pokemon is already cached
+  useLoadingModal(
+    loading && !!selectedPokemonId && !initialLoad, 
+    'LOADING POKEMON', 
+    [selectedPokemonId, initialLoad, loading]
+  )
   
   // Set toast controller
   useEffect(() => {
     setToastController(toast)
+    // Set initialLoad to false immediately since we're not auto-loading
+    setInitialLoad(false)
   }, [toast])
-  
-  // Load daily Pokemon on mount if it exists
-  useEffect(() => {
-    const loadDailyPokemon = async () => {
-      try {
-        setInitialLoad(true)
-        // Get or generate daily Pokemon
-        const dailyId = await getDailyPokemon()
-        
-        // If we have a daily Pokemon for today, load and display it
-        if (dailyId) {
-          try {
-            setLoading(true)
-            await fetchPokemonDetail(dailyId)
-            setSelectedPokemonId(dailyId)
-          } catch (_error) {
-            // Error is handled by the store
-          } finally {
-            setLoading(false)
-          }
-        }
-      } catch (_error) {
-        // Error is handled by the store
-      } finally {
-        setInitialLoad(false)
-      }
-    }
-    
-    loadDailyPokemon()
-  }, [getDailyPokemon, fetchPokemonDetail])
   
   // Handle roulette completion
   const handleRouletteComplete = useCallback(async (finalNumber: number) => {
+    // First, dismiss the roulette modal
+    dismiss()
+    
+    // Wait a bit for the roulette modal to fully dismiss before showing loading
+    await new Promise(resolve => setTimeout(resolve, 300))
+    
     try {
       setLoading(true)
       setSelectedPokemonId(finalNumber)
@@ -98,14 +79,16 @@ export default function ParentScreen() {
     } finally {
       setLoading(false)
       setIsSpinning(false)
-      dismiss()
     }
   }, [fetchPokemonDetail, setDailyPokemonId, toast, dismiss])
   
   // Start roulette
-  const handleStartRoulette = useCallback(() => {
+  const handleStartRoulette = useCallback(({ isInitialLoad }: { isInitialLoad?: boolean }) => {
     const newPokemonId = generateRandomPokemonId()
     const nextSession = rouletteSession + 1
+    if (!isInitialLoad) {
+      setRerollCount()
+    }
     setRouletteSession(nextSession)
     setIsSpinning(true)
     showRoulette({
@@ -119,11 +102,6 @@ export default function ParentScreen() {
   }, [rouletteSession, showRoulette, handleRouletteComplete])
   
   
-  // Handle remove (not used, but required by PokemonCard)
-  const handleRemove = useCallback(() => {
-    // No-op
-  }, [])
-
   // Handle Pokemon card press - navigate to details
   const handlePokemonPress = useCallback(
     async (id: number) => {
@@ -141,33 +119,6 @@ export default function ParentScreen() {
     [fetchPokemonDetail, router],
   )
 
-  // Render "Ready to spin?" card
-  const renderStartRouletteCard = useCallback(() => {
-    return (
-      <Card elevate bordered background={theme.red.val}>
-        <Card.Header padded>
-          <YStack gap={12} items='center' width='100%'>
-            <Text fontSize={16} textAlign='center' color={theme.text.val}>
-              Ready to spin?
-            </Text>
-            <Button
-              onPress={handleStartRoulette}
-              disabled={loading || isSpinning}
-              size={68}
-              backgroundColor={theme.water?.val}
-              color={theme.text.val}
-              width="100%"
-              height={68}
-            >
-              {loading ? 'Spinning...' : 'Start Roulette'}
-            </Button>
-          </YStack>
-        </Card.Header>
-      </Card>
-    )
-  }, [theme.red.val, theme.text.val, theme.water?.val, handleStartRoulette, loading, isSpinning])
-
-  
   const currentPokemon = selectedPokemonId ? getPokemonDetail(selectedPokemonId) : null
   const rerollCount = getRerollCount()
   
@@ -198,111 +149,42 @@ export default function ParentScreen() {
     [selectedPokemonId, parentBookmarkedPokemonIds]
   )
 
-  // Render Pokemon Card section - always render container when selectedPokemonId exists
-  const renderPokemonCard = useCallback(() => {
-    // Always render container if selectedPokemonId exists, even if Pokemon is loading
-    if (!selectedPokemonId) return null
-    
-    // If no Pokemon data available yet (first load), don't render
-    if (!displayPokemon) return null
-
-    return (
-      <Card elevate>
-        <Card.Header padded>
-          <ImageBackground
-            source={PokeballWallpaper}
-            imageStyle={{
-              width: '100%',
-              height: 'auto',
-              overflow: 'hidden',
-              borderRadius: 16,
-            }}
-            style={{
-              width: '100%',
-              height: 'auto',
-              overflow: 'hidden',
-              borderRadius: 16,
-            }}
-          >
-            <YStack
-              gap={12}
-              items='center'
-              width='100%'
-              paddingTop={24}
-            >
-              <YStack width='70%'>
-                <PokemonCard
-                  id={displayPokemon.id}
-                  name={displayPokemon.name}
-                  sprite={sprite}
-                  variant="recent"
-                  primaryType={displayPokemon.types?.[0]?.type.name || 'normal'}
-                  types={displayPokemon.types || []}
-                  onRemove={handleRemove}
-                  onSelect={handlePokemonPress}
-                  displayRemoveButton={false}
-                  bookmarkSource="parent"
-                />
-              </YStack>
-
-              {/* Bookmark Button */}
-              <BookmarkButton
-                isBookmarked={bookmarked}
-                onPress={() => toggleParentBookmark(selectedPokemonId)}
-                size={68}
-                backgroundColor="rgba(255, 255, 255, 0.3)"
-              />
-            </YStack>
-          </ImageBackground>
-        </Card.Header>
-      </Card>
-    )
-  }, [
-    selectedPokemonId,
-    displayPokemon,
-    sprite,
-    bookmarked,
-    handleRemove,
-    handlePokemonPress,
-    toggleParentBookmark,
-  ])
-
-  // Show full-screen loading during initial load
-  useLoadingModal(initialLoad && !selectedPokemonId, 'LOADING', [selectedPokemonId])
-
-  if (initialLoad && !selectedPokemonId) {
-    return null
-  }
-
+  // Remove the renderPokemonCard callback entirely
+  
   return (
-    <>
-      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
-        <ScrollView>
-          <YStack flex={1} gap={16} p={16} pt={48}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
+      <ScrollView>
+        <YStack flex={1} gap={16} p={16} pt={48}>
           {/* Header */}
           <H2 mb={16} color={theme.text.val}>
             Pokemon of the day
           </H2>
           
-          {/* Pokemon Card - Always show container when Pokemon is selected */}
-          {selectedPokemonId && renderPokemonCard()}
-          
-          {/* Start Roulette Button - Show only when no Pokemon selected and initial load is complete */}
-          {!selectedPokemonId && !isSpinning && !initialLoad && renderStartRouletteCard()}
+          {/* Pokemon Card - Shows "Get Pokemon" card when no Pokemon selected */}
+          <DailyPokemonCard
+            selectedPokemonId={selectedPokemonId}
+            displayPokemon={displayPokemon || null}
+            sprite={sprite}
+            isBookmarked={bookmarked}
+            isLoading={loading}
+            isSpinning={isSpinning}
+            onGetPokemon={() => handleStartRoulette({ isInitialLoad: true })}
+            onPokemonPress={handlePokemonPress}
+            onToggleBookmark={toggleParentBookmark}
+          />
           
           {/* Retry Button - Always show when Pokemon is selected */}
           {selectedPokemonId && currentPokemon && (
             <Button
-              onPress={handleStartRoulette}
+              onPress={() => handleStartRoulette({ isInitialLoad: false })}
               disabled={loading || isSpinning}
               color={theme.text.val}
               size={48}
               bordered
             >
-              <Text textAlign="center" fontSize={16} fontWeight={800}> 
-                {loading ? 'Loading...' : isSpinning ? 'Shuffling...' : 'Try Again'}
+              <Text textAlign="center" fontSize={16} fontWeight={800} color={theme.text.val}> 
+                {loading ? 'Loading...' : 'Try Again'}
               </Text>
-             
             </Button>
           )}
           
@@ -322,9 +204,8 @@ export default function ParentScreen() {
             onSelect={handlePokemonPress}
             bookmarkSource="parent"
           />
-          </YStack>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+        </YStack>
+      </ScrollView>
+    </SafeAreaView>
   )
 }

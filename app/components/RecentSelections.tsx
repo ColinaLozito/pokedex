@@ -41,7 +41,7 @@ export default function RecentSelections({
 
   return (
     <YStack gap={13}>
-      <H4 color={theme.text.val}>Recent Selections</H4>
+      <H4 color={theme.text.val}>Recently Inspected</H4>
       <XStack gap={7} flexWrap='wrap' justify='space-between'>
         {recentPokemonData.map((pokemon) => (
           <YStack key={pokemon.id} width='48%'>

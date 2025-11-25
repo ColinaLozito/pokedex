@@ -1,5 +1,5 @@
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Text, useTheme, YStack } from 'tamagui'
+import { GetThemeValueForKey, Text, useTheme, YStack } from 'tamagui'
 
 interface ErrorScreenProps {
   error: string
@@ -35,7 +35,7 @@ export default function ErrorScreen({
       >
         <Text
           fontSize={20}
-          color={errorColor || theme.red10?.val || '#EF4444'}
+          color={(errorColor || theme.red10?.val) as GetThemeValueForKey<"color"> || '#EF4444'}
           textAlign='center'
         >
           {error}
@@ -45,7 +45,7 @@ export default function ErrorScreen({
             <YStack height={20} />
             <Text
               fontSize={16}
-              color={goBackColor || theme.blue10?.val || '#3B82F6'}
+              color={(goBackColor || theme.blue10?.val) as GetThemeValueForKey<"color"> || '#3B82F6'}
               textDecorationLine='underline'
               onPress={onGoBack}
             >

@@ -25,9 +25,10 @@ export default function AutocompleteDropdownList({
   
   const inputContainerStyle = useMemo(() => ({
     backgroundColor: theme.background.val,
-    borderColor: theme.border.val,
+    borderColor: theme.black1.val,
     borderWidth: 1,
-  }), [theme.background.val, theme.border.val])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [])
   
   const textInputProps = useMemo(() => ({
     style: {

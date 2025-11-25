@@ -81,7 +81,9 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
        * Set the type list
        */
       setTypeList: (list) => {
-        set({ typeList: list })
+        // Filter out stellar type for now
+        const filteredList = list.filter((type) => type.name !== 'stellar')
+        set({ typeList: filteredList })
       },
 
       /**

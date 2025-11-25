@@ -96,7 +96,6 @@ export const usePokemonDataStore = create<PokemonDataState>()(
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Failed to fetch Pokemon list'
           set({ error: errorMessage, loading: false })
-          console.error('Error fetching Pokemon list:', error)
         }
       },
 
@@ -173,6 +172,63 @@ export const usePokemonDataStore = create<PokemonDataState>()(
             fetchingIds: new Set([...state.fetchingIds].filter(fId => fId !== id))
           }))
 
+          // Pre-fetch full details for all evolution Pokemon in the background
+          // This ensures they're instantly available when clicked
+          const evolutionIds = detail.evolutionChain
+            .map((evo) => evo.id)
+            .filter((evoId) => evoId !== id) // Exclude the current Pokemon
+
+          // Filter out evolutions that are already cached or being fetched
+          const currentStateAfterMain = get()
+          const evolutionsToFetch = evolutionIds.filter(
+            (evoId) =>
+              !currentStateAfterMain.pokemonDetails[evoId] &&
+              !currentStateAfterMain.fetchingIds.has(evoId)
+          )
+
+          // Pre-fetch evolution details in background (non-blocking)
+          if (evolutionsToFetch.length > 0) {
+            // Mark as fetching to prevent duplicate requests
+            set((state) => ({
+              fetchingIds: new Set([...state.fetchingIds, ...evolutionsToFetch]),
+            }))
+
+            // Fetch all evolutions in parallel (non-blocking, fire and forget)
+            Promise.allSettled(
+              evolutionsToFetch.map(async (evoId) => {
+                try {
+                  // Fetch full details for this evolution
+                  const evoDetail = await fetchCompletePokemonDetail(
+                    evoId,
+                    get().basicPokemonCache,
+                    cacheEvolutionPokemon
+                  )
+
+                  // Store in cache
+                  set((state) => ({
+                    pokemonDetails: {
+                      ...state.pokemonDetails,
+                      [evoId]: evoDetail,
+                    },
+                    fetchingIds: new Set(
+                      [...state.fetchingIds].filter((fId) => fId !== evoId)
+                    ),
+                  }))
+                } catch (_error) {
+                  // Silently fail for background fetches - don't show errors
+                  // Remove from fetching set
+                  set((state) => ({
+                    fetchingIds: new Set(
+                      [...state.fetchingIds].filter((fId) => fId !== evoId)
+                    ),
+                  }))
+                }
+              })
+            ).catch(() => {
+              // Ignore errors in background pre-fetching
+            })
+          }
+
           return detail
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : `Failed to fetch Pokemon ${id}`
@@ -187,7 +243,6 @@ export const usePokemonDataStore = create<PokemonDataState>()(
             fetchingIds: new Set([...state.fetchingIds].filter(fId => fId !== id))
           }))
           
-          console.error(`❌ Error fetching Pokemon ${id}:`, error)
           throw error
         }
       },
@@ -204,23 +259,17 @@ export const usePokemonDataStore = create<PokemonDataState>()(
           return state.basicPokemonCache[id]
         }
 
-        try {
-          const basicData = await fetchPokemonById(id)
-          
-          // Store in basic cache
-          set(state => ({
-            basicPokemonCache: {
-              ...state.basicPokemonCache,
-              [id]: basicData
-            }
-          }))
+        const basicData = await fetchPokemonById(id)
+        
+        // Store in basic cache
+        set(state => ({
+          basicPokemonCache: {
+            ...state.basicPokemonCache,
+            [id]: basicData
+          }
+        }))
 
-          return basicData
-        } catch (error) {
-          console.error(`Error fetching basic Pokemon ${id}:`, error)
-          showToast('Error Loading Pokemon', `Failed to load Pokemon #${id} data`)
-          throw error
-        }
+        return basicData
       },
 
       /**

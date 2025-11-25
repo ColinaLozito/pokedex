@@ -20,7 +20,7 @@ export default function PokemonAttributes({ species, height, weight }: PokemonAt
                 <Text fontSize={12} color={theme.text.val} mb={4}>
                   Species
                 </Text>
-                <Text fontSize={14} fontWeight="600" textAlign='center' color={theme.text.val}>
+                <Text fontSize={14} fontWeight={600} textAlign='center' color={theme.text.val}>
                   {species}
                 </Text>
               </YStack>
@@ -33,7 +33,7 @@ export default function PokemonAttributes({ species, height, weight }: PokemonAt
             <Text fontSize={12} color={theme.text.val} mb={4}>
               Height
             </Text>
-            <Text fontSize={14} fontWeight="600" textAlign='center' color={theme.text.val}>
+            <Text fontSize={14} fontWeight={600} textAlign='center' color={theme.text.val}>
               {(height / 10).toFixed(1)} m
             </Text>
           </YStack>
@@ -46,7 +46,7 @@ export default function PokemonAttributes({ species, height, weight }: PokemonAt
             <Text fontSize={12} color={theme.text.val} mb={4}>
               Weight
             </Text>
-            <Text fontSize={14} fontWeight="600" textAlign='center' color={theme.text.val}>
+            <Text fontSize={14} fontWeight={600} textAlign='center' color={theme.text.val}>
               {(weight / 10).toFixed(1)} kg
             </Text>
           </YStack>

@@ -57,13 +57,13 @@ export default function ParentScreen() {
             await fetchPokemonDetail(dailyId)
             setSelectedPokemonId(dailyId)
           } catch (error) {
-            console.error('Failed to load daily Pokemon:', error)
+            // Error is handled by the store
           } finally {
             setLoading(false)
           }
         }
       } catch (error) {
-        console.error('Failed to get daily Pokemon:', error)
+        // Error is handled by the store
       } finally {
         setInitialLoad(false)
       }
@@ -86,7 +86,6 @@ export default function ParentScreen() {
       
       toast.show('Pokemon Selected!', { message: `You got Pokemon #${String(finalNumber).padStart(4, '0')}!` })
     } catch (error) {
-      console.error('Failed to fetch Pokemon:', error)
       toast.show('Error', { message: 'Failed to load Pokemon' })
     } finally {
       setLoading(false)
@@ -119,7 +118,7 @@ export default function ParentScreen() {
           params: { source: 'parent' },
         })
       } catch (error) {
-        console.error('Failed to fetch Pokemon:', error)
+        // Error is handled by the store
       }
     },
     [fetchPokemonDetail, router],
@@ -286,7 +285,7 @@ export default function ParentScreen() {
               size={48}
               bordered
             >
-              <Text textAlign="center" fontSize={16} fontWeight="800"> 
+              <Text textAlign="center" fontSize={16} fontWeight={800}> 
                 {loading ? 'Loading...' : isSpinning ? 'Shuffling...' : 'Try Again'}
               </Text>
              

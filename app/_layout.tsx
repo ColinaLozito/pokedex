@@ -81,8 +81,8 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
         .then((list) => {
           setTypeList(list)
         })
-        .catch((error) => {
-          console.error('Failed to fetch type list:', error)
+        .catch((_error) => {
+          // Error is handled silently
         })
     }
   }, [fetchPokemonListAction, typeList.length, setTypeList])

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Text, YStack } from 'tamagui'
+import { Text, useTheme, YStack } from 'tamagui'
 
 interface NumberRouletteProps {
   onComplete: (finalNumber: number) => void
@@ -16,6 +16,7 @@ export default function NumberRoulette({
   max = 1000,
   start = true
 }: NumberRouletteProps) {
+  const theme = useTheme()
   const [currentNumber, setCurrentNumber] = useState<number>(min)
   const [isSpinning, setIsSpinning] = useState(false)
   const onCompleteRef = useRef(onComplete)
@@ -102,17 +103,17 @@ export default function NumberRoulette({
       items='center'
       justify='center'
       p={32}
-      bg='#F5F5F5'
+      bg={theme.gray2?.val || '#F5F5F5'}
       borderRadius={16}
       minHeight={150}
       width='100%'
       borderWidth={2}
-      borderColor='#E0E0E0'
+      borderColor={theme.border?.val || '#E0E0E0'}
     >
       <Text
         fontSize={56}
-        fontWeight="900"
-        color="#333333"
+        fontWeight={900}
+        color={theme.text?.val || '#333333'}
         letterSpacing={6}
       >
         #{String(currentNumber).padStart(4, '0')}
@@ -120,9 +121,9 @@ export default function NumberRoulette({
       {isSpinning && (
         <Text
           fontSize={20}
-          color="#666666"
+          color={theme.gray10?.val || '#666666'}
           mt={12}
-          fontWeight='600'
+          fontWeight={600}
         >
           Spinning...
         </Text>

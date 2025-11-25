@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 import { FlatList } from 'react-native'
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { H3, useTheme, YStack } from 'tamagui'
+import { GetThemeValueForKey, H3, useTheme, YStack } from 'tamagui'
 
 export default function KidScreen() {
   const router = useRouter()
@@ -64,8 +64,7 @@ export default function KidScreen() {
         pathname: '/screens/pokemonDetails',
         params: { source: 'kid' }
       })
-    } catch (error) {
-      console.error('Failed to fetch Pokémon details:', error)
+    } catch (_error) {
       // Error is already set in the store and toast is shown
       // Don't navigate or add to history if fetch failed
     }
@@ -85,6 +84,10 @@ export default function KidScreen() {
     id: pokemon.id.toString(), 
     title: pokemon.name,
   }))
+
+  const backgroundColor = (
+    theme.background?.val || '#FFFFFF'
+  ) as GetThemeValueForKey<"backgroundColor">
   
   return (
     <AutocompleteDropdownContextProvider headerOffset={insets.top}>
@@ -92,7 +95,7 @@ export default function KidScreen() {
           flex={1}
           height="100%"
           width="100%"
-          bg="$background"
+          bg={backgroundColor}
           style={{
             paddingTop: 50,
             paddingHorizontal: 16,

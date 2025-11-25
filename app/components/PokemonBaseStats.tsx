@@ -1,4 +1,4 @@
-import { Card, H4, Text, XStack, YStack, useTheme } from 'tamagui'
+import { Card, GetThemeValueForKey, H4, Text, XStack, YStack, useTheme } from 'tamagui'
 
 interface StatInfo {
   base_stat: number
@@ -31,7 +31,7 @@ export default function PokemonBaseStats({ stats, primaryTypeColor }: PokemonBas
                 >
                   {statInfo.stat.name.replace('-', ' ')}
                 </Text>
-                <Text fontSize={14} fontWeight="600" color={theme.text.val}>
+                <Text fontSize={14} fontWeight={600} color={theme.text.val}>
                   {statInfo.base_stat}
                 </Text>
               </XStack>
@@ -44,7 +44,7 @@ export default function PokemonBaseStats({ stats, primaryTypeColor }: PokemonBas
                 <YStack
                   height='100%'
                   width={`${(statInfo.base_stat / 255) * 100}%`}
-                  bg={primaryTypeColor as any}
+                  bg={primaryTypeColor as GetThemeValueForKey<"backgroundColor">}
                 />
               </YStack>
             </YStack>

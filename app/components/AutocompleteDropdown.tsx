@@ -1,49 +1,56 @@
-//...
-import { AutocompleteDropdown, AutocompleteDropdownItem } from 'react-native-autocomplete-dropdown';
-import { useTheme } from 'tamagui';
-//...
+import { useCallback, useMemo } from 'react'
+import { AutocompleteDropdown, AutocompleteDropdownItem } from 'react-native-autocomplete-dropdown'
+import { useTheme } from 'tamagui'
+
 interface AutocompleteDropdownProviderProps {
-    onSelectItem: (id: number) => void;
-    dataSet: { id: string; title: string }[];
+  onSelectItem: (id: number) => void
+  dataSet: { id: string; title: string }[]
 }
 
 export default function AutocompleteDropdownList({
   onSelectItem,
   dataSet,
 }: AutocompleteDropdownProviderProps) {
-    const theme = useTheme()
-    const handleSelectItem = (item: AutocompleteDropdownItem | null) => {
-        // Only trigger if item is valid and has an ID
-        if (!item || !item.id) return
-        
-        const id = parseInt(item.id, 10)
-        if (id > 0) {
-            onSelectItem(id)
-        }
-    }
+  const theme = useTheme()
+  
+  const handleSelectItem = useCallback((item: AutocompleteDropdownItem | null) => {
+    // Only trigger if item is valid and has an ID
+    if (!item || !item.id) return
     
-    return (
-      <AutocompleteDropdown
-        clearOnFocus={false}
-        closeOnBlur={true}
-        closeOnSubmit={false}
-        onSelectItem={handleSelectItem}
-        dataSet={dataSet}
-        suggestionsListMaxHeight={200}
-        inputContainerStyle={{
-          backgroundColor: theme.background.val,
-          borderColor: theme.border.val,
-          borderWidth: 1,
-        }}
-        textInputProps={{
-          style: {
-            color: theme.text.val,
-          },
-          placeholderTextColor: theme.gray10?.val || '#737373',
-        }}
-        suggestionsListContainerStyle={{
-          top: -60,
-        }}
-      />
-    )
+    const id = parseInt(item.id, 10)
+    if (id > 0) {
+      onSelectItem(id)
+    }
+  }, [onSelectItem])
+  
+  const inputContainerStyle = useMemo(() => ({
+    backgroundColor: theme.background.val,
+    borderColor: theme.border.val,
+    borderWidth: 1,
+  }), [theme.background.val, theme.border.val])
+  
+  const textInputProps = useMemo(() => ({
+    style: {
+      color: theme.text.val,
+    },
+    placeholderTextColor: theme.gray10?.val || '#737373',
+  }), [theme.text.val, theme.gray10?.val])
+  
+  const suggestionsListContainerStyle = useMemo(() => ({
+    top: -60,
+  }), [])
+  
+  return (
+    <AutocompleteDropdown
+      clearOnFocus={false}
+      closeOnBlur={true}
+      closeOnSubmit={false}
+      onSelectItem={handleSelectItem}
+      dataSet={dataSet}
+      suggestionsListMaxHeight={200}
+      inputContainerStyle={inputContainerStyle}
+      textInputProps={textInputProps}
+      suggestionsListContainerStyle={suggestionsListContainerStyle}
+    />
+  )
 }

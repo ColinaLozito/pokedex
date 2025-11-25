@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import EvolutionSpriteContainer from 'app/components/EvolutionSpriteContainer'
 import type { EvolutionChainLink, PokemonDetail } from 'app/services/types'
 import { buildEvolutionTree, collectEvolutionVariants, isBranchingEvolution, type EvolutionNode } from 'app/utils/evolutionTree'
@@ -25,14 +26,30 @@ export default function EvolutionChain({
   // Check if it's branching
   const isBranching = isBranchingEvolution(evolutionChainTree)
   
-  // Get sprite for a Pokemon (with cache fallback)
-  const getSprite = (pokemonId: number): string => {
+  // Get sprite for a Pokemon (with cache fallback and error handling)
+  const getSprite = useCallback((pokemonId: number): string => {
+    // Validate Pokemon ID
+    if (!pokemonId || pokemonId <= 0 || !Number.isInteger(pokemonId)) {
+      // Return a fallback sprite URL for invalid IDs
+      return getPokemonSpriteUrl(1) // Default to Bulbasaur
+    }
+    
+    // Try to get cached data
     const cached = getBasicPokemon?.(pokemonId)
     if (cached) {
-      return getPokemonSprite(cached, pokemonId)
+      // Validate cached data has required structure
+      if (typeof cached === 'object' && cached !== null) {
+        const sprite = getPokemonSprite(cached, pokemonId)
+        // Validate sprite URL is not empty
+        if (sprite && sprite.trim().length > 0) {
+          return sprite
+        }
+      }
     }
+    
+    // Fallback to direct URL based on ID
     return getPokemonSpriteUrl(pokemonId)
-  }
+  }, [getBasicPokemon])
   
   // Render a single Pokemon card (for branching evolution)
   const renderPokemonSprite = (node: EvolutionNode, isCurrent: boolean = false, variantType: 'branching-variant' | 'branching-initial' | 'linear') => {
@@ -77,7 +94,7 @@ export default function EvolutionChain({
               <XStack justify='center' m={0}>
                 <Text 
                   fontSize={20} 
-                  fontWeight="300"
+                  fontWeight={300}
                   color={theme.text.val}
                 >
                   →

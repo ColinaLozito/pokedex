@@ -44,7 +44,6 @@ export async function fetchPokemonById(id: number): Promise<PokemonDetail> {
     
     return data as PokemonDetail
   } catch (error) {
-    console.error(`Error fetching Pokémon ${id}:`, error)
     throw error
   }
 }
@@ -64,7 +63,6 @@ export async function fetchPokemonSpecies(id: number): Promise<PokemonSpecies> {
     
     return data as PokemonSpecies
   } catch (error) {
-    console.error(`Error fetching species ${id}:`, error)
     throw error
   }
 }
@@ -84,7 +82,6 @@ export async function fetchEvolutionChain(url: string): Promise<EvolutionChain> 
     
     return data as EvolutionChain
   } catch (error) {
-    console.error(`Error fetching evolution chain:`, error)
     throw error
   }
 }
@@ -182,7 +179,6 @@ export async function fetchCompletePokemonDetail(
     
     return combinedDetail
   } catch (error) {
-    console.error(`Error fetching complete Pokemon detail for ID ${id}:`, error)
     throw error
   }
 }
@@ -206,7 +202,6 @@ export async function fetchPokemonList(): Promise<PokemonListItem[]> {
     
     return transformedList
   } catch (error) {
-    console.error('Error fetching Pokémon list:', error)
     throw error
   }
 }
@@ -235,7 +230,6 @@ export async function fetchTypeList(): Promise<TypeListItem[]> {
     
     return filteredList
   } catch (error) {
-    console.error('Error fetching type list:', error)
     throw error
   }
 }
@@ -265,7 +259,6 @@ export async function fetchPokemonByType(
     
     return pokemonList
   } catch (error) {
-    console.error(`[TYPE FETCH] Error fetching Pokemon by type ${typeIdOrName}:`, error)
     throw error
   }
 }

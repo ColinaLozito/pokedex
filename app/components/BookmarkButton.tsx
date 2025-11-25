@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkCheck } from '@tamagui/lucide-icons'
-import { Button, useTheme } from 'tamagui'
+import { Button, GetThemeValueForKey, useTheme } from 'tamagui'
 
 interface BookmarkButtonProps {
   isBookmarked: boolean
@@ -32,6 +32,10 @@ export default function BookmarkButton({
 }: BookmarkButtonProps) {
   const theme = useTheme()
 
+  const shadowColor = (
+    theme.shadowColor?.val || 'rgba(0, 0, 0, 0.1)'
+  ) as GetThemeValueForKey<"backgroundColor">
+
   return (
     <Button
       size={size}
@@ -42,7 +46,7 @@ export default function BookmarkButton({
       disabled={disabled}
       color={theme.text.val}
       scaleIcon={scaleIcon}
-      shadowColor={theme.shadowColor?.val as any || 'rgba(0, 0, 0, 0.1)'}
+      shadowColor={shadowColor}
       shadowOpacity={0.3}
       shadowRadius={8}
       opacity={opacity}

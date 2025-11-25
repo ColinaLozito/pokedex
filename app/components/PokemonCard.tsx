@@ -1,9 +1,18 @@
 import { X } from '@tamagui/lucide-icons'
 import { getTypeColor } from 'app/utils/getTypeColor'
 import { useRouter } from 'expo-router'
+import { useState } from 'react'
 import { GestureResponderEvent, Pressable } from 'react-native'
-import { Button, Card, Image, Text, XStack, YStack } from 'tamagui'
+import { Button, Card, GetThemeValueForKey, Image, Text, XStack, YStack } from 'tamagui'
 import TypeChips from './TypeChips'
+
+// Constants for PokemonCard styling
+const POKEMON_CARD_COLORS = {
+  buttonBackground: 'rgba(0, 0, 0, 0.2)',
+  circularBackground: 'rgba(255, 255, 255, 0.15)',
+  noImageBackground: 'rgba(255, 255, 255, 0.2)',
+  mutedText: 'rgba(255, 255, 255, 0.7)',
+} as const
 
 interface PokemonCardProps {
   id: number
@@ -40,6 +49,7 @@ export default function PokemonCard({
   onNavigate
 }: PokemonCardProps) {
   const router = useRouter()
+  const [imageError, setImageError] = useState(false)
 
   const handleCardPress = async () => {
     // Use custom handler if provided
@@ -66,7 +76,10 @@ export default function PokemonCard({
     onRemove(id)
   }
 
-  const backgroundColor = getTypeColor(primaryType, variant)
+
+  const backgroundColor = (
+    getTypeColor(primaryType, variant)
+  ) as GetThemeValueForKey<"backgroundColor">
 
   return (
     <Pressable
@@ -81,7 +94,7 @@ export default function PokemonCard({
         elevate
         borderRadius={16}
         overflow="hidden"
-        bg={backgroundColor as any}
+        bg={backgroundColor}
         height={150}
         width='100%'
       >
@@ -91,11 +104,11 @@ export default function PokemonCard({
             displayRemoveButton && (
               <XStack position='absolute' top={6} right={6} zIndex={10}>
                 <Button
-                  size="$1.5"
+                  size={24}
                   circular
                   icon={X}
                   chromeless
-                  style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+                  style={{ backgroundColor: POKEMON_CARD_COLORS.buttonBackground }}
                   color="white"
                   onPress={handleRemove}
                 />
@@ -110,14 +123,14 @@ export default function PokemonCard({
               textTransform="capitalize"
               numberOfLines={1}
               lineHeight={24}
-              fontWeight="800"
+              fontWeight={800}
             >
               {name}
             </Text>
             <Text 
               fontSize={14} 
               color="white"
-              fontWeight="500"
+              fontWeight={500}
             >
               #{id.toString().padStart(3, '0')}
             </Text>
@@ -138,28 +151,29 @@ export default function PokemonCard({
               borderRadius={100}
               right={-15}
               top={-10}
-              bg='rgba(255, 255, 255, 0.15)'
+              bg={POKEMON_CARD_COLORS.circularBackground}
             />
             
             {/* Pokemon Sprite */}
-            {sprite ? (
+            {sprite && !imageError ? (
               <Image
                 source={{ uri: sprite }}
                 width={90}
                 height={90}
                 zIndex={1}
                 objectFit="contain"
+                onError={() => setImageError(true)}
               />
             ) : (
               <YStack
                 width={70}
                 height={70}
-                bg='rgba(255, 255, 255, 0.2)'
+                bg={POKEMON_CARD_COLORS.noImageBackground}
                 borderRadius={8}
                 justify='center'
                 items='center'
               >
-                <Text fontSize="$1" color="rgba(255, 255, 255, 0.7)">
+                <Text fontSize={12} color={POKEMON_CARD_COLORS.mutedText}>
                   No Image
                 </Text>
               </YStack>
@@ -173,7 +187,7 @@ export default function PokemonCard({
             </XStack>
           ) : 
             <XStack mt={8} ml={24}>
-              <Text fontSize={24} color="rgba(255, 255, 255, 0.7)">??</Text>
+              <Text fontSize={24} color={POKEMON_CARD_COLORS.mutedText}>??</Text>
             </XStack>
           }
         </YStack>

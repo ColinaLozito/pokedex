@@ -1,5 +1,5 @@
 import { pokemonTypeColors } from 'config/colors'
-import { Text, YStack } from 'tamagui'
+import { GetThemeValueForKey, Text, YStack } from 'tamagui'
 
 interface TypeBadgeProps {
   typeName: string
@@ -7,7 +7,9 @@ interface TypeBadgeProps {
 }
 
 export default function TypeBadge({ typeName, size = 'medium' }: TypeBadgeProps) {
-  const typeColor = pokemonTypeColors[typeName as keyof typeof pokemonTypeColors] || '#CCCCCC'
+  const typeColor = (
+    pokemonTypeColors[typeName as keyof typeof pokemonTypeColors] || '#CCCCCC'
+  ) as GetThemeValueForKey<"backgroundColor">
   
   // Size variants
   const sizeStyles = {
@@ -15,19 +17,19 @@ export default function TypeBadge({ typeName, size = 'medium' }: TypeBadgeProps)
       paddingHorizontal: 8,
       paddingVertical: 4,
       borderRadius: 6,
-      fontSize: '$2' as const,
+      fontSize: 14,
     },
     medium: {
       paddingHorizontal: 12,
       paddingVertical: 6,
       borderRadius: 8,
-      fontSize: '$3' as const,
+      fontSize: 16,
     },
     large: {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 10,
-      fontSize: '$4' as const,
+      fontSize: 20,
     },
   }
   
@@ -36,14 +38,14 @@ export default function TypeBadge({ typeName, size = 'medium' }: TypeBadgeProps)
   return (
     <YStack
       elevation={1}
-      bg={typeColor as any}
-      p={styles.paddingHorizontal}
+      bg={typeColor}
+      px={styles.paddingHorizontal}
       py={styles.paddingVertical}
       borderRadius={styles.borderRadius}
     >
       <Text 
         color="white" 
-        fontWeight="600" 
+        fontWeight={600} 
         fontSize={styles.fontSize}
         textTransform="capitalize"
       >

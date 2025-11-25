@@ -14,7 +14,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef } from 'react'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { H2, Image, Text, XStack, YStack, useTheme } from 'tamagui'
+import { GetThemeValueForKey, H2, Image, Text, XStack, YStack, useTheme } from 'tamagui'
 
 export default function PokemonDetailsScreen() {
   const theme = useTheme()
@@ -70,8 +70,7 @@ export default function PokemonDetailsScreen() {
       // Fetch the Pokemon details - automatically sets currentPokemonId
       // This will trigger re-render and scroll to top via the useEffect that watches currentPokemonId
       await fetchPokemonDetail(pokemonId)
-    } catch (error) {
-      console.error('Failed to fetch evolution Pokemon details:', error)
+    } catch (_error) {
       // Error toast is already shown by the store
     }
   }
@@ -100,14 +99,14 @@ export default function PokemonDetailsScreen() {
           color="white"
           textTransform="capitalize"
           fontSize={32}
-          fontWeight="800"
+          fontWeight={800}
         >
           {currentPokemon.name}
         </H2>
         <Text
           color="rgba(255, 255, 255, 0.9)"
           fontSize={18}
-          fontWeight="600"
+          fontWeight={600}
         >
           #{currentPokemon.id.toString().padStart(3, '0')}
         </Text>
@@ -120,21 +119,26 @@ export default function PokemonDetailsScreen() {
     if (!currentPokemon) return null
 
     // Calculate values inside callback to avoid dependency issues
-    const primaryTypeColor =
+    const primaryTypeColor = (
       currentPokemon.types.length > 0
         ? pokemonTypeColors[
             currentPokemon.types[0].type.name as keyof typeof pokemonTypeColors
           ] || theme.background.val
-        : theme.background.val
+        : theme.background.val ) as GetThemeValueForKey<"backgroundColor">
 
     const sprite =
       currentPokemon.sprites.other?.['official-artwork']?.front_default ||
       currentPokemon.sprites.other?.home?.front_default ||
       currentPokemon.sprites.front_default
 
+     
+    const containerBackgroundColor = (
+      theme.background.val || '#FFFFFF'
+    ) as GetThemeValueForKey<"backgroundColor">
+    
     return (
       <YStack
-        bg={theme.background.val as any}
+        bg={containerBackgroundColor}
         paddingHorizontal={16}
         paddingTop={60}
         items="center"
@@ -148,7 +152,7 @@ export default function PokemonDetailsScreen() {
           borderRadius={1000}
           width={1000}
           height={1000}
-          bg={primaryTypeColor as any}
+          bg={primaryTypeColor}
           opacity={0.9}
         />
         {/* Name and Number - Top */}
@@ -212,7 +216,7 @@ export default function PokemonDetailsScreen() {
   }
 
   return (
-    <YStack flex={1} bg={getPrimaryTypeColor() as any}>
+    <YStack flex={1} bg={getPrimaryTypeColor() as GetThemeValueForKey<"backgroundColor">}>
       <ScrollView ref={scrollViewRef} style={{ flex: 1, backgroundColor: theme.background.val }}>
         <SafeAreaView style={{ flex: 1 }}>
         <YStack flex={1}>

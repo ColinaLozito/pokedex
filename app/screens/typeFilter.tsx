@@ -60,7 +60,6 @@ export default function TypeFilterScreen() {
         // Store the filtered list for reactivity
         setFilteredList(data.map((item) => ({ id: item.id, name: item.name })))
       } catch (err) {
-        console.error('Failed to fetch Pokemon by type:', err)
         setError('Failed to load Pokemon')
         toast.show('Error', { message: 'Failed to load Pokemon for this type' })
       } finally {
@@ -97,7 +96,7 @@ export default function TypeFilterScreen() {
         params: { source: 'kid' }
       })
     } catch (error) {
-      console.error('Failed to fetch Pokémon details:', error)
+      // Error is handled by the store
     }
   }
   
@@ -144,7 +143,7 @@ export default function TypeFilterScreen() {
             <H2 
               color="white" 
               textTransform="capitalize"
-              fontWeight="800"
+              fontWeight={800}
             >
               {typeName}
             </H2>

@@ -1,5 +1,5 @@
 import { Pressable } from 'react-native'
-import { Image, Text, useTheme, YStack } from 'tamagui'
+import { GetThemeValueForKey, Image, Text, useTheme, YStack } from 'tamagui'
 
 interface EvolutionSpriteContainerProps {
   sprite: string
@@ -70,10 +70,12 @@ export default function EvolutionSpriteContainer({
         items='center'
         p={variantConfig.padding}
         borderRadius={12}
-        bg={isCurrent ? variantConfig.backgroundColor as any : undefined}
-        minWidth={variantConfig.minWidth ? parseInt(variantConfig.minWidth) : undefined}
-        maxWidth={variantConfig.maxWidth ? parseInt(variantConfig.maxWidth) : undefined}
+        bg={isCurrent ? (variantConfig.backgroundColor as GetThemeValueForKey<"backgroundColor">) : undefined}
         width={variant === 'branching-variant' ? '100%' : undefined}
+        style={{
+          minWidth: variantConfig.minWidth,
+          maxWidth: variantConfig.maxWidth,
+        }}
       >
         <Image
           source={{ uri: sprite }}
@@ -83,7 +85,7 @@ export default function EvolutionSpriteContainer({
         />
         <Text
           fontSize={variantConfig.nameFontSize}
-          fontWeight="700"
+          fontWeight={700}
           textTransform="capitalize"
           mt={variantConfig.nameMarginTop}
           text='center'

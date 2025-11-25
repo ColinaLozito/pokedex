@@ -1,5 +1,6 @@
 import typeSymbolsIcons from 'app/utils/typeSymbolsIcons'
 import { pokemonTypeColors } from 'config/colors'
+import { useCallback, useMemo } from 'react'
 import { Card, GetThemeValueForKey, H4, Image, Text, useTheme, XStack, YStack } from 'tamagui'
 
 export interface TypeGridItem {
@@ -12,26 +13,38 @@ interface TypeGridProps {
   onTypeSelect?: (typeId: number, typeName: string) => void
 }
 
+// Get color for type, fallback to gray if not found
+// Moved outside component since it doesn't depend on props/state
+const getTypeColor = (typeName: string): string => {
+  return (pokemonTypeColors[typeName as keyof typeof pokemonTypeColors] || '#A8A77A')
+}
+
+// Constant style for type icons - moved outside component to avoid recreation
+const typeIconStyle = {
+  width: 50,
+  height: 50,
+  opacity: 0.8,
+}
+
 export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
   const theme = useTheme()
   
-  if (typeList.length === 0) {
-    return null
-  }
-
-  const handleTypePress = (typeId: number, typeName: string) => {
+  // Hooks must be called before any early returns
+  const handleTypePress = useCallback((typeId: number, typeName: string) => {
     onTypeSelect?.(typeId, typeName)
-  }
-
-  // Get color for type, fallback to gray if not found
-  const getTypeColor = (typeName: string): string => {
-    return pokemonTypeColors[typeName as keyof typeof pokemonTypeColors] || '#A8A77A'
-  }
+  }, [onTypeSelect])
 
   // Split types into pairs for 2-column layout
-  const rows: TypeGridItem[][] = []
-  for (let i = 0; i < typeList.length; i += 2) {
-    rows.push(typeList.slice(i, i + 2))
+  const rows = useMemo(() => {
+    const result: TypeGridItem[][] = []
+    for (let i = 0; i < typeList.length; i += 2) {
+      result.push(typeList.slice(i, i + 2))
+    }
+    return result
+  }, [typeList])
+
+  if (typeList.length === 0) {
+    return null
   }
 
   return (
@@ -49,7 +62,7 @@ export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
                 hoverStyle={{ scale: 0.98 }}
                 pressStyle={{ scale: 0.95 }}
                 onPress={() => handleTypePress(type.id, type.name)}
-                backgroundColor={getTypeColor(type.name) as GetThemeValueForKey<"backgroundColor">}
+                backgroundColor={(getTypeColor(type.name)) as GetThemeValueForKey<"backgroundColor">}
               >
                 <Card.Header padded>
                   <XStack 
@@ -62,7 +75,7 @@ export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
                         fontSize={16} 
                         textTransform="capitalize"
                         color="white"
-                        fontWeight="800"
+                        fontWeight={800}
                       >
                         {type.name}
                       </Text>
@@ -71,11 +84,7 @@ export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
                       source={typeSymbolsIcons[
                         type.name.toLowerCase() as keyof typeof typeSymbolsIcons
                       ]}
-                      style={{
-                        width: 50,
-                        height: 50,
-                        opacity: 0.8,
-                      }}
+                      style={typeIconStyle}
                       objectFit="contain"
                     />
                   </XStack>

@@ -40,14 +40,17 @@ export default function PokemonDetailsScreen() {
   const toggleBookmark = usePokemonGeneralStore((state) => state.toggleBookmark)
   const toggleParentBookmark = usePokemonGeneralStore((state) => state.toggleParentBookmark)
   const bookmarkedPokemonIds = usePokemonGeneralStore((state) => state.bookmarkedPokemonIds)
-  const parentBookmarkedPokemonIds = usePokemonGeneralStore((state) => state.parentBookmarkedPokemonIds)
+  const parentBookmarkedPokemonIds = usePokemonGeneralStore(
+    (state) => state.parentBookmarkedPokemonIds)
   
   // Choose the correct bookmark function and array based on source
   const activeToggleBookmark = bookmarkSource === 'parent' ? toggleParentBookmark : toggleBookmark
   const activeBookmarkedPokemonIds = bookmarkSource === 'parent' ? parentBookmarkedPokemonIds : bookmarkedPokemonIds
   
   // Check if current Pokemon is bookmarked (reactive)
-  const isBookmarked = currentPokemon ? activeBookmarkedPokemonIds.includes(currentPokemon.id) : false
+  const isBookmarked = currentPokemon 
+    ? activeBookmarkedPokemonIds.includes(currentPokemon.id) 
+    : false
   
   // Clear error when component mounts or when navigating back
   useEffect(() => {

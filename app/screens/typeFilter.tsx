@@ -63,7 +63,7 @@ export default function TypeFilterScreen() {
         const data = await fetchPokemonByTypeAndGetDisplayData(typeId, typeName)
         // Store the filtered list for reactivity
         setFilteredList(data.map((item) => ({ id: item.id, name: item.name })))
-      } catch (err) {
+      } catch (_err) {
         setError('Failed to load Pokemon')
         toast.show('Error', { message: 'Failed to load Pokemon for this type' })
       } finally {
@@ -80,6 +80,7 @@ export default function TypeFilterScreen() {
   const pokemonData = useMemo(() => {
     if (filteredList.length === 0) return []
     return getPokemonDisplayData(filteredList, typeName)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredList, typeName, getPokemonDisplayData, pokemonDetails, basicPokemonCache])
   
   // Handle Pokemon card selection

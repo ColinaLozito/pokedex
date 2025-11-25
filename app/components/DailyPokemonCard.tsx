@@ -11,7 +11,7 @@ interface DailyPokemonCardProps {
   sprite: string | null
   isBookmarked: boolean
   isLoading: boolean
-  isSpinning: boolean
+  isShuffling: boolean
   onGetPokemon: () => void
   onPokemonPress: (id: number) => void
   onToggleBookmark: (id: number) => void
@@ -23,7 +23,7 @@ export default function DailyPokemonCard({
   sprite,
   isBookmarked,
   isLoading,
-  isSpinning,
+  isShuffling,
   onGetPokemon,
   onPokemonPress,
   onToggleBookmark,
@@ -41,7 +41,7 @@ export default function DailyPokemonCard({
             </H3>
             <Button
               onPress={onGetPokemon}
-              disabled={isLoading || isSpinning}
+              disabled={isLoading || isShuffling}
               size={68}
               backgroundColor={theme.water?.val}
               color={theme.text.val}
@@ -49,7 +49,7 @@ export default function DailyPokemonCard({
               height={68}
             >
               <Text fontSize={18} fontWeight={600}>
-                {isLoading ? 'Loading...' : isSpinning ? 'Spinning...' : 'Get Pokemon'}
+                {isLoading ? 'Loading...' : isShuffling ? 'Shuffling...' : 'Get Pokemon'}
               </Text>
             </Button>
           </YStack>

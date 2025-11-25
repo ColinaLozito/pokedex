@@ -20,7 +20,7 @@ export default function ParentScreen() {
   const theme = useTheme()
   const toast = useToastController()
   
-  const [isSpinning, setIsSpinning] = useState(false)
+  const [isShuffling, setisShuffling] = useState(false)
   const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [initialLoad, setInitialLoad] = useState(true)
@@ -78,7 +78,7 @@ export default function ParentScreen() {
       toast.show('Error', { message: 'Failed to load Pokemon' })
     } finally {
       setLoading(false)
-      setIsSpinning(false)
+      setisShuffling(false)
     }
   }, [fetchPokemonDetail, setDailyPokemonId, toast, dismiss])
   
@@ -90,7 +90,7 @@ export default function ParentScreen() {
       setRerollCount()
     }
     setRouletteSession(nextSession)
-    setIsSpinning(true)
+    setisShuffling(true)
     showRoulette({
       sessionKey: nextSession,
       finalNumber: newPokemonId,
@@ -167,7 +167,7 @@ export default function ParentScreen() {
             sprite={sprite}
             isBookmarked={bookmarked}
             isLoading={loading}
-            isSpinning={isSpinning}
+            isShuffling={isShuffling}
             onGetPokemon={() => handleStartRoulette({ isInitialLoad: true })}
             onPokemonPress={handlePokemonPress}
             onToggleBookmark={toggleParentBookmark}
@@ -177,7 +177,7 @@ export default function ParentScreen() {
           {selectedPokemonId && currentPokemon && (
             <Button
               onPress={() => handleStartRoulette({ isInitialLoad: false })}
-              disabled={loading || isSpinning}
+              disabled={loading || isShuffling}
               color={theme.text.val}
               size={48}
               bordered

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Text, useTheme, YStack } from 'tamagui'
+import { Text, YStack, useTheme } from 'tamagui'
 
 interface NumberRouletteProps {
   onComplete: (finalNumber: number) => void
@@ -20,11 +20,11 @@ export default function NumberRoulette({
 }: NumberRouletteProps) {
   const theme = useTheme()
   const [currentNumber, setCurrentNumber] = useState<number>(min)
-  const [isSpinning, setIsSpinning] = useState(false)
+  const [isShuffling, setisShuffling] = useState(false)
   const onCompleteRef = useRef(onComplete)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const startTimeRef = useRef<number | null>(null)
-  const isSpinningRef = useRef(false)
+  const isShufflingRef = useRef(false)
   const finalNumberRef = useRef<number | undefined>(finalNumber)
   
   // Update ref when callback changes
@@ -43,11 +43,11 @@ export default function NumberRoulette({
         clearTimeout(timeoutRef.current)
         timeoutRef.current = null
       }
-      if (isSpinningRef.current) {
-        isSpinningRef.current = false
+      if (isShufflingRef.current) {
+        isShufflingRef.current = false
         // Update state asynchronously to avoid synchronous setState in effect
         Promise.resolve().then(() => {
-          setIsSpinning(false)
+          setisShuffling(false)
         })
       }
       return
@@ -60,9 +60,9 @@ export default function NumberRoulette({
     }
     
     // Start spinning asynchronously
-    isSpinningRef.current = true
+    isShufflingRef.current = true
     Promise.resolve().then(() => {
-      setIsSpinning(true)
+      setisShuffling(true)
       setCurrentNumber(min)
       startTimeRef.current = Date.now()
       const targetNumber =
@@ -71,7 +71,7 @@ export default function NumberRoulette({
           : Math.floor(Math.random() * (max - min + 1)) + min
       
       const spin = () => {
-        if (!startTimeRef.current || !isSpinningRef.current) return
+        if (!startTimeRef.current || !isShufflingRef.current) return
         
         const elapsed = Date.now() - startTimeRef.current
         const progress = Math.min(elapsed / duration, 1)
@@ -79,8 +79,8 @@ export default function NumberRoulette({
         if (progress >= 1) {
           // Animation complete - show provided final number (or generated fallback)
           setCurrentNumber(targetNumber)
-          isSpinningRef.current = false
-          setIsSpinning(false)
+          isShufflingRef.current = false
+          setisShuffling(false)
           
           // Add 1 second delay after final number is shown before calling onComplete
           timeoutRef.current = setTimeout(() => {
@@ -105,7 +105,7 @@ export default function NumberRoulette({
     })
     
     return () => {
-      isSpinningRef.current = false
+      isShufflingRef.current = false
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
         timeoutRef.current = null
@@ -133,14 +133,14 @@ export default function NumberRoulette({
       >
         #{String(currentNumber).padStart(4, '0')}
       </Text>
-      {isSpinning && (
+      {isShuffling && (
         <Text
           fontSize={20}
           color={theme.gray10?.val || '#666666'}
           mt={12}
           fontWeight={600}
         >
-          Spinning...
+          Shuffling
         </Text>
       )}
     </YStack>

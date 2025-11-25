@@ -24,7 +24,6 @@ export default function TypeFilterScreen() {
   const params = useLocalSearchParams<{ typeId: string; typeName: string }>()
   
   const [filteredList, setFilteredList] = useState<PokemonListItem[]>([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   // Add these new states for Pokemon selection loading
   const [isFetchingPokemon, setIsFetchingPokemon] = useState(false)
@@ -48,8 +47,8 @@ export default function TypeFilterScreen() {
   
   const addRecentSelection = usePokemonGeneralStore((state) => state.addRecentSelection)
   
-  // Show loading modal when loading (for initial list or individual Pokemon)
-  useLoadingModal(loading || isFetchingPokemon, 'LOADING POKEMON', [loading, isFetchingPokemon])
+  // Show loading modal only when fetching individual Pokemon, not for initial list load
+  useLoadingModal(isFetchingPokemon, 'LOADING POKEMON', [isFetchingPokemon])
   
   // Navigate to pokemon details after loading modal dismisses
   useEffect(() => {
@@ -77,12 +76,10 @@ export default function TypeFilterScreen() {
     const loadPokemon = async () => {
       if (!typeId) {
         setError('Invalid type ID')
-        setLoading(false)
         return
       }
       
       try {
-        setLoading(true)
         setError(null)
         const data = await fetchPokemonByTypeAndGetDisplayData(typeId, typeName)
         // Store the filtered list for reactivity
@@ -90,9 +87,7 @@ export default function TypeFilterScreen() {
       } catch (_err) {
         setError('Failed to load Pokemon')
         toast.show('Error', { message: 'Failed to load Pokemon for this type' })
-      } finally {
-        setLoading(false)
-      }
+      } 
     }
     
     loadPokemon()

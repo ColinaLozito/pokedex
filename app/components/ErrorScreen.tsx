@@ -29,26 +29,24 @@ export default function ErrorScreen({
     >
       <YStack
         flex={1}
-        style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}
+        justifyContent='center'
+        alignItems='center'
+        padding={16}
       >
         <Text
           fontSize={20}
-          style={{
-            color: errorColor || theme.red10?.val || '#EF4444',
-            textAlign: 'center',
-          }}
+          color={errorColor || theme.red10?.val || '#EF4444'}
+          textAlign='center'
         >
           {error}
         </Text>
         {onGoBack && (
           <>
-            <YStack style={{ height: 20 }} />
+            <YStack height={20} />
             <Text
               fontSize={16}
-              style={{
-                color: goBackColor || theme.blue10?.val || '#3B82F6',
-                textDecorationLine: 'underline',
-              }}
+              color={goBackColor || theme.blue10?.val || '#3B82F6'}
+              textDecorationLine='underline'
               onPress={onGoBack}
             >
               {goBackText}

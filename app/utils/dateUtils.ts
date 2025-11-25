@@ -1,3 +1,6 @@
+// Maximum Pokemon ID for random generation (PokéAPI has Pokemon up to #1000+)
+const MAX_POKEMON_ID = 1000
+
 /**
  * Get today's date string in YYYY-MM-DD format
  */
@@ -15,9 +18,10 @@ export function isNewDay(dateString: string | null): boolean {
 }
 
 /**
- * Generate a random Pokemon ID between 1 and 1000
+ * Generate a random Pokemon ID between 1 and MAX_POKEMON_ID
+ * @returns Random Pokemon ID between 1 and 1000
  */
 export function generateRandomPokemonId(): number {
-  return Math.floor(Math.random() * 1000) + 1
+  return Math.floor(Math.random() * MAX_POKEMON_ID) + 1
 }
 

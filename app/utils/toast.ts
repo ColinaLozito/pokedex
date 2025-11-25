@@ -1,7 +1,10 @@
-// Toast controller will be set from the app
-let toastController: any = null
+import type { useToastController } from '@tamagui/toast'
 
-export const setToastController = (controller: any) => {
+// Toast controller will be set from the app
+type ToastController = ReturnType<typeof useToastController>
+let toastController: ToastController | null = null
+
+export const setToastController = (controller: ToastController) => {
   toastController = controller
 }
 

@@ -13,18 +13,16 @@ export default function HomeScreen() {
       style={{ flex: 1 }}
       resizeMode="cover"
     >
-      <YStack flex={1} style={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-        <YStack width={"100%"} height={90} style={{ position: "absolute", top: "35%" }}>
+      <YStack flex={1} justifyContent='flex-end' alignItems='flex-end'>
+        <YStack width="100%" height={90} position="absolute" top="35%">
           <Image
             source={PokedexLogo}
-            style={{
-              width: 256,
-              height: 84,
-              alignSelf: 'center',
-            }}
+            width={256}
+            height={84}
+            alignSelf='center'
           />
         </YStack>
-        <XStack style={{ width: '100%', alignItems: 'center', justifyContent: 'center', gap: 24, marginBottom: 68 }}>
+        <XStack width='100%' alignItems='center' justifyContent='center' gap={24} marginBottom={68}>
           <ActionButton
             text="Parent"
             onPress={() => router.push('/screens/parent')}

@@ -42,6 +42,7 @@ export default function TypeBadge({ typeName, size = 'medium' }: TypeBadgeProps)
       px={styles.paddingHorizontal}
       py={styles.paddingVertical}
       borderRadius={styles.borderRadius}
+      alignSelf="flex-start"
     >
       <Text 
         color="white" 

@@ -97,9 +97,9 @@ export const useDailyPokemonStore = create<DailyPokemonState>()(
        * Increments reroll count if same day
        */
       rerollDailyPokemon: async (): Promise<number> => {
-        const state = get()
         const newId = generateRandomPokemonId()
-        state.setDailyPokemonId(newId)
+        // Call setDailyPokemonId action directly
+        get().setDailyPokemonId(newId)
         return newId
       },
 

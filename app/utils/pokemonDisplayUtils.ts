@@ -1,7 +1,11 @@
 import type { CombinedPokemonDetail, PokemonDetail, PokemonListItem } from '../services/types'
 import { getPokemonSprite, getPokemonSpriteUrl } from './pokemonSprites'
 
-export type PokemonDisplayData = Array<{
+/**
+ * Array of Pokemon display data items
+ * Used for transforming lists of Pokemon into display-ready format
+ */
+export type PokemonDisplayDataArray = Array<{
   id: number
   name: string
   sprite: string | null
@@ -11,13 +15,18 @@ export type PokemonDisplayData = Array<{
 
 /**
  * Transform Pokemon list to display-ready data with sprites and types
+ * @param pokemonList - List of Pokemon items to transform
+ * @param pokemonDetails - Record of full Pokemon details by ID
+ * @param basicPokemonCache - Record of basic Pokemon data by ID
+ * @param fallbackType - Optional fallback type if Pokemon has no type data
+ * @returns Array of display-ready Pokemon data
  */
 export function getPokemonDisplayData(
   pokemonList: PokemonListItem[],
   pokemonDetails: Record<number, CombinedPokemonDetail>,
   basicPokemonCache: Record<number, PokemonDetail>,
   fallbackType?: string
-): PokemonDisplayData {
+): PokemonDisplayDataArray {
   return pokemonList.map((pokemon) => {
     const fullData = pokemonDetails[pokemon.id]
     const basicData = basicPokemonCache[pokemon.id]

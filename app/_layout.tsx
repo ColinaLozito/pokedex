@@ -14,8 +14,7 @@ import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf'
 import MontserratThin from '../assets/fonts/Montserrat-Thin.ttf'
 import { Provider } from './components/Provider'
 import { fetchTypeList } from './services/api'
-import { usePokemonDataStore } from './store/pokemonDataStore'
-import { usePokemonStore } from './store/pokemonStore'
+import { usePokemonGeneralStore } from './store/pokemonGeneralStore'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -44,9 +43,6 @@ export default function RootLayout() {
   })
 
   useEffect(() => {
-    /* (async () => {
-      await AsyncStorage.clear()
-    })() */
     if (fontsLoaded || fontError) {
       // Hide the splash screen after the fonts have loaded (or an error was returned) and the UI is ready.
       SplashScreen.hideAsync()
@@ -65,11 +61,11 @@ export default function RootLayout() {
 }
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
-  const typeList = usePokemonStore((state) => state.typeList)
-  const setTypeList = usePokemonStore((state) => state.setTypeList)
+  const typeList = usePokemonGeneralStore((state) => state.typeList)
+  const setTypeList = usePokemonGeneralStore((state) => state.setTypeList)
   
-  // Use new data store for Pokemon list
-  const fetchPokemonListAction = usePokemonDataStore((state) => state.fetchPokemonListAction)
+  // Use general store for Pokemon list
+  const fetchPokemonListAction = usePokemonGeneralStore((state) => state.fetchPokemonListAction)
 
   useEffect(() => {
     // Fetch Pokemon list using new store (handles caching internally)

@@ -26,13 +26,14 @@ export default function LoadingScreen({
     >
       <YStack
         flex={1}
-        style={{ justifyContent: 'center', alignItems: 'center' }}
+        justifyContent='center'
+        alignItems='center'
       >
         <ActivityIndicator
           size="large"
           color={indicatorColor || theme.color.val}
         />
-        <Text style={{ marginTop: 16 }} color={textColor || theme.text.val}>
+        <Text marginTop={16} color={textColor || theme.text.val}>
           {message}
         </Text>
       </YStack>

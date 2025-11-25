@@ -27,11 +27,13 @@ export default function EmptyStateScreen({
     >
       <YStack
         flex={1}
-        style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}
+        justifyContent='center'
+        alignItems='center'
+        padding={16}
       >
         <Text
           fontSize={20}
-          style={{ textAlign: 'center' }}
+          textAlign='center'
           color={titleColor || theme.text.val}
         >
           {title}
@@ -39,10 +41,8 @@ export default function EmptyStateScreen({
         {subtitle && (
           <Text
             fontSize={14}
-            style={{
-              color: subtitleColor || theme.gray10?.val || '#737373',
-              marginTop: 8,
-            }}
+            color={subtitleColor || theme.gray10?.val || '#737373'}
+            marginTop={8}
           >
             {subtitle}
           </Text>

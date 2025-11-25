@@ -1,7 +1,7 @@
 import { X } from '@tamagui/lucide-icons'
 import { getTypeColor } from 'app/utils/getTypeColor'
 import { useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { GestureResponderEvent, Pressable } from 'react-native'
 import { Button, Card, GetThemeValueForKey, Image, Text, XStack, YStack } from 'tamagui'
 import TypeChips from './TypeChips'
@@ -51,7 +51,7 @@ export default function PokemonCard({
   const router = useRouter()
   const [imageError, setImageError] = useState(false)
 
-  const handleCardPress = async () => {
+  const handleCardPress = useCallback(async () => {
     // Use custom handler if provided
     if (onSelect) {
       onSelect(id)
@@ -69,17 +69,16 @@ export default function PokemonCard({
       pathname: '/screens/pokemonDetails',
       params: { source: bookmarkSource, id: id.toString() }
     })
-  }
+  }, [id, onSelect, onNavigate, bookmarkSource, router])
 
-  const handleRemove = (e: GestureResponderEvent) => {
+  const handleRemove = useCallback((e: GestureResponderEvent) => {
     e.stopPropagation()
     onRemove(id)
-  }
+  }, [id, onRemove])
 
-
-  const backgroundColor = (
+  const backgroundColor = useMemo(() => (
     getTypeColor(primaryType, variant)
-  ) as GetThemeValueForKey<"backgroundColor">
+  ) as GetThemeValueForKey<"backgroundColor">, [primaryType, variant])
 
   return (
     <Pressable
@@ -108,7 +107,7 @@ export default function PokemonCard({
                   circular
                   icon={X}
                   chromeless
-                  style={{ backgroundColor: POKEMON_CARD_COLORS.buttonBackground }}
+                  backgroundColor={POKEMON_CARD_COLORS.buttonBackground}
                   color="white"
                   onPress={handleRemove}
                 />

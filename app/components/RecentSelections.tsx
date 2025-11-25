@@ -1,6 +1,7 @@
 import type { CombinedPokemonDetail, PokemonDetail } from 'app/services/types'
-import { RecentSelection } from 'app/store/pokemonStore'
+import { RecentSelection } from 'app/store/pokemonGeneralStore'
 import { transformPokemonToDisplayData } from 'app/utils/pokemonDisplayData'
+import { useMemo } from 'react'
 import { H4, useTheme, XStack, YStack } from 'tamagui'
 import PokemonCard from './PokemonCard'
 
@@ -21,19 +22,22 @@ export default function RecentSelections({
 }: RecentSelectionsProps) {
   const theme = useTheme()
 
+  // Get Pokemon data with sprites for each recent selection
+  // Must be called before early return to follow Rules of Hooks
+  const recentPokemonData = useMemo(() => {
+    return recentSelections.map((pokemon) => 
+      transformPokemonToDisplayData(
+        pokemon.id,
+        pokemon.name,
+        getPokemonDetail,
+        getBasicPokemon
+      )
+    )
+  }, [recentSelections, getPokemonDetail, getBasicPokemon])
+
   if (recentSelections.length === 0) {
     return null
   }
-
-  // Get Pokemon data with sprites for each recent selection
-  const recentPokemonData = recentSelections.map((pokemon) => 
-    transformPokemonToDisplayData(
-      pokemon.id,
-      pokemon.name,
-      getPokemonDetail,
-      getBasicPokemon
-    )
-  )
 
   return (
     <YStack gap={13}>

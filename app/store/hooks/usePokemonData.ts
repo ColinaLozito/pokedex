@@ -1,11 +1,12 @@
 import { usePokemonDataStore } from '../pokemonDataStore'
+import { usePokemonGeneralStore } from '../pokemonGeneralStore'
 
 /**
  * Hook to get Pokemon list
  */
 export const usePokemonList = () => {
-  const list = usePokemonDataStore(state => state.pokemonList)
-  const fetchList = usePokemonDataStore(state => state.fetchPokemonListAction)
+  const list = usePokemonGeneralStore(state => state.pokemonList)
+  const fetchList = usePokemonGeneralStore(state => state.fetchPokemonListAction)
   return { list, fetchList }
 }
 
@@ -28,7 +29,11 @@ export const usePokemonDetail = (id: number | null) => {
  */
 export const useCurrentPokemon = () => {
   const currentId = usePokemonDataStore(state => state.currentPokemonId)
-  const currentPokemon = usePokemonDataStore(state => state.getCurrentPokemon())
+  const currentPokemon = usePokemonDataStore(state => 
+    state.currentPokemonId !== null 
+      ? state.pokemonDetails[state.currentPokemonId] 
+      : undefined
+  )
   const setCurrentId = usePokemonDataStore(state => state.setCurrentPokemonId)
   
   return { currentId, currentPokemon, setCurrentId }

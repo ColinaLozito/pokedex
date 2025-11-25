@@ -1,8 +1,8 @@
-import { useCallback } from 'react'
 import EvolutionSpriteContainer from 'app/components/EvolutionSpriteContainer'
 import type { EvolutionChainLink, PokemonDetail } from 'app/services/types'
 import { buildEvolutionTree, collectEvolutionVariants, isBranchingEvolution, type EvolutionNode } from 'app/utils/evolutionTree'
 import { getPokemonSprite, getPokemonSpriteUrl } from 'app/utils/pokemonSprites'
+import { useCallback, useMemo } from 'react'
 import { H4, Text, useTheme, XStack, YStack } from 'tamagui'
 
 interface EvolutionChainProps {
@@ -20,11 +20,11 @@ export default function EvolutionChain({
 }: EvolutionChainProps) {
   const theme = useTheme()
   
-  // Build the evolution tree
-  const rootNode = buildEvolutionTree(evolutionChainTree)
+  // Build the evolution tree (memoized to avoid recalculation)
+  const rootNode = useMemo(() => buildEvolutionTree(evolutionChainTree), [evolutionChainTree])
   
-  // Check if it's branching
-  const isBranching = isBranchingEvolution(evolutionChainTree)
+  // Check if it's branching (memoized to avoid recalculation)
+  const isBranching = useMemo(() => isBranchingEvolution(evolutionChainTree), [evolutionChainTree])
   
   // Get sprite for a Pokemon (with cache fallback and error handling)
   const getSprite = useCallback((pokemonId: number): string => {
@@ -52,7 +52,7 @@ export default function EvolutionChain({
   }, [getBasicPokemon])
   
   // Render a single Pokemon card (for branching evolution)
-  const renderPokemonSprite = (node: EvolutionNode, isCurrent: boolean = false, variantType: 'branching-variant' | 'branching-initial' | 'linear') => {
+  const renderPokemonSprite = useCallback((node: EvolutionNode, isCurrent: boolean = false, variantType: 'branching-variant' | 'branching-initial' | 'linear') => {
     const sprite = getSprite(node.id)
     return (
       <EvolutionSpriteContainer
@@ -64,7 +64,7 @@ export default function EvolutionChain({
         variant={variantType}
       />
     )
-  }
+  }, [getSprite, onPokemonPress])
   
   // VARIANT 1: Linear Evolution - Each Pokemon in column (image, name, ID) with arrows between
   const renderLinearEvolution = (node: EvolutionNode): React.ReactNode => {

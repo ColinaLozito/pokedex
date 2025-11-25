@@ -6,11 +6,12 @@ import NumberRoulette from 'app/components/NumberRoulette'
 import PokemonCard from 'app/components/PokemonCard'
 import { useDailyPokemonStore } from 'app/store/dailyPokemonStore'
 import { usePokemonDataStore } from 'app/store/pokemonDataStore'
+import { usePokemonGeneralStore } from 'app/store/pokemonGeneralStore'
 import { getPokemonSprite, getPokemonSpriteUrl } from 'app/utils/pokemonSprites'
 import { setToastController } from 'app/utils/toast'
 import { useRouter } from 'expo-router'
-import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, ImageBackground, ScrollView } from 'react-native'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ImageBackground, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button, Card, H2, Text, YStack, useTheme } from 'tamagui'
 import PokeballWallpaper from '../../assets/images/pokeball-patten.png'
@@ -33,8 +34,8 @@ export default function ParentScreen() {
   const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
   const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
-  const toggleParentBookmark = usePokemonDataStore((state) => state.toggleParentBookmark)
-  const parentBookmarkedPokemonIds = usePokemonDataStore(
+  const toggleParentBookmark = usePokemonGeneralStore((state) => state.toggleParentBookmark)
+  const parentBookmarkedPokemonIds = usePokemonGeneralStore(
     (state) => state.parentBookmarkedPokemonIds)
   
   // Set toast controller
@@ -56,13 +57,13 @@ export default function ParentScreen() {
             setLoading(true)
             await fetchPokemonDetail(dailyId)
             setSelectedPokemonId(dailyId)
-          } catch (error) {
+          } catch (_error) {
             // Error is handled by the store
           } finally {
             setLoading(false)
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // Error is handled by the store
       } finally {
         setInitialLoad(false)
@@ -73,7 +74,7 @@ export default function ParentScreen() {
   }, [getDailyPokemon, fetchPokemonDetail])
   
   // Handle roulette completion
-  const handleRouletteComplete = async (finalNumber: number) => {
+  const handleRouletteComplete = useCallback(async (finalNumber: number) => {
     try {
       setLoading(true)
       setSelectedPokemonId(finalNumber)
@@ -85,14 +86,14 @@ export default function ParentScreen() {
       setDailyPokemonId(finalNumber)
       
       toast.show('Pokemon Selected!', { message: `You got Pokemon #${String(finalNumber).padStart(4, '0')}!` })
-    } catch (error) {
+    } catch (_error) {
       toast.show('Error', { message: 'Failed to load Pokemon' })
     } finally {
       setLoading(false)
       setIsSpinning(false)
       setShowRoulette(false)
     }
-  }
+  }, [fetchPokemonDetail, setDailyPokemonId, toast])
   
   // Start roulette
   const handleStartRoulette = useCallback(() => {
@@ -117,7 +118,7 @@ export default function ParentScreen() {
           pathname: '/screens/pokemonDetails',
           params: { source: 'parent' },
         })
-      } catch (error) {
+      } catch (_error) {
         // Error is handled by the store
       }
     },
@@ -129,15 +130,15 @@ export default function ParentScreen() {
     return (
       <Card elevate bordered background={theme.red.val}>
         <Card.Header padded>
-          <YStack style={{ gap: 12, alignItems: 'center', width: '100%' }}>
-            <Text fontSize={16} style={{ textAlign: 'center' }} color={theme.text.val}>
+          <YStack gap={12} items='center' width='100%'>
+            <Text fontSize={16} textAlign='center' color={theme.text.val}>
               Ready to spin?
             </Text>
             <Button
               onPress={handleStartRoulette}
               disabled={loading || isSpinning}
               size={68}
-              style={{ backgroundColor: theme.water?.val }}
+              backgroundColor={theme.water?.val}
               color={theme.text.val}
               width="100%"
               height={68}
@@ -154,21 +155,22 @@ export default function ParentScreen() {
   const currentPokemon = selectedPokemonId ? getPokemonDetail(selectedPokemonId) : null
   const rerollCount = getRerollCount()
   
-  // Get sprite
-  const getSprite = () => {
+  // Get sprite (memoized to avoid recalculation)
+  const sprite = useMemo(() => {
     if (!currentPokemon || !selectedPokemonId) return null
     const basicData = getBasicPokemon(selectedPokemonId)
     return getPokemonSprite(currentPokemon, selectedPokemonId) || 
            (basicData ? getPokemonSprite(basicData, selectedPokemonId) : 
             getPokemonSpriteUrl(selectedPokemonId))
-  }
+  }, [currentPokemon, selectedPokemonId, getBasicPokemon])
   
-  const sprite = getSprite()
-  // Make bookmark state reactive by subscribing to the array directly
-  const bookmarked =
+  // Make bookmark state reactive by subscribing to the array directly (memoized)
+  const bookmarked = useMemo(() =>
     selectedPokemonId
       ? parentBookmarkedPokemonIds.includes(selectedPokemonId)
-      : false
+      : false,
+    [selectedPokemonId, parentBookmarkedPokemonIds]
+  )
 
   // Render Pokemon Card section
   const renderPokemonCard = useCallback(() => {
@@ -193,14 +195,12 @@ export default function ParentScreen() {
             }}
           >
             <YStack
-              style={{
-                gap: 12,
-                alignItems: 'center',
-                width: '100%',
-                paddingTop: 24,
-              }}
+              gap={12}
+              items='center'
+              width='100%'
+              paddingTop={24}
             >
-              <YStack style={{ width: '70%' }}>
+              <YStack width='70%'>
                 <PokemonCard
                   id={currentPokemon.id}
                   name={currentPokemon.name}
@@ -248,8 +248,7 @@ export default function ParentScreen() {
         <YStack flex={1} gap={16} p={16} pt={48}>
           {/* Header */}
           <H2 mb={16} color={theme.text.val}>
-            {`Pokemon 
-            of the day`}
+            Pokemon of the day
           </H2>
           
           {/* Number Roulette Card - Show when spinning */}
@@ -258,7 +257,7 @@ export default function ParentScreen() {
               <Card.Header padded>
                 <YStack width="100%" minH={150}>
                   <NumberRoulette
-                    key={`roulette-${isSpinning}-${showRoulette}-${Date.now()}`} // Force re-render on state change
+                    key={`roulette-${isSpinning}-${showRoulette}`}
                     onComplete={handleRouletteComplete}
                     duration={3000}
                     min={1}
@@ -300,10 +299,7 @@ export default function ParentScreen() {
           )}
           
           {loading && selectedPokemonId && (
-            <YStack alignItems="center" mt={16}>
-              <ActivityIndicator size="large" color={theme.color.val} />
-              <Text mt={8} color={theme.text.val}>Loading Pokemon...</Text>
-            </YStack>
+            <LoadingScreen message="Loading Pokemon..." />
           )}
           
           {/* Parent Bookmarked Pokemon Section */}
@@ -315,7 +311,7 @@ export default function ParentScreen() {
             onSelect={handlePokemonPress}
             bookmarkSource="parent"
           />
-        </YStack>
+    </YStack>
       </ScrollView>
     </SafeAreaView>
   )

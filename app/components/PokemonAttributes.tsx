@@ -24,7 +24,7 @@ export default function PokemonAttributes({ species, height, weight }: PokemonAt
                   {species}
                 </Text>
               </YStack>
-              <YStack width={1} height='100%' bg='#E0E0E0' mx={8} />
+              <YStack width={1} height='100%' bg={theme.border?.val || theme.gray5?.val || '#E0E0E0'} mx={8} />
             </>
           )}
           
@@ -39,7 +39,7 @@ export default function PokemonAttributes({ species, height, weight }: PokemonAt
           </YStack>
           
           {/* Vertical Divider */}
-          <YStack width={1} height='100%' bg='#E0E0E0' mx={8} />
+          <YStack width={1} height='100%' bg={theme.border?.val || theme.gray5?.val || '#E0E0E0'} mx={8} />
           
           {/* Weight */}
           <YStack flex={1} items='center'>

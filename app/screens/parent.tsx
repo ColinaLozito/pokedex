@@ -34,7 +34,6 @@ export default function ParentScreen() {
   const getRerollCount = useDailyPokemonStore((state) => state.getRerollCount)
   const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
-  const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   const toggleParentBookmark = usePokemonGeneralStore((state) => state.toggleParentBookmark)
   const setRerollCount = useDailyPokemonStore((state) => state.setRerollCount)
   const parentBookmarkedPokemonIds = usePokemonGeneralStore(
@@ -135,11 +134,9 @@ export default function ParentScreen() {
   // Get sprite (memoized to avoid recalculation)
   const sprite = useMemo(() => {
     if (!displayPokemon || !selectedPokemonId) return null
-    const basicData = getBasicPokemon(selectedPokemonId)
     return getPokemonSprite(displayPokemon, selectedPokemonId) || 
-           (basicData ? getPokemonSprite(basicData, selectedPokemonId) : 
-            getPokemonSpriteUrl(selectedPokemonId))
-  }, [displayPokemon, selectedPokemonId, getBasicPokemon])
+           getPokemonSpriteUrl(selectedPokemonId)
+  }, [displayPokemon, selectedPokemonId])
   
   // Make bookmark state reactive by subscribing to the array directly (memoized)
   const bookmarked = useMemo(() =>
@@ -199,7 +196,6 @@ export default function ParentScreen() {
           <BookmarkedPokemon
             bookmarkedPokemonIds={parentBookmarkedPokemonIds}
             getPokemonDetail={getPokemonDetail}
-            getBasicPokemon={getBasicPokemon}
             onRemove={toggleParentBookmark}
             onSelect={handlePokemonPress}
             bookmarkSource="parent"

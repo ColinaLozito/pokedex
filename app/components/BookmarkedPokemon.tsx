@@ -1,5 +1,5 @@
 import { Bookmark } from '@tamagui/lucide-icons'
-import type { CombinedPokemonDetail, PokemonDetail } from 'app/services/types'
+import type { CombinedPokemonDetail } from 'app/services/types'
 import { transformPokemonToDisplayData } from 'app/utils/pokemonDisplayData'
 import { useMemo } from 'react'
 import { H4, useTheme, XStack, YStack } from 'tamagui'
@@ -8,7 +8,6 @@ import PokemonCard from './PokemonCard'
 interface BookmarkedPokemonProps {
   bookmarkedPokemonIds: number[]
   getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
-  getBasicPokemon: (id: number) => PokemonDetail | undefined
   onRemove: (id: number) => void
   onSelect?: (id: number) => void
   bookmarkSource?: 'parent' | 'kid' // Source for bookmark system when navigating
@@ -17,7 +16,6 @@ interface BookmarkedPokemonProps {
 export default function BookmarkedPokemon({ 
   bookmarkedPokemonIds,
   getPokemonDetail,
-  getBasicPokemon,
   onRemove,
   onSelect,
   bookmarkSource = 'kid'
@@ -31,11 +29,10 @@ export default function BookmarkedPokemon({
       transformPokemonToDisplayData(
         id,
         `Pokemon #${id}`,
-        getPokemonDetail,
-        getBasicPokemon
+        getPokemonDetail
       )
     )
-  }, [bookmarkedPokemonIds, getPokemonDetail, getBasicPokemon])
+  }, [bookmarkedPokemonIds, getPokemonDetail])
 
   if (bookmarkedPokemonIds.length === 0) {
     return null

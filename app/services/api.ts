@@ -76,15 +76,12 @@ export async function fetchEvolutionChain(url: string): Promise<EvolutionChain> 
 
 /**
  * Fetch complete Pokemon details including species and evolution chain
- * This version fetches FULL data for each Pokemon in the evolution chain
+ * Evolution chain contains only IDs and names (from API response)
+ * Sprites are retrieved from pokemonDetails cache when rendering, or fallback to ID-based URL
  * @param id - Pokemon ID to fetch
- * @param existingCache - Existing cache of basic Pokemon data to avoid refetching
- * @param cacheCallback - Optional callback to store evolution Pokemon in external cache
  */
 export async function fetchCompletePokemonDetail(
-  id: number, 
-  existingCache?: Record<number, PokemonDetail>,
-  cacheCallback?: (id: number, data: PokemonDetail) => void
+  id: number
 ): Promise<CombinedPokemonDetail> {
   // Fetch pokemon data and species data in parallel
   const [pokemonData, speciesData] = await Promise.all([
@@ -95,38 +92,23 @@ export async function fetchCompletePokemonDetail(
   // Fetch evolution chain
   const evolutionChainData = await fetchEvolutionChain(speciesData.evolution_chain.url)
   
-  // Extract evolution chain into flat array
+  // Extract evolution chain into flat array with just IDs and names
+  // Names are already in the API response, no need to fetch separately
   const evolutionSpeciesList = extractEvolutionChain(evolutionChainData.chain)
   
-  // Fetch full Pokemon data for each evolution and store via callback
-  const evolutionPokemonPromises = evolutionSpeciesList.map(async (species) => {
+  const evolutionChain = evolutionSpeciesList.map((species) => {
     const speciesId = extractPokemonId(species.url)
     
     if (speciesId === 0) {
       throw new Error(`Could not extract Pokemon ID from URL: ${species.url}`)
     }
     
-    // Check cache first to avoid duplicate fetches
-    let pokemonDetails: PokemonDetail
-    if (existingCache && existingCache[speciesId]) {
-      pokemonDetails = existingCache[speciesId]
-    } else {
-      pokemonDetails = await fetchPokemonById(speciesId)
-      
-      // IMPORTANT: Cache the fetched data via callback so it's available in store
-      if (cacheCallback) {
-        cacheCallback(speciesId, pokemonDetails)
-      }
-    }
-    
-    // Return just ID and name - sprite will be retrieved from store when rendering
+    // Return just ID and name - sprite will be retrieved from pokemonDetails cache when rendering
     return {
       id: speciesId,
       name: species.name
     }
   })
-  
-  const evolutionChain = await Promise.all(evolutionPokemonPromises)
   
   // Get English flavor text
   const englishFlavorText = speciesData.flavor_text_entries

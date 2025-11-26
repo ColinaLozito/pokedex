@@ -43,7 +43,6 @@ export default function TypeFilterScreen() {
   // This ensures cards update when returning from pokemonDetails screen
   // Note: Subscribing to entire objects - useMemo will handle optimization
   const pokemonDetails = usePokemonDataStore((state) => state.pokemonDetails)
-  const basicPokemonCache = usePokemonDataStore((state) => state.basicPokemonCache)
   
   const addRecentSelection = usePokemonGeneralStore((state) => state.addRecentSelection)
   
@@ -94,13 +93,13 @@ export default function TypeFilterScreen() {
   }, [typeId, typeName, fetchPokemonByTypeAndGetDisplayData, toast])
   
   // Re-compute display data reactively when store cache updates
-  // We include pokemonDetails and basicPokemonCache to trigger re-computation
-  // when store updates, since getPokemonDisplayData reads from store internally
+  // We include pokemonDetails to trigger re-computation when store updates,
+  // since getPokemonDisplayData reads from store internally
   const pokemonData = useMemo(() => {
     if (filteredList.length === 0) return []
     return getPokemonDisplayData(filteredList, typeName)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filteredList, typeName, getPokemonDisplayData, pokemonDetails, basicPokemonCache])
+  }, [filteredList, typeName, getPokemonDisplayData, pokemonDetails])
   
   // Handle Pokemon card selection
   const handlePokemonSelect = useCallback(async (id: number) => {

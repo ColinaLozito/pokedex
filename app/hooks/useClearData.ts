@@ -62,7 +62,6 @@ export function useClearData() {
               // Reset all stores to initial state using setState
               usePokemonDataStore.setState({
                 pokemonDetails: {},
-                basicPokemonCache: {},
                 currentPokemonId: null,
               })
 

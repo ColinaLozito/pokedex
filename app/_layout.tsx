@@ -12,7 +12,7 @@ import MontserratMedium from '../assets/fonts/Montserrat-Medium.ttf'
 import MontserratRegular from '../assets/fonts/Montserrat-Regular.ttf'
 import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf'
 import MontserratThin from '../assets/fonts/Montserrat-Thin.ttf'
-import { Provider } from './components/Provider'
+import { Provider as TamaguiProvider } from './components/TamaguiProvider'
 import { fetchTypeList } from './services/api'
 import { usePokemonGeneralStore } from './store/pokemonGeneralStore'
 
@@ -83,7 +83,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     }
   }, [fetchPokemonListAction, typeList.length, setTypeList])
 
-  return <Provider>{children}</Provider>
+  return <TamaguiProvider>{children}</TamaguiProvider>
 }
 
 function RootLayoutNav() {

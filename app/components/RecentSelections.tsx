@@ -1,4 +1,4 @@
-import type { CombinedPokemonDetail, PokemonDetail } from 'app/services/types'
+import type { CombinedPokemonDetail } from 'app/services/types'
 import { RecentSelection } from 'app/store/pokemonGeneralStore'
 import { transformPokemonToDisplayData } from 'app/utils/pokemonDisplayData'
 import { useMemo } from 'react'
@@ -8,7 +8,6 @@ import PokemonCard from './PokemonCard'
 interface RecentSelectionsProps {
   recentSelections: RecentSelection[]
   getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
-  getBasicPokemon: (id: number) => PokemonDetail | undefined
   onRemove: (id: number) => void
   onSelect?: (id: number) => void
 }
@@ -16,7 +15,6 @@ interface RecentSelectionsProps {
 export default function RecentSelections({ 
   recentSelections,
   getPokemonDetail,
-  getBasicPokemon,
   onRemove,
   onSelect 
 }: RecentSelectionsProps) {
@@ -29,11 +27,10 @@ export default function RecentSelections({
       transformPokemonToDisplayData(
         pokemon.id,
         pokemon.name,
-        getPokemonDetail,
-        getBasicPokemon
+        getPokemonDetail
       )
     )
-  }, [recentSelections, getPokemonDetail, getBasicPokemon])
+  }, [recentSelections, getPokemonDetail])
 
   if (recentSelections.length === 0) {
     return null

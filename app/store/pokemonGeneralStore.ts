@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { fetchPokemonByType, fetchPokemonList } from '../services/api'
-import type { CombinedPokemonDetail, PokemonListItem, TypeListItem } from '../services/types'
+import type { PokemonListItem, TypeListItem } from '../services/types'
 import type { PokemonDisplayDataArray } from '../utils/pokemonDisplayUtils'
 import { getPokemonDisplayData } from '../utils/pokemonDisplayUtils'
 import { usePokemonDataStore } from './pokemonDataStore'
@@ -26,13 +26,8 @@ interface PokemonGeneralState {
   setTypeList: (list: TypeListItem[]) => void
   addRecentSelection: (pokemon: PokemonListItem) => void
   removeRecentSelection: (pokemonId: number) => void
-  clearRecentSelections: () => void
   toggleBookmark: (id: number) => void
-  isBookmarked: (id: number) => boolean
-  getBookmarkedPokemon: () => CombinedPokemonDetail[]
   toggleParentBookmark: (id: number) => void
-  isParentBookmarked: (id: number) => boolean
-  getParentBookmarkedPokemon: () => CombinedPokemonDetail[]
   
   // Helper methods (these need access to pokemonDataStore for details)
   getPokemonDisplayData: (
@@ -113,13 +108,6 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
       },
 
       /**
-       * Clear all recent selections
-       */
-      clearRecentSelections: () => {
-        set({ recentSelections: [] })
-      },
-
-      /**
        * Toggle bookmark for a Pokemon (kid)
        */
       toggleBookmark: (id: number) => {
@@ -131,25 +119,6 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
           
           return { bookmarkedPokemonIds: newBookmarkedIds }
         })
-      },
-
-      /**
-       * Check if a Pokemon is bookmarked (kid)
-       */
-      isBookmarked: (id: number): boolean => {
-        return get().bookmarkedPokemonIds.includes(id)
-      },
-
-      /**
-       * Get all bookmarked Pokemon details (kid)
-       */
-      getBookmarkedPokemon: (): CombinedPokemonDetail[] => {
-        const state = get()
-        // Cache pokemonDataState to avoid multiple .getState() calls
-        const pokemonDataState = usePokemonDataStore.getState()
-        return state.bookmarkedPokemonIds
-          .map((id) => pokemonDataState.pokemonDetails[id])
-          .filter((pokemon) => pokemon !== undefined)
       },
 
       /**
@@ -169,25 +138,6 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
       },
       
       /**
-       * Check if a Pokemon is bookmarked by parent
-       */
-      isParentBookmarked: (id: number): boolean => {
-        return get().parentBookmarkedPokemonIds.includes(id)
-      },
-      
-      /**
-       * Get all parent bookmarked Pokemon details
-       */
-      getParentBookmarkedPokemon: (): CombinedPokemonDetail[] => {
-        const state = get()
-        // Cache pokemonDataState to avoid multiple .getState() calls
-        const pokemonDataState = usePokemonDataStore.getState()
-        return state.parentBookmarkedPokemonIds
-          .map((id) => pokemonDataState.pokemonDetails[id])
-          .filter((pokemon) => pokemon !== undefined)
-      },
-      
-      /**
        * Transform Pokemon list to display-ready data with sprites and types
        * Note: This method needs access to pokemonDataStore for details
        */
@@ -201,7 +151,6 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
         return getPokemonDisplayData(
           pokemonList,
           pokemonDataState.pokemonDetails,
-          pokemonDataState.basicPokemonCache,
           fallbackType
         )
       },
@@ -223,7 +172,6 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
         return getPokemonDisplayData(
           filteredList,
           pokemonDataState.pokemonDetails,
-          pokemonDataState.basicPokemonCache,
           typeName
         )
       },

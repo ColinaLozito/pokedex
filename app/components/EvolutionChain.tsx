@@ -1,5 +1,5 @@
 import EvolutionSpriteContainer from 'app/components/EvolutionSpriteContainer'
-import type { EvolutionChainLink, PokemonDetail } from 'app/services/types'
+import type { CombinedPokemonDetail, EvolutionChainLink } from 'app/services/types'
 import { buildEvolutionTree, collectEvolutionVariants, isBranchingEvolution, type EvolutionNode } from 'app/utils/evolutionTree'
 import { getPokemonSprite, getPokemonSpriteUrl } from 'app/utils/pokemonSprites'
 import { useCallback, useMemo } from 'react'
@@ -9,14 +9,14 @@ interface EvolutionChainProps {
   evolutionChainTree: EvolutionChainLink
   currentPokemonId: number
   onPokemonPress: (id: number) => void
-  getBasicPokemon?: (id: number) => PokemonDetail | undefined
+  getPokemonDetail?: (id: number) => CombinedPokemonDetail | undefined
 }
 
 export default function EvolutionChain({ 
   evolutionChainTree, 
   currentPokemonId,
   onPokemonPress,
-  getBasicPokemon
+  getPokemonDetail
 }: EvolutionChainProps) {
   const theme = useTheme()
   
@@ -34,8 +34,8 @@ export default function EvolutionChain({
       return getPokemonSpriteUrl(1) // Default to Bulbasaur
     }
     
-    // Try to get cached data
-    const cached = getBasicPokemon?.(pokemonId)
+    // Try to get cached data from pokemonDetails
+    const cached = getPokemonDetail?.(pokemonId)
     if (cached) {
       // Validate cached data has required structure
       if (typeof cached === 'object' && cached !== null) {
@@ -47,9 +47,9 @@ export default function EvolutionChain({
       }
     }
     
-    // Fallback to direct URL based on ID
+    // Fallback to direct URL based on ID (works for all Pokemon)
     return getPokemonSpriteUrl(pokemonId)
-  }, [getBasicPokemon])
+  }, [getPokemonDetail])
   
   // Render a single Pokemon card (for branching evolution)
   const renderPokemonSprite = useCallback((node: EvolutionNode, isCurrent: boolean = false, variantType: 'branching-variant' | 'branching-initial' | 'linear') => {

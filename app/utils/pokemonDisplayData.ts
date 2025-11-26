@@ -1,4 +1,4 @@
-import type { CombinedPokemonDetail, PokemonDetail } from 'app/services/types'
+import type { CombinedPokemonDetail } from 'app/services/types'
 import { getPokemonSprite, getPokemonSpriteUrl } from './pokemonSprites'
 
 export interface PokemonDisplayData {
@@ -17,39 +17,33 @@ export interface PokemonDisplayData {
 
 /**
  * Transform Pokemon data into display-ready format
- * Handles both full details and basic cache data
+ * Uses pokemonDetails cache, falls back to ID-based sprite URL if not cached
  * 
  * @param id - Pokemon ID
  * @param name - Pokemon name (fallback if not in cache)
- * @param getPokemonDetail - Function to get full Pokemon details
- * @param getBasicPokemon - Function to get basic Pokemon data
+ * @param getPokemonDetail - Function to get Pokemon details from cache
  * @returns Display-ready Pokemon data object
  */
 export function transformPokemonToDisplayData(
   id: number,
   name: string,
-  getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined,
-  getBasicPokemon: (id: number) => PokemonDetail | undefined
+  getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
 ): PokemonDisplayData {
-  // Try to get full details first, fall back to basic cache
-  const fullData = getPokemonDetail(id)
-  const basicData = getBasicPokemon(id)
+  // Try to get cached data
+  const cachedData = getPokemonDetail(id)
   
   // Get all types and primary type
-  const types = fullData?.types || basicData?.types || undefined
+  const types = cachedData?.types || undefined
   const primaryType = types?.[0]?.type?.name || undefined
   
-  // Use direct sprite URL (no need to fetch just for sprite)
-  // If we have cached data, use it; otherwise use direct URL
-  const sprite = fullData 
-    ? getPokemonSprite(fullData, id)
-    : (basicData 
-      ? getPokemonSprite(basicData, id)
-      : getPokemonSpriteUrl(id))
+  // Get sprite from cache if available, otherwise use ID-based URL
+  const sprite = cachedData 
+    ? getPokemonSprite(cachedData, id)
+    : getPokemonSpriteUrl(id)
   
   return {
     id,
-    name: fullData?.name || basicData?.name || name,
+    name: cachedData?.name || name,
     sprite,
     primaryType,
     types

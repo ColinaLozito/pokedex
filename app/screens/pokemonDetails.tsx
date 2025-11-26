@@ -29,7 +29,7 @@ export default function PokemonDetailsScreen() {
   const loading = usePokemonDataStore((state) => state.loading)
   const error = usePokemonDataStore((state) => state.error)
   const clearError = usePokemonDataStore((state) => state.clearError)
-  const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
+  const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
   const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
   const currentPokemonId = usePokemonDataStore((state) => state.currentPokemonId)
   
@@ -247,7 +247,7 @@ export default function PokemonDetailsScreen() {
                     evolutionChainTree={currentPokemon.evolutionChainTree}
                     currentPokemonId={currentPokemon.id}
                     onPokemonPress={handleEvolutionPress}
-                    getBasicPokemon={getBasicPokemon}
+                    getPokemonDetail={getPokemonDetail}
                   />
                 </YStack>
               ) : null

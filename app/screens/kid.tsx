@@ -33,7 +33,6 @@ export default function KidScreen() {
   
   // Use data store for Pokemon details
   const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
-  const getBasicPokemon = usePokemonDataStore((state) => state.getBasicPokemon)
   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
   
   // Local loading state for when fetching a new Pokemon
@@ -170,7 +169,6 @@ export default function KidScreen() {
                 <BookmarkedPokemon
                   bookmarkedPokemonIds={bookmarkedPokemonIds}
                   getPokemonDetail={getPokemonDetail}
-                  getBasicPokemon={getBasicPokemon}
                   onRemove={toggleBookmark}
                   onSelect={handleSelectItem}
                   bookmarkSource="kid"
@@ -179,7 +177,6 @@ export default function KidScreen() {
                 <RecentSelections
                   recentSelections={recentSelections}
                   getPokemonDetail={getPokemonDetail}
-                  getBasicPokemon={getBasicPokemon}
                   onRemove={removeRecentSelection}
                   onSelect={handleSelectItem}
                 />

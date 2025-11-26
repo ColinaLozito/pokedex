@@ -1,4 +1,4 @@
-import type { CombinedPokemonDetail, PokemonDetail, PokemonListItem } from '../services/types'
+import type { CombinedPokemonDetail, PokemonListItem } from '../services/types'
 import { getPokemonSprite, getPokemonSpriteUrl } from './pokemonSprites'
 
 /**
@@ -17,28 +17,23 @@ export type PokemonDisplayDataArray = Array<{
  * Transform Pokemon list to display-ready data with sprites and types
  * @param pokemonList - List of Pokemon items to transform
  * @param pokemonDetails - Record of full Pokemon details by ID
- * @param basicPokemonCache - Record of basic Pokemon data by ID
  * @param fallbackType - Optional fallback type if Pokemon has no type data
  * @returns Array of display-ready Pokemon data
  */
 export function getPokemonDisplayData(
   pokemonList: PokemonListItem[],
   pokemonDetails: Record<number, CombinedPokemonDetail>,
-  basicPokemonCache: Record<number, PokemonDetail>,
   fallbackType?: string
 ): PokemonDisplayDataArray {
   return pokemonList.map((pokemon) => {
-    const fullData = pokemonDetails[pokemon.id]
-    const basicData = basicPokemonCache[pokemon.id]
-    const types = fullData?.types || basicData?.types || undefined
+    const cachedData = pokemonDetails[pokemon.id]
+    const types = cachedData?.types || undefined
     const primaryType =
       types?.[0]?.type?.name || fallbackType?.toLowerCase() || 'normal'
 
-    const sprite = fullData
-      ? getPokemonSprite(fullData, pokemon.id)
-      : basicData
-        ? getPokemonSprite(basicData, pokemon.id)
-        : getPokemonSpriteUrl(pokemon.id)
+    const sprite = cachedData
+      ? getPokemonSprite(cachedData, pokemon.id)
+      : getPokemonSpriteUrl(pokemon.id)
 
     return {
       id: pokemon.id,

@@ -20,7 +20,7 @@ export default function NumberRoulette({
 }: NumberRouletteProps) {
   const theme = useTheme()
   const [currentNumber, setCurrentNumber] = useState<number>(min)
-  const [isShuffling, setisShuffling] = useState(false)
+  const [isShuffling, setIsShuffling] = useState(false)
   const onCompleteRef = useRef(onComplete)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const startTimeRef = useRef<number | null>(null)
@@ -45,9 +45,8 @@ export default function NumberRoulette({
       }
       if (isShufflingRef.current) {
         isShufflingRef.current = false
-        // Update state asynchronously to avoid synchronous setState in effect
         Promise.resolve().then(() => {
-          setisShuffling(false)
+          setIsShuffling(false)
         })
       }
       return
@@ -59,51 +58,65 @@ export default function NumberRoulette({
       timeoutRef.current = null
     }
     
-    // Start spinning asynchronously
-    isShufflingRef.current = true
-    Promise.resolve().then(() => {
-      setisShuffling(true)
+    // Initialize animation
+    const initializeAnimation = () => {
+      setIsShuffling(true)
       setCurrentNumber(min)
       startTimeRef.current = Date.now()
-      const targetNumber =
-        finalNumberRef.current !== undefined
-          ? finalNumberRef.current
-          : Math.floor(Math.random() * (max - min + 1)) + min
       
-      const spin = () => {
-        if (!startTimeRef.current || !isShufflingRef.current) return
+      // Determine target number (use provided or generate random)
+      const targetNumber = (finalNumberRef.current 
+        || Math.floor(Math.random() * (max - min + 1)) + min)
+      
+      // Animation loop function
+      const animate = () => {
+        // Safety check: stop if animation was cancelled
+        if (!startTimeRef.current || !isShufflingRef.current) {
+          return
+        }
         
-        const elapsed = Date.now() - startTimeRef.current
-        const progress = Math.min(elapsed / duration, 1)
+        const now = Date.now()
+        const elapsed = now - startTimeRef.current
+        const progress = Math.min(elapsed / duration, 1) // 0 to 1
         
+        // Check if animation is complete
         if (progress >= 1) {
-          // Animation complete - show provided final number (or generated fallback)
+          // Show final number
           setCurrentNumber(targetNumber)
           isShufflingRef.current = false
-          setisShuffling(false)
+          setIsShuffling(false)
           
-          // Add 1 second delay after final number is shown before calling onComplete
+          // Call onComplete after 1 second delay
           timeoutRef.current = setTimeout(() => {
             onCompleteRef.current(targetNumber)
             timeoutRef.current = null
-          }, 1000) // 1 second delay
-        } else {
-          // During animation - show random numbers
-          // Slow down as we approach the end (ease-out effect)
-          const easeOut = 1 - Math.pow(1 - progress, 3)
-          const updateInterval = Math.max(10, 50 * (1 - easeOut * 0.8)) // Slower updates near the end
-          
-          const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min
-          setCurrentNumber(randomNumber)
-          
-          timeoutRef.current = setTimeout(spin, updateInterval)
+          }, 1000)
+          return
         }
+        
+        // Still animating - show random number
+        const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min
+        setCurrentNumber(randomNumber)
+        
+        // Calculate next update interval (slower near the end for ease-out effect)
+        const easeOut = 1 - Math.pow(1 - progress, 3) // Cubic ease-out: 0 to 1
+        const baseInterval = 50 // Base update interval in ms
+        const slowestInterval = 10 // Slowest update interval
+        const updateInterval = Math.max(slowestInterval, baseInterval * (1 - easeOut * 0.8))
+        
+        // Schedule next animation frame
+        timeoutRef.current = setTimeout(animate, updateInterval)
       }
       
-      // Start spinning
-      spin()
-    })
+      // Start the animation
+      animate()
+    }
     
+    // Start animation asynchronously (avoids synchronous setState in effect)
+    isShufflingRef.current = true
+    Promise.resolve().then(initializeAnimation)
+    
+    // Cleanup function
     return () => {
       isShufflingRef.current = false
       if (timeoutRef.current) {

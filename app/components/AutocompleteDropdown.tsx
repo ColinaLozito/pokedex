@@ -43,7 +43,7 @@ export default function AutocompleteDropdownList({
   
   return (
     <AutocompleteDropdown
-      clearOnFocus={false}
+      clearOnFocus={true}
       closeOnBlur={true}
       closeOnSubmit={false}
       onSelectItem={handleSelectItem}

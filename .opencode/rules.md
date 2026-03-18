@@ -3,6 +3,12 @@
 - **Selective Retrieval:** Only access files mentioned in the user's prompt or direct dependencies.
 - **Trust the Map:** Refer to `.opencode/project-map.md` instead of re-indexing the file system.
 
+## 📚 External Knowledge Base
+- We use SkillsMP standards located in `.opencode/skills/`.
+- **Constraint:** Do not read the `references/` folder unless you encounter a specific complex implementation issue that `SKILL.md` cannot resolve.
+- **Priority:** Always prioritize `SKILL.md` for syntax and patterns.
+
+---
 
 # 📱 Project Context: Pokedex (Mobile App)
 
@@ -125,32 +131,3 @@ A modern Pokémon exploration app built with React Native and Expo, designed to 
 - **OTA:** `expo-updates` for over-the-air updates.
 - **Web:** Mobile Web Vitals (Load Time, Jank, Responsiveness).
 - **Integration:** Detox [To be implemented].
-
-## 📚 External Knowledge Base
-- We use SkillsMP standards located in `.opencode/skills/`.
-- **Constraint:** Do not read the `references/` folder unless you encounter a specific complex implementation issue that `SKILL.md` cannot resolve.
-- **Priority:** Always prioritize `SKILL.md` for syntax and patterns.
-
-# 🚦 AI Skill Router
-When a task is received, prioritize loading skills in this specific order:
-1. **Foundation:** Always load `typescript-expert.md` for syntax and type safety.
-2. **Domain Selection:**
-   - **Is it a UI/Layout/Performance task?** Load `vercel-react-native-skills.md` (Best practices for performance).
-   - **Is it a Platform/Navigation/Native task?** Load `react-native-expert.md` (Expo Router, Native modules, Platform-specifics).
-   - **Is it a general logic task?** Stay only with `typescript-expert.md`.
-
-# 📱 Mobile Master Skill (Expo + RN)
-
-## 🏗 Architecture & Navigation (From RN-Expert)
-- Use **Expo Router** for file-based routing.
-- Keep business logic in `/app/services` and UI in `/app/components`.
-- Handle platform-specific logic (iOS/Android) using the `.ios.tsx` or `.android.tsx` extensions.
-
-## 🚀 Performance & Rendering (From Vercel Skills)
-- Use **FlashList** or **LegendList** for the Pokemon list to ensure 60fps.
-- Optimize images using `expo-image` with priority caching.
-- Use `useMemo` and `useCallback` strictly on list items to avoid over-rendering.
-
-## 🎨 UI & Animations
-- Use **Tamagui** tokens for all styling (no hardcoded values).
-- Leverage **Reanimated 3** for fluid transitions between the list and the Pokemon detail view.

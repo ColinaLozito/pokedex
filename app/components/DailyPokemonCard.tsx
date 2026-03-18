@@ -99,18 +99,17 @@ export default function DailyPokemonCard({
             paddingTop={24}
           >
             <YStack width='70%'>
-              <PokemonCard
-                id={displayPokemon.id}
-                name={displayPokemon.name}
-                sprite={sprite}
-                variant="recent"
-                primaryType={displayPokemon.types?.[0]?.type.name || 'normal'}
-                types={displayPokemon.types || []}
-                onRemove={() => {}}
-                onSelect={onPokemonPress}
-                displayRemoveButton={false}
-                bookmarkSource="parent"
-              />
+               <PokemonCard
+                 id={displayPokemon.id}
+                 name={displayPokemon.name}
+                 sprite={sprite}
+                 variant="recent"
+                 primaryType={displayPokemon.types?.[0]?.type.name || 'normal'}
+                 types={displayPokemon.types || []}
+                 onRemove={() => {}}
+                 onSelect={onPokemonPress}
+                 displayRemoveButton={false}
+               />
             </YStack>
 
             {/* Bookmark Button */}

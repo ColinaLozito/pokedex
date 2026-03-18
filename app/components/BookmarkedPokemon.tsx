@@ -6,20 +6,18 @@ import { H4, useTheme, XStack, YStack } from 'tamagui'
 import PokemonCard from './PokemonCard'
 
 interface BookmarkedPokemonProps {
-  bookmarkedPokemonIds: number[]
-  getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
-  onRemove: (id: number) => void
-  onSelect?: (id: number) => void
-  bookmarkSource?: 'parent' | 'kid' // Source for bookmark system when navigating
-}
-
-export default function BookmarkedPokemon({ 
-  bookmarkedPokemonIds,
-  getPokemonDetail,
-  onRemove,
-  onSelect,
-  bookmarkSource = 'kid'
-}: BookmarkedPokemonProps) {
+   bookmarkedPokemonIds: number[]
+   getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
+   onRemove: (id: number) => void
+   onSelect?: (id: number) => void
+ }
+ 
+ export default function BookmarkedPokemon({ 
+   bookmarkedPokemonIds,
+   getPokemonDetail,
+   onRemove,
+   onSelect
+ }: BookmarkedPokemonProps) {
   const theme = useTheme()
   
   // Get Pokemon data for each bookmarked ID
@@ -47,18 +45,17 @@ export default function BookmarkedPokemon({
       <XStack flexWrap='wrap' justify='space-between' gap={8}>
         {bookmarkedPokemonData.map((pokemon) => (
           <YStack key={pokemon.id} width='48%'>
-            <PokemonCard
-              id={pokemon.id}
-              name={pokemon.name}
-              sprite={pokemon.sprite}
-              variant="bookmark"
-              primaryType={pokemon.primaryType}
-              types={pokemon.types}
-              onRemove={onRemove}
-              onSelect={onSelect}
-              displayRemoveButton={true}
-              bookmarkSource={bookmarkSource}
-            />
+             <PokemonCard
+               id={pokemon.id}
+               name={pokemon.name}
+               sprite={pokemon.sprite}
+               variant="bookmark"
+               primaryType={pokemon.primaryType}
+               types={pokemon.types}
+               onRemove={onRemove}
+               onSelect={onSelect}
+               displayRemoveButton={true}
+             />
           </YStack>
         ))}
       </XStack>

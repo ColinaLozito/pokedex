@@ -108,23 +108,14 @@ function RootLayoutNav() {
           }}
         />
 
-        <Stack.Screen
-          name="screens/parent"
-          options={{
-            title: '',
-            headerShown: true,
-            headerTransparent: true,
-          }}
-        />
-
-        <Stack.Screen
-          name="screens/kid"
-          options={{
-            title: '',
-            headerShown: true,
-            headerTransparent: true,
-          }}
-        />
+         <Stack.Screen
+           name="screens/pokedex"
+           options={{
+             title: '',
+             headerShown: true,
+             headerTransparent: true,
+           }}
+         />
         <Stack.Screen
           name="screens/pokemonDetails"
           options={{

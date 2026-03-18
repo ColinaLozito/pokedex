@@ -16,31 +16,26 @@ import { clearAllStoredData } from '../utils/clearStorage'
 export function useClearData() {
   const toast = useToastController()
 
-  // Check if there's any stored data
-  const pokemonDetails = usePokemonDataStore((state) => state.pokemonDetails)
-  const bookmarkedPokemonIds = usePokemonGeneralStore((state) => state.bookmarkedPokemonIds)
-  const parentBookmarkedPokemonIds = usePokemonGeneralStore(
-    (state) => state.parentBookmarkedPokemonIds
-  )
-  const recentSelections = usePokemonGeneralStore((state) => state.recentSelections)
-  const dailyPokemonId = useDailyPokemonStore((state) => state.dailyPokemonId)
+   // Check if there's any stored data
+   const pokemonDetails = usePokemonDataStore((state) => state.pokemonDetails)
+   const bookmarkedPokemonIds = usePokemonGeneralStore((state) => state.bookmarkedPokemonIds)
+   const recentSelections = usePokemonGeneralStore((state) => state.recentSelections)
+   const dailyPokemonId = useDailyPokemonStore((state) => state.dailyPokemonId)
 
-  // Check if there's any data to clear
-  const hasStoredData = useMemo(() => {
-    return (
-      Object.keys(pokemonDetails).length > 0 ||
-      bookmarkedPokemonIds.length > 0 ||
-      parentBookmarkedPokemonIds.length > 0 ||
-      recentSelections.length > 0 ||
-      dailyPokemonId !== null
-    )
-  }, [
-    pokemonDetails,
-    bookmarkedPokemonIds,
-    parentBookmarkedPokemonIds,
-    recentSelections,
-    dailyPokemonId,
-  ])
+   // Check if there's any data to clear
+   const hasStoredData = useMemo(() => {
+     return (
+       Object.keys(pokemonDetails).length > 0 ||
+       bookmarkedPokemonIds.length > 0 ||
+       recentSelections.length > 0 ||
+       dailyPokemonId !== null
+     )
+   }, [
+     pokemonDetails,
+     bookmarkedPokemonIds,
+     recentSelections,
+     dailyPokemonId,
+   ])
 
   const handleClearData = useCallback(() => {
     Alert.alert(
@@ -65,11 +60,10 @@ export function useClearData() {
                 currentPokemonId: null,
               })
 
-              usePokemonGeneralStore.setState({
-                bookmarkedPokemonIds: [],
-                parentBookmarkedPokemonIds: [],
-                recentSelections: [],
-              })
+               usePokemonGeneralStore.setState({
+                 bookmarkedPokemonIds: [],
+                 recentSelections: [],
+               })
 
               useDailyPokemonStore.setState({
                 dailyPokemonId: null,

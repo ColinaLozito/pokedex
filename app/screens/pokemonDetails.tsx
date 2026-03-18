@@ -21,36 +21,27 @@ export default function PokemonDetailsScreen() {
   const theme = useTheme()
   const router = useRouter()
   const scrollViewRef = useRef<ScrollView>(null)
-  const params = useLocalSearchParams<{ source?: 'parent' | 'kid' }>()
-  
-  const { currentPokemon } = useCurrentPokemon()
-
-  // Use individual selectors to avoid infinite loops
-  const loading = usePokemonDataStore((state) => state.loading)
-  const error = usePokemonDataStore((state) => state.error)
-  const clearError = usePokemonDataStore((state) => state.clearError)
-  const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
-  const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
-  const currentPokemonId = usePokemonDataStore((state) => state.currentPokemonId)
-  
-  // Determine bookmark system based on source (default to 'kid' if not specified)
-  const bookmarkSource = params.source || 'kid'
-  
-  // Select both bookmark functions and arrays separately (stable selectors)
-  const toggleBookmark = usePokemonGeneralStore((state) => state.toggleBookmark)
-  const toggleParentBookmark = usePokemonGeneralStore((state) => state.toggleParentBookmark)
-  const bookmarkedPokemonIds = usePokemonGeneralStore((state) => state.bookmarkedPokemonIds)
-  const parentBookmarkedPokemonIds = usePokemonGeneralStore(
-    (state) => state.parentBookmarkedPokemonIds)
-  
-  // Choose the correct bookmark function and array based on source
-  const activeToggleBookmark = bookmarkSource === 'parent' ? toggleParentBookmark : toggleBookmark
-  const activeBookmarkedPokemonIds = bookmarkSource === 'parent' ? parentBookmarkedPokemonIds : bookmarkedPokemonIds
-  
-  // Check if current Pokemon is bookmarked (reactive)
-  const isBookmarked = currentPokemon 
-    ? activeBookmarkedPokemonIds.includes(currentPokemon.id) 
-    : false
+   const params = useLocalSearchParams<{ source?: string }>()
+   
+   // Use data store for Pokemon details
+   const { currentPokemon } = useCurrentPokemon()
+ 
+   // Use individual selectors to avoid infinite loops
+   const loading = usePokemonDataStore((state) => state.loading)
+   const error = usePokemonDataStore((state) => state.error)
+   const clearError = usePokemonDataStore((state) => state.clearError)
+   const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
+   const fetchPokemonDetail = usePokemonDataStore((state) => state.fetchPokemonDetail)
+   const currentPokemonId = usePokemonDataStore((state) => state.currentPokemonId)
+   
+    // Select bookmark function and array (using shared bookmarking system)
+    const toggleBookmark = usePokemonGeneralStore((state) => state.toggleBookmark)
+    const bookmarkedPokemonIds = usePokemonGeneralStore((state) => state.bookmarkedPokemonIds)
+   
+   // Check if current Pokemon is bookmarked (reactive)
+   const isBookmarked = currentPokemon 
+     ? bookmarkedPokemonIds.includes(currentPokemon.id) 
+     : false
   
   // Show loading modal when loading
   useLoadingModal(loading, 'Loading Pokémon...')
@@ -168,26 +159,26 @@ export default function PokemonDetailsScreen() {
             objectFit="contain"
           />
         )}
-        <BookmarkButton
-          isBookmarked={isBookmarked}
-          onPress={() => activeToggleBookmark(currentPokemon.id)}
-          size={40}
-          scaleIcon={1.5}
-          opacity={0.6}
-          position="absolute"
-          right={16}
-          bottom={200}
-        />
+         <BookmarkButton
+           isBookmarked={isBookmarked}
+           onPress={() => toggleBookmark(currentPokemon.id)}
+           size={40}
+           scaleIcon={1.5}
+           opacity={0.6}
+           position="absolute"
+           right={16}
+           bottom={200}
+         />
       </YStack>
     )
-  }, [
-    currentPokemon,
-    theme.background.val,
-    isBookmarked,
-    activeToggleBookmark,
-    renderPokemonHeader,
-    primaryTypeColor,
-  ])
+   }, [
+     currentPokemon,
+     theme.background.val,
+     isBookmarked,
+     toggleBookmark,
+     renderPokemonHeader,
+     primaryTypeColor,
+   ])
 
   // Error state - Only show if there's an error AND no current Pokemon
   // This prevents the error screen from blocking the UI after a failed fetch

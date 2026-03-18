@@ -43,15 +43,11 @@ export default function HomeScreen() {
           />
         </YStack>
         <XStack width='100%' alignItems='center' justifyContent='center' gap={24} marginBottom={68}>
-          <ActionButton
-            text="Parent"
-            onPress={() => router.push('/screens/parent')}
-          />
-          <ActionButton
-            text="Kid"
-            onPress={() => router.push('/screens/kid')}
-          />
-        </XStack>
+           <ActionButton
+             text="Pokedex"
+             onPress={() => router.push('/screens/pokedex')}
+           />
+         </XStack>
       </YStack>
     </ImageBackground>
   )

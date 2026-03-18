@@ -14,20 +14,18 @@ export interface RecentSelection {
 }
 
 interface PokemonGeneralState {
-  // State
-  pokemonList: PokemonListItem[] // Lightweight list of all Pokemon
-  typeList: TypeListItem[] // Complete list of Pokémon types from API
-  recentSelections: RecentSelection[] // Last 5 selected Pokémon
-  bookmarkedPokemonIds: number[] // Array of bookmarked Pokemon IDs (for kid)
-  parentBookmarkedPokemonIds: number[] // Array of bookmarked Pokemon IDs (for parent)
+   // State
+   pokemonList: PokemonListItem[] // Lightweight list of all Pokemon
+   typeList: TypeListItem[] // Complete list of Pokémon types from API
+   recentSelections: RecentSelection[] // Last 5 selected Pokémon
+   bookmarkedPokemonIds: number[] // Array of bookmarked Pokemon IDs
 
-  // Actions
-  fetchPokemonListAction: () => Promise<void>
-  setTypeList: (list: TypeListItem[]) => void
-  addRecentSelection: (pokemon: PokemonListItem) => void
-  removeRecentSelection: (pokemonId: number) => void
-  toggleBookmark: (id: number) => void
-  toggleParentBookmark: (id: number) => void
+   // Actions
+   fetchPokemonListAction: () => Promise<void>
+   setTypeList: (list: TypeListItem[]) => void
+   addRecentSelection: (pokemon: PokemonListItem) => void
+   removeRecentSelection: (pokemonId: number) => void
+   toggleBookmark: (id: number) => void
   
   // Helper methods (these need access to pokemonDataStore for details)
   getPokemonDisplayData: (
@@ -45,12 +43,11 @@ const MAX_RECENT_SELECTIONS = 5
 export const usePokemonGeneralStore = create<PokemonGeneralState>()(
   persist(
     (set, get) => ({
-      // Initial state
-      pokemonList: [],
-      typeList: [],
-      recentSelections: [],
-      bookmarkedPokemonIds: [],
-      parentBookmarkedPokemonIds: [],
+       // Initial state
+       pokemonList: [],
+       typeList: [],
+       recentSelections: [],
+       bookmarkedPokemonIds: [],
 
       /**
        * Fetch the complete Pokemon list (lightweight)
@@ -107,35 +104,19 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
         }))
       },
 
-      /**
-       * Toggle bookmark for a Pokemon (kid)
-       */
-      toggleBookmark: (id: number) => {
-        set((state) => {
-          const isCurrentlyBookmarked = state.bookmarkedPokemonIds.includes(id)
-          const newBookmarkedIds = isCurrentlyBookmarked
-            ? state.bookmarkedPokemonIds.filter((bookmarkId) => bookmarkId !== id)
-            : [...state.bookmarkedPokemonIds, id]
-          
-          return { bookmarkedPokemonIds: newBookmarkedIds }
-        })
-      },
-
-      /**
-       * Toggle parent bookmark
-       */
-      toggleParentBookmark: (id: number) => {
-        set((state) => {
-          const currentBookmarks = state.parentBookmarkedPokemonIds
-          const isBookmarked = currentBookmarks.includes(id)
-          
-          const newBookmarkedIds = isBookmarked
-            ? currentBookmarks.filter((bookmarkId) => bookmarkId !== id)
-            : [...currentBookmarks, id]
-          
-          return { parentBookmarkedPokemonIds: newBookmarkedIds }
-        })
-      },
+       /**
+        * Toggle bookmark for a Pokemon
+        */
+       toggleBookmark: (id: number) => {
+         set((state) => {
+           const isCurrentlyBookmarked = state.bookmarkedPokemonIds.includes(id)
+           const newBookmarkedIds = isCurrentlyBookmarked
+             ? state.bookmarkedPokemonIds.filter((bookmarkId) => bookmarkId !== id)
+             : [...state.bookmarkedPokemonIds, id]
+           
+           return { bookmarkedPokemonIds: newBookmarkedIds }
+         })
+       },
       
       /**
        * Transform Pokemon list to display-ready data with sprites and types
@@ -177,15 +158,14 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
       },
     }),
     {
-      name: 'pokemon-general-storage',
-      storage: createJSONStorage(() => AsyncStorage),
-      partialize: (state) => ({
-        pokemonList: state.pokemonList,
-        typeList: state.typeList,
-        recentSelections: state.recentSelections,
-        bookmarkedPokemonIds: state.bookmarkedPokemonIds,
-        parentBookmarkedPokemonIds: state.parentBookmarkedPokemonIds,
-      })
+       name: 'pokemon-general-storage',
+       storage: createJSONStorage(() => AsyncStorage),
+       partialize: (state) => ({
+         pokemonList: state.pokemonList,
+         typeList: state.typeList,
+         recentSelections: state.recentSelections,
+         bookmarkedPokemonIds: state.bookmarkedPokemonIds,
+       })
     }
   )
 )

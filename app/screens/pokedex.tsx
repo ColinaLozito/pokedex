@@ -25,7 +25,7 @@ const SPACING = {
   LARGE_GAP: 40,
 } as const
 
-export default function KidScreen() {
+export default function PokedexScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const theme = useTheme()
@@ -84,11 +84,10 @@ export default function KidScreen() {
       if (!isCached) {
         setPendingNavigationId(id)
       } else {
-        // If cached, navigate immediately
-        router.push({
-          pathname: '/screens/pokemonDetails',
-          params: { source: 'kid' }
-        })
+   // If cached, navigate immediately
+   router.push({
+     pathname: '/screens/pokemonDetails'
+   })
       }
     } catch (_error) {
       // Error is already set in the store and toast is shown
@@ -127,21 +126,20 @@ export default function KidScreen() {
   // Show loading modal when fetching a new Pokemon
   useLoadingModal(isFetchingPokemon, 'LOADING POKEMON')
   
-  // Navigate to pokemon details after loading modal dismisses
-  useEffect(() => {
-    if (!isFetchingPokemon && pendingNavigationId !== null) {
-      // Wait a bit for modal to fully dismiss before navigating
-      const timer = setTimeout(() => {
-        router.push({
-          pathname: '/screens/pokemonDetails',
-          params: { source: 'kid' }
-        })
-        setPendingNavigationId(null)
-      }, NAVIGATION_DELAY)
-      
-      return () => clearTimeout(timer)
-    }
-  }, [isFetchingPokemon, pendingNavigationId, router])
+       // Navigate to pokemon details after loading modal dismisses
+   useEffect(() => {
+     if (!isFetchingPokemon && pendingNavigationId !== null) {
+       // Wait a bit for modal to fully dismiss before navigating
+       const timer = setTimeout(() => {
+         router.push({
+           pathname: '/screens/pokemonDetails'
+         })
+         setPendingNavigationId(null)
+       }, NAVIGATION_DELAY)
+       
+       return () => clearTimeout(timer)
+     }
+   }, [isFetchingPokemon, pendingNavigationId, router])
   
   return (
     <AutocompleteDropdownContextProvider headerOffset={insets.top}>
@@ -166,13 +164,12 @@ export default function KidScreen() {
                   dataSet={pokemonListDataSet}
                 />
                 <YStack height={SPACING.SMALL_GAP} />
-                <BookmarkedPokemon
-                  bookmarkedPokemonIds={bookmarkedPokemonIds}
-                  getPokemonDetail={getPokemonDetail}
-                  onRemove={toggleBookmark}
-                  onSelect={handleSelectItem}
-                  bookmarkSource="kid"
-                />
+         <BookmarkedPokemon
+                   bookmarkedPokemonIds={bookmarkedPokemonIds}
+                   getPokemonDetail={getPokemonDetail}
+                   onRemove={toggleBookmark}
+                   onSelect={handleSelectItem}
+                 />
                 <YStack height={SPACING.MEDIUM_GAP} />
                 <RecentSelections
                   recentSelections={recentSelections}

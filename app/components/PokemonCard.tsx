@@ -15,25 +15,24 @@ const POKEMON_CARD_COLORS = {
 } as const
 
 interface PokemonCardProps {
-  id: number
-  name: string
-  sprite?: string | null
-  variant?: 'recent' | 'bookmark'
-  primaryType?: string  // Pokemon's primary type for background coloring
-  displayRemoveButton?: boolean
-  types?: Array<{      // All Pokemon types for display
-    slot: number
-    type: {
-      name: string
-      url: string
-    }
-  }>
-  onRemove: (id: number) => void
-  onSelect?: (id: number) => void
-  bookmarkSource?: 'parent' | 'kid' // Source for bookmark system when navigating
-  // Optional: If not provided, onSelect must handle navigation
-  onNavigate?: (id: number, source: 'parent' | 'kid') => void
-}
+   id: number
+   name: string
+   sprite?: string | null
+   variant?: 'recent' | 'bookmark'
+   primaryType?: string  // Pokemon's primary type for background coloring
+   displayRemoveButton?: boolean
+   types?: Array<{      // All Pokemon types for display
+     slot: number
+     type: {
+       name: string
+       url: string
+     }
+   }>
+   onRemove: (id: number) => void
+   onSelect?: (id: number) => void
+   // Optional: If not provided, onSelect must handle navigation
+   onNavigate?: (id: number) => void
+ }
 
 export default function PokemonCard({ 
   id, 
@@ -45,31 +44,29 @@ export default function PokemonCard({
   displayRemoveButton = false,
   onRemove,
   onSelect,
-  bookmarkSource = 'kid', // Default to 'kid' if not specified
-  onNavigate
+   onNavigate
 }: PokemonCardProps) {
   const router = useRouter()
   const [imageError, setImageError] = useState(false)
 
-  const handleCardPress = useCallback(async () => {
-    // Use custom handler if provided
-    if (onSelect) {
-      onSelect(id)
-      return
-    }
+   const handleCardPress = useCallback(async () => {
+     // Use custom handler if provided
+     if (onSelect) {
+       onSelect(id)
+       return
+     }
 
-    // Use navigation handler if provided
-    if (onNavigate) {
-      onNavigate(id, bookmarkSource)
-      return
-    }
+     // Use navigation handler if provided
+     if (onNavigate) {
+       onNavigate(id)
+       return
+     }
 
-    // Fallback: direct navigation (not recommended, but kept for backward compatibility)
-    router.push({
-      pathname: '/screens/pokemonDetails',
-      params: { source: bookmarkSource, id: id.toString() }
-    })
-  }, [id, onSelect, onNavigate, bookmarkSource, router])
+     // Fallback: direct navigation (not recommended, but kept for backward compatibility)
+     router.push({
+       pathname: '/screens/pokemonDetails'
+     })
+   }, [id, onSelect, onNavigate, router])
 
   const handleRemove = useCallback((e: GestureResponderEvent) => {
     e.stopPropagation()

@@ -1,0 +1,15 @@
+# Cache and Expo/Tamagui tools
+.expo/
+.tamagui/
+.vscode/
+.yarn/
+node_modules/
+dist/
+web-build/
+
+# System config files and locks
+yarn.lock
+.yarnrc.yml
+tsconfg.tsbuildinfo
+tamagui-web.css
+

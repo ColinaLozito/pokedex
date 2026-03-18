@@ -49,21 +49,20 @@ export default function TypeFilterScreen() {
   // Show loading modal only when fetching individual Pokemon, not for initial list load
   useLoadingModal(isFetchingPokemon, 'LOADING POKEMON', [isFetchingPokemon])
   
-  // Navigate to pokemon details after loading modal dismisses
-  useEffect(() => {
-    if (!isFetchingPokemon && pendingNavigationId !== null) {
-      // Wait a bit for modal to fully dismiss before navigating
-      const timer = setTimeout(() => {
-        router.push({
-          pathname: '/screens/pokemonDetails',
-          params: { source: 'kid' }
-        })
-        setPendingNavigationId(null)
-      }, NAVIGATION_DELAY)
-      
-      return () => clearTimeout(timer)
-    }
-  }, [isFetchingPokemon, pendingNavigationId, router])
+   // Navigate to pokemon details after loading modal dismisses
+   useEffect(() => {
+     if (!isFetchingPokemon && pendingNavigationId !== null) {
+       // Wait a bit for modal to fully dismiss before navigating
+       const timer = setTimeout(() => {
+         router.push({
+           pathname: '/screens/pokemonDetails'
+         })
+         setPendingNavigationId(null)
+       }, NAVIGATION_DELAY)
+       
+       return () => clearTimeout(timer)
+     }
+   }, [isFetchingPokemon, pendingNavigationId, router])
   
   // Set toast controller
   useEffect(() => {
@@ -126,11 +125,10 @@ export default function TypeFilterScreen() {
       if (!isCached) {
         setPendingNavigationId(id)
       } else {
-        // If cached, navigate immediately
-        router.push({
-          pathname: '/screens/pokemonDetails',
-          params: { source: 'kid' }
-        })
+       // If cached, navigate immediately
+         router.push({
+           pathname: '/screens/pokemonDetails'
+         })
       }
     } catch (_error) {
       // Error is handled by the store

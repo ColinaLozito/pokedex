@@ -4,9 +4,7 @@ A modern Pokémon exploration app built with React Native and Expo, designed for
 
 ## 🎯 Overview
 
-This Pokédex application provides two distinct user experiences:
-- **Parent Mode**: Daily Pokémon discovery with a fun roulette system and bookmarking
-- **Kid Mode**: Interactive exploration with search, filtering, and bookmarking
+This Pokédex application provides a unified Pokémon exploration experience with search, filtering, bookmarking, and detailed Pokémon information.
 
 The app fetches data from the [PokéAPI](https://pokeapi.co/) and provides a smooth, performant experience with offline capabilities through persistent storage.
 The pokemons are stored locally while the user inspect them the first time
@@ -24,21 +22,15 @@ https://github.com/user-attachments/assets/7d2d91ef-3d8a-443e-8c8f-a1d07c74d227
 
 ## ✨ Features
 
-### Parent Screen
-- **Daily Pokémon Roulette**: Spin a number roulette (#0001-#1000) to discover a random Pokémon
-- **Pokémon of the Day**: Automatic daily Pokémon selection with retry functionality
-- **Bookmarking**: Save favorite Pokémon in a separate parent bookmark list
-
-### Kid Screen
+### Pokedex Screen
 - **Search**: Autocomplete search to find any Pokémon by name
 - **Type Filtering**: Browse Pokémon by type with visual type grid
 - **Recent Selections**: Quick access to the last 5 viewed Pokémon
-- **Bookmarking**: Personal bookmark list for favorite Pokémon
+- **Bookmarking**: Save favorite Pokémon for quick access
 
 ### Pokémon Details
 - **Comprehensive Information**: Stats, abilities, types, attributes
 - **Evolution Chain Visualization**: Interactive evolution tree with branching support
-- **Context-Aware Bookmarking**: Bookmarks sync based on navigation source (parent/kid)
 
 ## 🛠 Tech Stack
 

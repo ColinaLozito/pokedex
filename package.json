@@ -8,7 +8,7 @@
     "upgrade:tamagui": "yarn up '*tamagui*'@latest '@tamagui/*'@latest",
     "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary",
     "check:tamagui": "tamagui check",
-    "start": "yarn dlx expo start",
+    "start": "yarn expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "test": "jest --watchAll",
@@ -21,7 +21,8 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@expo/router-server": "^55.0.10",
+    "@expo/router-server": "^55.0.11",
+    "@legendapp/list": "^2.0.19",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-navigation/native": "^7.1.6",
     "@shopify/flash-list": "2.0.2",

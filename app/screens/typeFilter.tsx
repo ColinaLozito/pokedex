@@ -208,27 +208,29 @@ export default function TypeFilterScreen() {
           pt={16}
           px={8}
         >
-           <LegendList
-             data={pokemonData}
-             numColumns={2}
-             renderItem={({ item }) => (
-               <YStack p={4}>
-                 <PokemonCard
-                   id={item.id}
-                   name={item.name}
-                   sprite={item.sprite}
-                   variant="recent"
-                   primaryType={item.primaryType}
-                   types={item.types}
-                   onRemove={NO_OP}
-                   onSelect={handlePokemonSelect}
-                   displayRemoveButton={false}
-                 />
-               </YStack>
-             )}
-             keyExtractor={(item) => item.id.toString()}
-             ItemSeparatorComponent={() => <YStack height={8} />}
-           />
+            <LegendList
+              data={pokemonData}
+              numColumns={2}
+              renderItem={({ item }) => (
+                <YStack p={4}>
+                  <PokemonCard
+                    id={item.id}
+                    name={item.name}
+                    sprite={item.sprite}
+                    variant="recent"
+                    primaryType={item.primaryType}
+                    types={item.types}
+                    onRemove={NO_OP}
+                    onSelect={handlePokemonSelect}
+                    displayRemoveButton={false}
+                  />
+                </YStack>
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              ItemSeparatorComponent={() => <YStack height={8} />}
+              drawDistance={500}
+              initialScrollIndex={0}
+            />
         </YStack>
       </YStack>
     </SafeAreaView>

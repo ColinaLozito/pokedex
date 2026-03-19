@@ -152,33 +152,44 @@ function PokemonCardComponent({
                bg={POKEMON_CARD_COLORS.circularBackground}
              />
              
-             {/* Pokemon Sprite */}
-             {sprite ? (
-               <Image
-                 source={{ uri: sprite }}
-                 width={90}
-                 height={90}
-                 zIndex={1}
-                 objectFit="contain"
-                 onError={() => setImageError(true)}
-                 onLoadStart={() => setImageLoading(true)}
-                 onLoadEnd={() => setImageLoading(false)}
-                 style={imageLoading ? { opacity: 0 } : {}}
-               />
-             ) : (
-               <YStack
-                 width={70}
-                 height={70}
-                 bg={POKEMON_CARD_COLORS.noImageBackground}
-                 borderRadius={8}
-                 justify='center'
-                 items='center'
-               >
-                 <Text fontSize={12} color={POKEMON_CARD_COLORS.mutedText}>
-                   No Image
-                 </Text>
-               </YStack>
-             )}
+              {/* Pokemon Sprite */}
+              {sprite ? (
+                <Image
+                  source={{ uri: sprite }}
+                  width={90}
+                  height={90}
+                  zIndex={1}
+                  objectFit="contain"
+                  onError={() => {
+                    console.log('Image error for:', sprite);
+                    setImageError(true);
+                  }}
+                  onLoadStart={() => {
+                    console.log('Image load start for:', sprite);
+                    setImageLoading(true);
+                  }}
+                  onLoadEnd={() => {
+                    console.log('Image load end for:', sprite);
+                    setImageLoading(false);
+                  }}
+                  onLoad={() => {
+                    console.log('Image load for:', sprite);
+                  }}
+                />
+              ) : (
+                <YStack
+                  width={70}
+                  height={70}
+                  bg={POKEMON_CARD_COLORS.noImageBackground}
+                  borderRadius={8}
+                  justify='center'
+                  items='center'
+                >
+                  <Text fontSize={12} color={POKEMON_CARD_COLORS.mutedText}>
+                    No Image
+                  </Text>
+                </YStack>
+              )}
            </XStack>
 
            {/* Bottom Section: Type Chips */}

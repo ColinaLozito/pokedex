@@ -1,0 +1,65 @@
+import { Bookmark } from '@tamagui/lucide-icons'
+import { useMemo } from 'react'
+import type { CombinedPokemonDetail } from 'src/services/types'
+import { PokemonCardVariant } from 'src/types/pokemonCardVariant'
+import { transformPokemonToDisplayData } from 'src/utils/pokemonDisplayData'
+import { H4, useTheme, XStack, YStack } from 'tamagui'
+import PokemonCard from './PokemonCard'
+
+interface BookmarkedPokemonProps {
+   bookmarkedPokemonIds: number[]
+   getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
+   onRemove: (id: number) => void
+   onSelect?: (id: number) => void
+ }
+ 
+ export default function BookmarkedPokemon({ 
+   bookmarkedPokemonIds,
+   getPokemonDetail,
+   onRemove,
+   onSelect
+ }: BookmarkedPokemonProps) {
+  const theme = useTheme()
+  
+  // Get Pokemon data for each bookmarked ID
+  // Must be called before early return to follow Rules of Hooks
+  const bookmarkedPokemonData = useMemo(() => {
+    return bookmarkedPokemonIds.map((id) => 
+      transformPokemonToDisplayData(
+        id,
+        `Pokemon #${id}`,
+        getPokemonDetail
+      )
+    )
+  }, [bookmarkedPokemonIds, getPokemonDetail])
+
+  if (bookmarkedPokemonIds.length === 0) {
+    return null
+  }
+
+  return (
+    <YStack gap={12}>
+      <XStack gap={8} items='center'>
+        <Bookmark size={20} color={theme.text.val} fill={theme.text.val} />
+        <H4 color={theme.text.val}>Bookmarked</H4>
+      </XStack>
+      <XStack flexWrap='wrap' justify='space-between' gap={8}>
+        {bookmarkedPokemonData.map((pokemon) => (
+          <YStack key={pokemon.id} width='48%'>
+             <PokemonCard
+               id={pokemon.id}
+               name={pokemon.name}
+               sprite={pokemon.sprite}
+               variant={PokemonCardVariant.BOOKMARK}
+               primaryType={pokemon.primaryType}
+               types={pokemon.types}
+               onRemove={onRemove}
+               onSelect={onSelect}
+               displayRemoveButton={true}
+             />
+          </YStack>
+        ))}
+      </XStack>
+    </YStack>
+  )
+}

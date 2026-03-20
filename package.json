@@ -76,5 +76,9 @@
     "prettier": "^3.6.2",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.47.0"
+  },
+  "tamagui": {
+    "config": "theme/tamagui.config.ts",
+    "components": "tamagui"
   }
 }

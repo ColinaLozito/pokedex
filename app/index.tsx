@@ -1,13 +1,3 @@
-import { useEffect } from 'react'
-import { RelativePathString, useRouter } from 'expo-router'
+import Home from '@screens/home'; // Importas la lógica de src
 
-export default function Index() {
-  const router = useRouter()
-
-  useEffect(() => {
-    router.replace('/screens/home' as RelativePathString)
-  }, [router])
-
-  return null
-}
-
+export default Home

@@ -17,7 +17,6 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { H2, Image, XStack, YStack } from 'tamagui'
 
 // No-op function for onRemove when remove button is not displayed
-const NO_OP = () => {}
 
 export default function TypeFilterScreen() {
   const router = useRouter()

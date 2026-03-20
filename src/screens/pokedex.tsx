@@ -120,7 +120,8 @@ export default function PokedexScreen() {
   )
 
   const backgroundColor = useMemo(() => (
-    theme.background?.val || '#FFFFFF'
+    theme.background?.val || theme.white1.val
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   ) as GetThemeValueForKey<"backgroundColor">, [theme.background?.val])
   
   // Show loading modal when fetching a new Pokemon
@@ -164,7 +165,7 @@ export default function PokedexScreen() {
                   dataSet={pokemonListDataSet}
                 />
                 <YStack height={SPACING.SMALL_GAP} />
-         <BookmarkedPokemon
+                <BookmarkedPokemon
                    bookmarkedPokemonIds={bookmarkedPokemonIds}
                    getPokemonDetail={getPokemonDetail}
                    onRemove={toggleBookmark}

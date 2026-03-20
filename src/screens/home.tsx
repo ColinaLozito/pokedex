@@ -4,12 +4,11 @@ import { Trash2 } from '@tamagui/lucide-icons'
 import { router } from 'expo-router'
 import { ImageBackground } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Button, Image, useTheme, XStack, YStack } from 'tamagui'
+import { Button, Image, XStack, YStack } from 'tamagui'
 import PokedexLogo from "../../assets/images/pokedex-logo.png"
 import PokedexWallpaper from "../../assets/images/pokedex-wallpaper.jpg"
 
 export default function HomeScreen() {
-  const theme = useTheme()
   const insets = useSafeAreaInsets()
   const { hasStoredData, handleClearData } = useClearData()
 

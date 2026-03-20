@@ -6,8 +6,11 @@
     "paths": {
       "@/*": ["src/*"],
       "@theme/*": ["theme/*"],
-      "@fonts/*": ["src/assets/fonts/*"],
-      "@colors/*": ["src/theme/colors/*"],
+      "@icons/*": ["assets/icons/*"],
+      "@images/*": ["assets/images/*"],
+      "@assets/*": ["assets/*"],
+      "@fonts/*": ["assets/fonts/*"],
+      "@colors/*": ["theme/colors/*"],
       "@screens/*": ["src/screens/*"],
       "@components/*": ["src/components/*"]
     }

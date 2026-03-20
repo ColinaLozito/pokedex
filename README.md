@@ -49,7 +49,7 @@ https://github.com/user-attachments/assets/7d2d91ef-3d8a-443e-8c8f-a1d07c74d227
 app/
 ├── components/    # Reusable UI components (cards, buttons, badges, etc.)
 ├── hooks/         # Custom React hooks (modal management, loading states)
-├── modals/        # Modal screens (roulette, loading)
+├── modals/        # Modal screens (loading)
 ├── screens/       # Main application screens (home, parent, kid, details, filters)
 ├── services/      # API services and type definitions
 ├── store/         # Zustand stores (data, general, daily, modal state)

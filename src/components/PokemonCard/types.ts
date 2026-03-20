@@ -37,11 +37,6 @@ export type PokemonCardRemoveButtonProps = {
 }
 export type PokemonCardSpriteProps = {
   sprite?: string | null
-  variant?: PokemonCardVariant
-  primaryType?: string
-  onError: () => void
-  onLoadStart?: () => void
-  onLoadEnd?: () => void
 }
 export type PokemonCardTypesProps = {
   types: Array<{ 

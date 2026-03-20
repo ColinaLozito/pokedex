@@ -76,7 +76,6 @@ function PokemonCardComponent({
           {/* Middle Section: Pokemon Sprite with Circular Background */}
           <PokemonCardSprite
             sprite={sprite}
-            onError={() => {}}
           />
           
           {/* Bottom Section: Type Chips */}

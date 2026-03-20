@@ -6,6 +6,7 @@ import { useLoadingModal } from 'app/hooks/useLoadingModal'
 import type { PokemonListItem } from 'app/services/types'
 import { usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { usePokemonGeneralStore } from 'app/store/pokemonGeneralStore'
+import { PokemonCardVariant } from 'app/types/pokemonCardVariant'
 import { NAVIGATION_DELAY } from 'app/utils/modalConstants'
 import { setToastController } from 'app/utils/toast'
 import typeSymbolsIcons from 'app/utils/typeSymbolsIcons'
@@ -217,10 +218,9 @@ export default function TypeFilterScreen() {
                     id={item.id}
                     name={item.name}
                     sprite={item.sprite}
-                    variant="recent"
+                    variant={PokemonCardVariant.LIST}
                     primaryType={item.primaryType}
                     types={item.types}
-                    onRemove={NO_OP}
                     onSelect={handlePokemonSelect}
                     displayRemoveButton={false}
                   />

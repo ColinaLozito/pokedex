@@ -226,4 +226,3 @@ export async function fetchPokemonByType(
   
   return pokemonList
 }
-

@@ -1,6 +1,6 @@
 import { usePathname, useRouter } from 'expo-router'
 import { useCallback } from 'react'
-import { useModalStore, type RouletteModalProps } from 'src/store/modalStore'
+import { useModalStore } from 'src/store/modalStore'
 
 /**
  * Custom hook for managing modals with navigation
@@ -32,25 +32,6 @@ export function useModal() {
     [openModal, router, closeModal, modalType, pathname],
   )
 
-  const showRoulette = useCallback(
-    async (props: RouletteModalProps) => {
-      // If already showing roulette modal, just update the props
-      if (modalType === 'roulette' && pathname === '/modals/roulette') {
-        openModal('roulette', props)
-        return
-      }
-      
-      try {
-        openModal('roulette', props)
-        await router.push('/modals/roulette')
-      } catch (error) {
-        console.error('Failed to show roulette modal:', error)
-        closeModal() // Clean up on failure
-      }
-    },
-    [openModal, router, closeModal, modalType, pathname],
-  )
-
   const dismiss = useCallback(() => {
     closeModal()
     // Note: router.back() should be handled by the modal screen itself
@@ -58,7 +39,6 @@ export function useModal() {
 
   return {
     showLoading,
-    showRoulette,
     dismiss,
     closeModal,
   }

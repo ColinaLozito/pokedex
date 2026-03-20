@@ -1,23 +1,10 @@
 import { fetchCompletePokemonDetail } from "src/services/api"
 import type { CombinedPokemonDetail } from "src/services/types"
+import type { PokemonDataState } from '../types/pokemon'
 import { showToast } from "src/utils/toast"
 import { StateCreator } from "zustand"
 
-export interface PokemonDataState {
-    // State
-    pokemonDetails: Record<number, CombinedPokemonDetail> // Detailed Pokemon data keyed by ID
-    currentPokemonId: number | null // Currently selected Pokemon ID
-    loading: boolean
-    error: string | null
-    pendingFetches: Map<number, Promise<CombinedPokemonDetail>> // Track pending fetches to prevent duplicates
-  
-    // Actions
-    fetchPokemonDetail: (id: number) => Promise<CombinedPokemonDetail>
-    getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
-    setCurrentPokemonId: (id: number | null) => void
-    getCurrentPokemon: () => CombinedPokemonDetail | undefined
-    clearError: () => void
-  }
+// PokemonDataState moved to src/store/types/pokemon.ts for reuse
 
 // Type for the store creator's set and get functions
 type StoreSet = Parameters<StateCreator<PokemonDataState>>[0]

@@ -125,10 +125,6 @@ function RootLayoutNav() {
           options={defaultStackOptions}
         />
         <Stack.Screen
-          name="modals/roulette"
-          options={defaultModalOptions}
-        />
-        <Stack.Screen
           name="modals/loading"
           options={defaultModalOptions}
         />

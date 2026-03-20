@@ -1,7 +1,6 @@
 import { useToastController } from '@tamagui/toast'
 import { useCallback, useMemo } from 'react'
 import { Alert } from 'react-native'
-import { useDailyPokemonStore } from '../store/dailyPokemonStore'
 import { usePokemonDataStore } from '../store/pokemonDataStore'
 import { usePokemonGeneralStore } from '../store/pokemonGeneralStore'
 import { clearAllStoredData } from '../utils/clearStorage'
@@ -20,21 +19,18 @@ export function useClearData() {
    const pokemonDetails = usePokemonDataStore((state) => state.pokemonDetails)
    const bookmarkedPokemonIds = usePokemonGeneralStore((state) => state.bookmarkedPokemonIds)
    const recentSelections = usePokemonGeneralStore((state) => state.recentSelections)
-   const dailyPokemonId = useDailyPokemonStore((state) => state.dailyPokemonId)
 
    // Check if there's any data to clear
    const hasStoredData = useMemo(() => {
      return (
        Object.keys(pokemonDetails).length > 0 ||
        bookmarkedPokemonIds.length > 0 ||
-       recentSelections.length > 0 ||
-       dailyPokemonId !== null
+       recentSelections.length > 0
      )
    }, [
      pokemonDetails,
      bookmarkedPokemonIds,
      recentSelections,
-     dailyPokemonId,
    ])
 
   const handleClearData = useCallback(() => {
@@ -64,13 +60,6 @@ export function useClearData() {
                  bookmarkedPokemonIds: [],
                  recentSelections: [],
                })
-
-              useDailyPokemonStore.setState({
-                dailyPokemonId: null,
-                dailyPokemonDate: null,
-                rerollCount: 0,
-                rerollDate: null,
-              })
 
               toast.show('All stored data cleared', {
                 message: 'All stored data has been cleared successfully',

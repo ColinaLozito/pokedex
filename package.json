@@ -14,6 +14,7 @@
     "test": "jest --watchAll",
     "lint": "eslint app",
     "lint:fix": "eslint app --fix",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

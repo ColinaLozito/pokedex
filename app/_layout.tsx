@@ -12,9 +12,9 @@ import MontserratMedium from '../assets/fonts/Montserrat-Medium.ttf'
 import MontserratRegular from '../assets/fonts/Montserrat-Regular.ttf'
 import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf'
 import MontserratThin from '../assets/fonts/Montserrat-Thin.ttf'
-import { Provider as TamaguiProvider } from './components/TamaguiProvider'
-import { fetchTypeList } from './services/api'
-import { usePokemonGeneralStore } from './store/pokemonGeneralStore'
+import { Provider as TamaguiProvider } from '../src/components/TamaguiProvider'
+import { fetchTypeList } from '../src/services/api'
+import { usePokemonGeneralStore } from '../src/store/pokemonGeneralStore'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -86,67 +86,51 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   return <TamaguiProvider>{children}</TamaguiProvider>
 }
 
+const defaultStackOptions: React.ComponentProps<typeof Stack.Screen>['options'] = {
+  title: '',
+  headerShown: true,
+  headerTransparent: true,
+}
+
+const defaultModalOptions: React.ComponentProps<typeof Stack.Screen>['options'] = {
+  presentation: 'transparentModal',
+  headerShown: false,
+  animation: 'fade',
+}
+
 function RootLayoutNav() {
 
   return (
     <ThemeProvider value={DefaultTheme}>
       <StatusBar style="dark" />
       <Stack>
-        <Stack.Screen
+       <Stack.Screen
           name="index"
           options={{
+            ...defaultStackOptions,
             headerShown: false,
-          }}
-        />
-
-        <Stack.Screen
-          name="screens/home"
-          options={{
-            title: '',
-            headerShown: false,
-            headerTransparent: true,
           }}
         />
 
          <Stack.Screen
-           name="screens/pokedex"
-           options={{
-             title: '',
-             headerShown: true,
-             headerTransparent: true,
-           }}
+           name="pokedex"
+           options={defaultStackOptions}
          />
         <Stack.Screen
-          name="screens/pokemonDetails"
-          options={{
-            title: '',
-            headerShown: true,
-            headerTransparent: true,
-          }}
+          name="pokemonDetails"
+          options={defaultStackOptions}
         />
         <Stack.Screen
-          name="screens/typeFilter"
-          options={{
-            title: '',
-            headerShown: true,
-            headerTransparent: true,
-          }}
+          name="typeFilter"
+          options={defaultStackOptions}
         />
         <Stack.Screen
           name="modals/roulette"
-          options={{
-            presentation: 'transparentModal',
-            headerShown: false,
-            animation: 'fade',
-          }}
+          options={defaultModalOptions}
         />
         <Stack.Screen
           name="modals/loading"
-          options={{
-            presentation: 'transparentModal',
-            headerShown: false,
-            animation: 'fade',
-          }}
+          options={defaultModalOptions}
         />
       </Stack>
     </ThemeProvider>

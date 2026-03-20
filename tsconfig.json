@@ -4,14 +4,19 @@
     "strict": true,
     "baseUrl": ".", 
     "paths": {
-      "@config/*": ["app/config/*"],
-      "@fonts/*": ["app/assets/fonts/*"],
-      "@colors/*": ["app/config/colors/*"]
+      "@/*": ["src/*"],
+      "@theme/*": ["theme/*"],
+      "@fonts/*": ["src/assets/fonts/*"],
+      "@colors/*": ["src/theme/colors/*"],
+      "@screens/*": ["src/screens/*"],
+      "@components/*": ["src/components/*"]
     }
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "app/**/*.ts",
+    "app/**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "types/**/*.d.ts"

@@ -1,13 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import type { CombinedPokemonDetail } from 'src/services/types'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import {
   fetchCompletePokemonDetail,
 } from '../services/api'
-import type { CombinedPokemonDetail } from 'src/services/types'
-import type { PokemonDataState } from './types/pokemon'
 import { createFetchHelpers } from './helpers/createFetchHelpers'
-
+import type { PokemonDataState } from './types/pokemon'
 
 export const usePokemonDataStore = create<PokemonDataState>()(
   persist(

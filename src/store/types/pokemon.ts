@@ -1,5 +1,4 @@
 import type { CombinedPokemonDetail } from 'src/services/types'
-import type { PokemonListItem, TypeListItem } from 'src/services/types'
 
 export interface PokemonDataState {
   pokemonDetails: Record<number, CombinedPokemonDetail>

@@ -1,4 +1,5 @@
-import { useModalStore, type LoadingModalProps } from '@/store/modalStore'
+import { useModalStore } from '@/store/modalStore'
+import type { LoadingModalProps } from '@/store/types/modal'
 import { DISMISSAL_DELAY, MODAL_STYLES } from '@/utils/modalConstants'
 import { useRouter } from 'expo-router'
 import { useEffect, useRef } from 'react'
@@ -93,4 +94,3 @@ export default function LoadingModalScreen() {
     </SafeAreaView>
   )
 }
-

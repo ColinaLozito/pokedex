@@ -1,42 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import type { PokemonListItem } from 'src/services/types'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { fetchPokemonByType, fetchPokemonList } from '../services/api'
-import type { PokemonListItem, TypeListItem } from '../services/types'
-import type { PokemonDisplayDataArray } from '../utils/pokemonDisplayUtils'
 import { getPokemonDisplayData } from '../utils/pokemonDisplayUtils'
 import { usePokemonDataStore } from './pokemonDataStore'
+import type { PokemonGeneralState } from './types/general'
+export type { PokemonGeneralState, RecentSelection } from './types/general'
 
-export interface RecentSelection {
-  id: number
-  name: string
-  selectedAt: number // timestamp
-}
-
-interface PokemonGeneralState {
-   // State
-   pokemonList: PokemonListItem[] // Lightweight list of all Pokemon
-   typeList: TypeListItem[] // Complete list of Pokémon types from API
-   recentSelections: RecentSelection[] // Last 5 selected Pokémon
-   bookmarkedPokemonIds: number[] // Array of bookmarked Pokemon IDs
-
-   // Actions
-   fetchPokemonListAction: () => Promise<void>
-   setTypeList: (list: TypeListItem[]) => void
-   addRecentSelection: (pokemon: PokemonListItem) => void
-   removeRecentSelection: (pokemonId: number) => void
-   toggleBookmark: (id: number) => void
-  
-  // Helper methods (these need access to pokemonDataStore for details)
-  getPokemonDisplayData: (
-    pokemonList: PokemonListItem[],
-    fallbackType?: string
-  ) => PokemonDisplayDataArray // Transform Pokemon list to display-ready data with sprites and types
-  fetchPokemonByTypeAndGetDisplayData: (
-    typeId: number,
-    typeName: string
-  ) => Promise<PokemonDisplayDataArray> // Fetch Pokemon by type and return display-ready data
-}
+// PokemonGeneralState moved to src/store/types/general.ts and imported below
 
 const MAX_RECENT_SELECTIONS = 5
 
@@ -169,4 +141,3 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
     }
   )
 )
-

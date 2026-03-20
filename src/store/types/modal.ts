@@ -1,28 +1,16 @@
-// Re-exported modal state types is safer to import from this file in stores
-export type ModalType = 'roulette' | 'loading' | null
-
-export interface RouletteModalProps {
-  sessionKey: number
-  finalNumber: number
-  duration: number
-  min: number
-  max: number
-  onComplete?: (finalNumber: number) => Promise<void> | void
-}
+// Modal types: simplified to only support loading modal
+export type ModalType = 'loading' | null
 
 export interface LoadingModalProps {
   message?: string
 }
 
-export type ModalProps = RouletteModalProps | LoadingModalProps
+export type ModalProps = LoadingModalProps
 
 export interface ModalState {
   type: ModalType
   props: ModalProps | null
-  openModal: <T extends ModalType>(
-    type: T,
-    props: T extends 'roulette' ? RouletteModalProps : T extends 'loading' ? LoadingModalProps : never
-  ) => void
+  openModal: (type: 'loading', props: LoadingModalProps) => void
   closeModal: () => void
   isOpen: (type: ModalType) => boolean
 }

@@ -11,7 +11,7 @@ import { useCurrentPokemon } from '@/store/hooks/usePokemonData'
 import { usePokemonDataStore } from '@/store/pokemonDataStore'
 import { usePokemonGeneralStore } from '@/store/pokemonGeneralStore'
 import { pokemonTypeColors } from '@theme/colors'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -21,7 +21,6 @@ export default function PokemonDetailsScreen() {
   const theme = useTheme()
   const router = useRouter()
   const scrollViewRef = useRef<ScrollView>(null)
-   const params = useLocalSearchParams<{ source?: string }>()
    
    // Use data store for Pokemon details
    const { currentPokemon } = useCurrentPokemon()

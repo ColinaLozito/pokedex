@@ -1,14 +1,20 @@
 # 🗺 Pokedex Project Map
 
-- `/app`: Root of Expo Router (File-based Routing).
-    - `/_layout.tsx`: Root nav layout and providers.
-    - `/screens`: Dedicated screen components (called by routes).
-    - `/components`: UI elements (Note: prefixed or nested to avoid route collision).
-    - `/hooks`: Custom React hooks.
-    - `/modals`: Modal screen definitions.
-    - `/services`: API, Axios, and Data fetching logic.
-    - `/store`: Zustand state management.
-    - `/utils`: Helper functions.
-- `/config`: **Source of Truth** for UI. Contains `tamagui.config.ts`, `colors.ts`, and `fonts.ts`.
-- `/assets`: Static resources (images, icons, fonts).
-- `/types`: TypeScript definitions for assets and global interfaces.
+- `/app`: Expo Router entrypoint.
+  - `/_layout.tsx`: Root navigation + providers.
+  - `/index.tsx`: Home route wrapper (`@/screens/home`).
+  ...etc
+  - `/modals/loading.tsx`: `@/modals/loading` modal route.
+  ...etc
+- `/src`: main app logic (linked into `app/*`).
+  - `/screens`: screen components + state/navigation logic.
+  - `/components`: UI components / small paged pieces.
+  - `/hooks`: custom hooks.
+  - `/modals`: modal business logic components.
+  - `/services`: API + fetching logic.
+  - `/store`: Zustand stores.
+  - `/utils`: utilities/helpers.
+- `/config`: UI constants.
+  - `tamagui.config.ts`, `colors.ts`, `fonts.ts`.
+- `/assets`: images/icons/fonts.
+- `/types`: global types/asset typings.

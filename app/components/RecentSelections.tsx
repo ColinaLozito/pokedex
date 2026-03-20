@@ -1,5 +1,6 @@
 import type { CombinedPokemonDetail } from 'app/services/types'
 import { RecentSelection } from 'app/store/pokemonGeneralStore'
+import { PokemonCardVariant } from 'app/types/pokemonCardVariant'
 import { transformPokemonToDisplayData } from 'app/utils/pokemonDisplayData'
 import { useMemo } from 'react'
 import { H4, useTheme, XStack, YStack } from 'tamagui'
@@ -46,7 +47,7 @@ export default function RecentSelections({
               id={pokemon.id}
               name={pokemon.name}
               sprite={pokemon.sprite}
-              variant="recent"
+              variant={PokemonCardVariant.RECENT}
               primaryType={pokemon.primaryType}
               types={pokemon.types}
               onRemove={onRemove}

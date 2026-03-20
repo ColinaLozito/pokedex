@@ -1,3 +1,4 @@
+import { PokemonCardVariant } from 'app/types/pokemonCardVariant'
 import { ImageBackground } from 'react-native'
 import { Button, Card, H3, Text, YStack, useTheme } from 'tamagui'
 import PokeballWallpaper from '../../assets/images/pokeball-patten.png'
@@ -103,7 +104,7 @@ export default function DailyPokemonCard({
                  id={displayPokemon.id}
                  name={displayPokemon.name}
                  sprite={sprite}
-                 variant="recent"
+                 variant={PokemonCardVariant.RECENT}
                  primaryType={displayPokemon.types?.[0]?.type.name || 'normal'}
                  types={displayPokemon.types || []}
                  onRemove={() => {}}

@@ -1,4 +1,4 @@
-import { FlashList } from '@shopify/flash-list'
+import { LegendList } from '@legendapp/list'
 import { useToastController } from '@tamagui/toast'
 import ErrorScreen from 'app/components/ErrorScreen'
 import PokemonCard from 'app/components/PokemonCard'
@@ -6,6 +6,7 @@ import { useLoadingModal } from 'app/hooks/useLoadingModal'
 import type { PokemonListItem } from 'app/services/types'
 import { usePokemonDataStore } from 'app/store/pokemonDataStore'
 import { usePokemonGeneralStore } from 'app/store/pokemonGeneralStore'
+import { PokemonCardVariant } from 'app/types/pokemonCardVariant'
 import { NAVIGATION_DELAY } from 'app/utils/modalConstants'
 import { setToastController } from 'app/utils/toast'
 import typeSymbolsIcons from 'app/utils/typeSymbolsIcons'
@@ -208,27 +209,28 @@ export default function TypeFilterScreen() {
           pt={16}
           px={8}
         >
-          <FlashList
-            data={pokemonData}
-            numColumns={2}
-            renderItem={({ item }) => (
-              <YStack p={4}>
-                <PokemonCard
-                  id={item.id}
-                  name={item.name}
-                  sprite={item.sprite}
-                  variant="recent"
-                  primaryType={item.primaryType}
-                  types={item.types}
-                  onRemove={NO_OP}
-                  onSelect={handlePokemonSelect}
-                  displayRemoveButton={false}
-                />
-              </YStack>
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            ItemSeparatorComponent={() => <YStack height={8} />}
-          />
+            <LegendList
+              data={pokemonData}
+              numColumns={2}
+              renderItem={({ item }) => (
+                <YStack p={4}>
+                  <PokemonCard
+                    id={item.id}
+                    name={item.name}
+                    sprite={item.sprite}
+                    variant={PokemonCardVariant.LIST}
+                    primaryType={item.primaryType}
+                    types={item.types}
+                    onSelect={handlePokemonSelect}
+                    displayRemoveButton={false}
+                  />
+                </YStack>
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              ItemSeparatorComponent={() => <YStack height={8} />}
+              drawDistance={500}
+              initialScrollIndex={0}
+            />
         </YStack>
       </YStack>
     </SafeAreaView>

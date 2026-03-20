@@ -1,5 +1,6 @@
 import { Bookmark } from '@tamagui/lucide-icons'
 import type { CombinedPokemonDetail } from 'app/services/types'
+import { PokemonCardVariant } from 'app/types/pokemonCardVariant'
 import { transformPokemonToDisplayData } from 'app/utils/pokemonDisplayData'
 import { useMemo } from 'react'
 import { H4, useTheme, XStack, YStack } from 'tamagui'
@@ -49,7 +50,7 @@ interface BookmarkedPokemonProps {
                id={pokemon.id}
                name={pokemon.name}
                sprite={pokemon.sprite}
-               variant="bookmark"
+               variant={PokemonCardVariant.BOOKMARK}
                primaryType={pokemon.primaryType}
                types={pokemon.types}
                onRemove={onRemove}

@@ -1,9 +1,11 @@
+import { PokemonCardVariant } from "app/types/pokemonCardVariant"
 import { pokemonTypeColors } from "config/colors"
 
 // Fallback colors for Pokemon cards without type
-const FALLBACK_COLORS = {
-  recent: '#F5F5F5', // Neutral gray for recent selections
-  bookmark: '#E0E0E0', // Light gray for bookmarks
+const FALLBACK_COLORS: Record<PokemonCardVariant, string> = {
+  [PokemonCardVariant.RECENT]: '#F5F5F5', // Neutral gray for recent selections
+  [PokemonCardVariant.BOOKMARK]: '#E0E0E0', // Light gray for bookmarks
+  [PokemonCardVariant.LIST]: '#FFFFFF', // White for list items
 } as const
 
 /**
@@ -14,7 +16,8 @@ const FALLBACK_COLORS = {
  */
 export const getTypeColor = (
   primaryType: string | undefined,
-  variant: 'recent' | 'bookmark'
+  variant: PokemonCardVariant
+  
 ): string => {
   if (primaryType) {
     const typeColor = pokemonTypeColors[primaryType as keyof typeof pokemonTypeColors]

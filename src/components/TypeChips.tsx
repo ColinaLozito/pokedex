@@ -1,14 +1,9 @@
+import { PokemonTypeSlot } from '@/services/types'
 import { XStack } from 'tamagui'
 import TypeBadge from './TypeBadge'
 
 interface TypeChipsProps {
-  types: Array<{
-    slot: number
-    type: {
-      name: string
-      url: string
-    }
-  }>
+  types: Array<PokemonTypeSlot>
   size?: 'small' | 'medium' | 'large'
   gap?: number
 }

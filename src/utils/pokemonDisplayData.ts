@@ -1,19 +1,8 @@
+import { PokemonCardData } from '@/components/PokemonCard/types'
 import type { CombinedPokemonDetail } from 'src/services/types'
 import { getPokemonSprite, getPokemonSpriteUrl } from './pokemonSprites'
 
-export interface PokemonDisplayData {
-  id: number
-  name: string
-  sprite: string
-  primaryType?: string
-  types?: Array<{
-    slot: number
-    type: {
-      name: string
-      url: string
-    }
-  }>
-}
+export type PokemonDisplayData = Omit<PokemonCardData, 'variant'> 
 
 /**
  * Transform Pokemon data into display-ready format

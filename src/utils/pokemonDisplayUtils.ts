@@ -1,17 +1,12 @@
 import type { CombinedPokemonDetail, PokemonListItem } from '../services/types'
+import { PokemonDisplayData } from './pokemonDisplayData'
 import { getPokemonSprite, getPokemonSpriteUrl } from './pokemonSprites'
 
 /**
  * Array of Pokemon display data items
  * Used for transforming lists of Pokemon into display-ready format
  */
-export type PokemonDisplayDataArray = Array<{
-  id: number
-  name: string
-  sprite: string | null
-  primaryType: string
-  types?: Array<{ slot: number; type: { name: string; url: string } }>
-}>
+export type PokemonDisplayDataArray = Array<PokemonDisplayData>
 
 /**
  * Transform Pokemon list to display-ready data with sprites and types

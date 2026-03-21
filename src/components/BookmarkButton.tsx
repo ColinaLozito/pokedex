@@ -23,7 +23,7 @@ export default function BookmarkButton({
       color={theme.text.val}
       shadowColor={shadowColor}
       shadowOpacity={0.3}
-      shadowRadius={8}
+      shadowRadius="$2"
       {...buttonProps}
     />
   )

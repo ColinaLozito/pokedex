@@ -1,7 +1,7 @@
 import { pokemonTypeColors } from '@theme/colors'
 import { useCallback, useMemo } from 'react'
 import typeSymbolsIcons from 'src/utils/typeSymbolsIcons'
-import { Card, GetThemeValueForKey, H4, Image, Text, useTheme, XStack, YStack } from 'tamagui'
+import { Card, GetThemeValueForKey, H4, Image, Text, XStack, YStack } from 'tamagui'
 
 export interface TypeGridItem {
   id: number
@@ -16,7 +16,7 @@ interface TypeGridProps {
 // Get color for type, fallback to gray if not found
 // Moved outside component since it doesn't depend on props/state
 const getTypeColor = (typeName: string): string => {
-  return (pokemonTypeColors[typeName as keyof typeof pokemonTypeColors] || '#A8A77A')
+  return (pokemonTypeColors[typeName as keyof typeof pokemonTypeColors] || "$hillary")
 }
 
 // Constant style for type icons - moved outside component to avoid recreation
@@ -27,8 +27,6 @@ const typeIconStyle = {
 }
 
 export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
-  const theme = useTheme()
-  
   // Hooks must be called before any early returns
   const handleTypePress = useCallback((typeId: number, typeName: string) => {
     onTypeSelect?.(typeId, typeName)
@@ -37,8 +35,8 @@ export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
   // Split types into pairs for 2-column layout
   const rows = useMemo(() => {
     const result: TypeGridItem[][] = []
-    for (let i = 0; i < typeList.length; i += 2) {
-      result.push(typeList.slice(i, i + 2))
+    for (let item = 0; item < typeList.length; item += 2) {
+      result.push(typeList.slice(item, item + 2))
     }
     return result
   }, [typeList])
@@ -48,11 +46,11 @@ export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
   }
 
   return (
-    <YStack gap={12}>
-      <H4 color={theme.text.val}>Pokémon Types</H4>
-      <YStack gap={8}>
+    <YStack gap="$3">
+      <H4 color="$text">Pokémon Types</H4>
+      <YStack gap="$2">
         {rows.map((row, rowIndex) => (
-          <XStack key={rowIndex} gap={8} width="100%">
+          <XStack key={rowIndex} gap="$2" width="100%">
             {row.map((type) => (
               <Card
                 key={type.id}
@@ -65,17 +63,17 @@ export default function TypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
                 backgroundColor={(getTypeColor(type.name)) as GetThemeValueForKey<"backgroundColor">}
               >
                 <Card.Header padded>
-                  <XStack 
-                    justify="space-between" 
+                  <XStack
+                    justify="space-between"
                     items="center"
-                    gap={8}
+                    gap="$2"
                   >
                     <YStack flex={1}>
-                      <Text 
-                        fontSize={16} 
+                      <Text
+                        fontSize="$3"
                         textTransform="capitalize"
-                        color="white"
-                        fontWeight={800}
+                        color="$white"
+                        fontWeight="$6"
                       >
                         {type.name}
                       </Text>

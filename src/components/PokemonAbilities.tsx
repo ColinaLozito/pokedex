@@ -1,4 +1,4 @@
-import { Card, H4, Text, XStack, YStack, useTheme } from 'tamagui'
+import { Card, H4, Text, XStack, YStack } from 'tamagui'
 
 interface AbilityInfo {
   ability: {
@@ -13,30 +13,28 @@ interface PokemonAbilitiesProps {
 }
 
 export default function PokemonAbilities({ abilities }: PokemonAbilitiesProps) {
-  const theme = useTheme()
-  
   return (
     <Card>
       <Card.Header padded>
-        <H4 mb={8} color={theme.text.val}>Abilities</H4>
-        <YStack gap={8}>
+        <H4 mb="$2" color="$text">Abilities</H4>
+        <YStack gap="$2">
           {abilities.map((abilityInfo, index) => (
-            <XStack key={index} gap={8} items='center'>
-              <Text 
-                fontSize={16} 
+            <XStack key={index} gap="$2" items="center">
+              <Text
+                fontSize="$3"
                 textTransform="capitalize"
-                color={theme.text.val}
+                color="$text"
               >
                 {abilityInfo.ability.name.replace('-', ' ')}
               </Text>
               {abilityInfo.is_hidden && (
-                <Text 
-                  fontSize={12} 
-                  color={theme.gray10?.val || '#737373'}
-                  bg={theme.gray4?.val || '#E5E5E5'}
-                  px={8}
-                  py={4}
-                  borderRadius={6}
+                <Text
+                  fontSize="$1"
+                  color="$doveGray"
+                  bg="$mercury"
+                  px="$2"
+                  py="$1"
+                  borderRadius="$2"
                 >
                   Hidden
                 </Text>

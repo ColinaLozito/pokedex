@@ -87,9 +87,9 @@ export default function LoadingModalScreen() {
         minHeight={MODAL_STYLES.minHeight}
         justifyContent="center"
         alignItems="center"
-        gap={16}
+        gap="$4"
       >
-        <H1 color="white" textAlign="center">{loadingProps.message}</H1>
+        <H1 color="$white" textAlign="center">{loadingProps.message}</H1>
       </YStack>
     </SafeAreaView>
   )

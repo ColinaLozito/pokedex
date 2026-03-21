@@ -144,7 +144,7 @@ export default function TypeFilterScreen() {
   
   // Get type color (memoized)
   const typeColor = useMemo(() => 
-    pokemonTypeColors[typeName.toLowerCase() as keyof typeof pokemonTypeColors] || '#A8A77A',
+    pokemonTypeColors[typeName.toLowerCase() as keyof typeof pokemonTypeColors] || '$hillary',
     [typeName]
   )
   
@@ -214,14 +214,13 @@ export default function TypeFilterScreen() {
               renderItem={({ item }) => (
                 <YStack p={4}>
                   <PokemonCard
+                    variant={PokemonCardVariant.LIST}
                     id={item.id}
                     name={item.name}
                     sprite={item.sprite}
-                    variant={PokemonCardVariant.LIST}
                     primaryType={item.primaryType}
                     types={item.types}
                     onSelect={handlePokemonSelect}
-                    displayRemoveButton={false}
                   />
                 </YStack>
               )}

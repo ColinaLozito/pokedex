@@ -15,11 +15,11 @@ export function Provider({ children, ...rest }: Omit<TamaguiProviderProps, 'conf
     >
       <ToastProvider
         swipeDirection="horizontal"
-        duration={5000}
+        duration={3000}
       >
         {children}
         <CurrentToast />
-        <ToastViewport top={46} left={0} right={0} />
+        <ToastViewport top="$6" left="$0" right="$0" />
       </ToastProvider>
     </TamaguiProvider>
   )

@@ -3,7 +3,7 @@ import EvolutionSpriteContainer from 'src/components/EvolutionSpriteContainer'
 import type { CombinedPokemonDetail, EvolutionChainLink } from 'src/services/types'
 import { buildEvolutionTree, collectEvolutionVariants, isBranchingEvolution, type EvolutionNode } from 'src/utils/evolutionTree'
 import { getPokemonSprite, getPokemonSpriteUrl } from 'src/utils/pokemonSprites'
-import { H4, Text, useTheme, XStack, YStack } from 'tamagui'
+import { H4, Text, XStack, YStack } from 'tamagui'
 
 interface EvolutionChainProps {
   evolutionChainTree: EvolutionChainLink
@@ -18,7 +18,6 @@ export default function EvolutionChain({
   onPokemonPress,
   getPokemonDetail
 }: EvolutionChainProps) {
-  const theme = useTheme()
   
   // Build the evolution tree (memoized to avoid recalculation)
   const rootNode = useMemo(() => buildEvolutionTree(evolutionChainTree), [evolutionChainTree])
@@ -83,7 +82,7 @@ export default function EvolutionChain({
         items='center'
         justify='center'
         flexWrap='wrap'
-        gap={4}
+        gap="$1"
       >
         {nodes.map((evolutionNode, index) => (
           <XStack key={`${evolutionNode.id}-${index}`} items='center'>
@@ -93,9 +92,9 @@ export default function EvolutionChain({
             {index < nodes.length - 1 && (
               <XStack justify='center' m={0}>
                 <Text 
-                  fontSize={20} 
-                  fontWeight={300}
-                  color={theme.text.val}
+                  fontSize="$4" 
+                  fontWeight="$3"
+                  color="$text"
                 >
                   →
                 </Text>
@@ -113,7 +112,7 @@ export default function EvolutionChain({
     const variants = collectEvolutionVariants(node)
     
     return (
-      <YStack items='center' gap={12} width='100%'>
+      <YStack items='center' gap="$1" width='100%'>
         {/* Initial Pokemon at top (centered) */}
         {renderPokemonSprite(node, node.id === currentPokemonId, 'branching-initial')}
         
@@ -141,7 +140,7 @@ export default function EvolutionChain({
   
   return (
     <YStack width='100%'>
-      <H4 mb={24} text='center' color={theme.text.val}>Evolution</H4>
+      <H4 mb="$5" text='center' color="$text">Evolution</H4>
       
       {isBranching ? (
         // Branching evolution (variants)

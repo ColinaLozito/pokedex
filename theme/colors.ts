@@ -7,6 +7,10 @@ export const baseColors = {
   disabled: '#C4C4C4',   // disabled state
   red: '#FF0000',
   white: '#FFFFFF',
+  doveGray: '#737373',
+  mercury: '#E5E5E5',
+  wildSand: '#F5F5F5',
+  hillary: '#A8A77A',
   opacity1: 'rgba(255, 255, 255, 0.1)',
   opacity2: 'rgba(255, 255, 255, 0.2)',
   opacity3: 'rgba(255, 255, 255, 0.3)',

@@ -1,4 +1,4 @@
-import { Card, GetThemeValueForKey, H4, Text, XStack, YStack, useTheme } from 'tamagui'
+import { Card, GetThemeValueForKey, H4, Text, XStack, YStack } from 'tamagui'
 
 interface StatInfo {
   base_stat: number
@@ -13,37 +13,45 @@ interface PokemonBaseStatsProps {
   primaryTypeColor: string
 }
 
+// Pokemon stat constants
+const MAX_POKEMON_STAT = 255
+const PERCENT_MULTIPLIER = 100
+
+// Calculate stat bar fill percentage
+
+const calculateStatBarPercentage = (baseStat: number): GetThemeValueForKey<"width"> => {
+  return `${(baseStat / MAX_POKEMON_STAT) * PERCENT_MULTIPLIER}%`
+}
+
 export default function PokemonBaseStats({ stats, primaryTypeColor }: PokemonBaseStatsProps) {
-  const theme = useTheme()
-  
   return (
     <Card>
       <Card.Header padded>
-        <H4 mb={12} color={theme.text.val}>Base Stats</H4>
-        <YStack gap={12}>
+        <H4 mb="$3" color="$text">Base Stats</H4>
+        <YStack gap="$3">
           {stats.map((statInfo) => (
-            <YStack key={statInfo.stat.name} gap={4}>
+            <YStack key={statInfo.stat.name} gap="$1">
               <XStack justify="space-between">
-                <Text 
-                  fontSize={14} 
+                <Text
+                  fontSize="$2"
                   textTransform="capitalize"
-                  color={theme.text.val}
+                  color="$text"
                 >
                   {statInfo.stat.name.replace('-', ' ')}
                 </Text>
-                <Text fontSize={14} fontWeight={600} color={theme.text.val}>
+                <Text fontSize="$2" fontWeight="$6" color="$text">
                   {statInfo.base_stat}
                 </Text>
               </XStack>
               <YStack
-                height={6}
-                bg={theme.gray5?.val || '#F5F5F5'}
-                borderRadius={8}
-                overflow='hidden'
+                height="$2"
+                bg="$wildSand"
+                borderRadius="$2"
+                overflow="hidden"
               >
                 <YStack
-                  height='100%'
-                  width={`${(statInfo.base_stat / 255) * 100}%`}
+                  height="100%"
+                  width={calculateStatBarPercentage(statInfo.base_stat)}
                   bg={primaryTypeColor as GetThemeValueForKey<"backgroundColor">}
                 />
               </YStack>
@@ -54,4 +62,3 @@ export default function PokemonBaseStats({ stats, primaryTypeColor }: PokemonBas
     </Card>
   )
 }
-

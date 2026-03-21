@@ -1,18 +1,17 @@
-import * as React from 'react'
-import { XStack, Text } from 'tamagui'
+import { Text, XStack } from 'tamagui'
 import TypeChips from '../../TypeChips'
-import { PokemonCardTypesProps } from '../types'
 import { POKEMON_CARD_COLORS } from '../constants'
+import { PokemonCardTypesProps } from '../types'
 
 export default function PokemonCardTypes({ types }: PokemonCardTypesProps) {
   return (
     types && types.length > 0 ? (
       <XStack mt={8}>
-        <TypeChips types={types} size="small" gap={6} />
+        <TypeChips types={types} size="small" gap="$1" />
       </XStack>
     ) : (
-      <XStack mt={8} ml={24}>
-        <Text fontSize={24} color={POKEMON_CARD_COLORS.mutedText}>??</Text>
+      <XStack mt="$3" justify="center">
+        <Text fontSize="$4" fontWeight="$7" color={POKEMON_CARD_COLORS.mutedText}>??</Text>
       </XStack>
     )
   )

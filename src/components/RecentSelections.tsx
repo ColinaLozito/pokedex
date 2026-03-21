@@ -3,7 +3,7 @@ import type { CombinedPokemonDetail } from 'src/services/types'
 import { RecentSelection } from 'src/store/pokemonGeneralStore'
 import { PokemonCardVariant } from 'src/types/pokemonCardVariant'
 import { transformPokemonToDisplayData } from 'src/utils/pokemonDisplayData'
-import { H4, useTheme, XStack, YStack } from 'tamagui'
+import { H4, XStack, YStack } from 'tamagui'
 import PokemonCard from './PokemonCard'
 
 interface RecentSelectionsProps {
@@ -19,8 +19,7 @@ export default function RecentSelections({
   onRemove,
   onSelect 
 }: RecentSelectionsProps) {
-  const theme = useTheme()
-
+  
   // Get Pokemon data with sprites for each recent selection
   // Must be called before early return to follow Rules of Hooks
   const recentPokemonData = useMemo(() => {
@@ -38,9 +37,9 @@ export default function RecentSelections({
   }
 
   return (
-    <YStack gap={13}>
-      <H4 color={theme.text.val}>Recently Inspected</H4>
-      <XStack gap={7} flexWrap='wrap' justify='space-between'>
+    <YStack gap="$4">
+      <H4 color="$text">Recently Inspected</H4>
+      <XStack gap="$2" flexWrap='wrap' justify='space-between'>
         {recentPokemonData.map((pokemon) => (
           <YStack key={pokemon.id} width='48%'>
             <PokemonCard
@@ -52,7 +51,6 @@ export default function RecentSelections({
               types={pokemon.types}
               onRemove={onRemove}
               onSelect={onSelect}
-              displayRemoveButton={true}
             />
           </YStack>
         ))}

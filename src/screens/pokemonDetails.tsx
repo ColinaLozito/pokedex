@@ -10,15 +10,14 @@ import { useLoadingModal } from '@/hooks/useLoadingModal'
 import { useCurrentPokemon } from '@/store/hooks/usePokemonData'
 import { usePokemonDataStore } from '@/store/pokemonDataStore'
 import { usePokemonGeneralStore } from '@/store/pokemonGeneralStore'
-import { pokemonTypeColors } from '@theme/colors'
+import { baseColors, pokemonTypeColors } from '@theme/colors'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { GetThemeValueForKey, H2, Image, Text, XStack, YStack, useTheme } from 'tamagui'
+import { GetThemeValueForKey, H2, Image, Text, XStack, YStack } from 'tamagui'
 
 export default function PokemonDetailsScreen() {
-  const theme = useTheme()
   const router = useRouter()
   const scrollViewRef = useRef<ScrollView>(null)
    
@@ -79,11 +78,11 @@ export default function PokemonDetailsScreen() {
   // Get type color for background (memoized to avoid recalculation)
   const primaryTypeColor = useMemo(() => {
     if (!currentPokemon || currentPokemon.types.length === 0) {
-      return theme.background.val
+      return baseColors.white
     }
     const primaryType = currentPokemon.types[0].type.name
-    return pokemonTypeColors[primaryType as keyof typeof pokemonTypeColors] || theme.background.val
-  }, [currentPokemon, theme.background.val])
+    return pokemonTypeColors[primaryType as keyof typeof pokemonTypeColors] || '$white'
+  }, [currentPokemon])
 
   // Render Pokemon header (name and ID)
   const renderPokemonHeader = useCallback(() => {
@@ -94,20 +93,20 @@ export default function PokemonDetailsScreen() {
         width="100%"
         justify="space-between"
         items="center"
-        marginBottom={16}
+        marginBottom="$4"
       >
         <H2
-          color="white"
+          color="$white"
           textTransform="capitalize"
-          fontSize={32}
-          fontWeight={800}
+          fontSize="$7"
+          fontWeight="$8"
         >
           {currentPokemon.name}
         </H2>
         <Text
-          color="rgba(255, 255, 255, 0.9)"
-          fontSize={18}
-          fontWeight={600}
+          color="$opacity9"
+          fontSize="$4"
+          fontWeight="$6"
         >
           #{currentPokemon.id.toString().padStart(3, '0')}
         </Text>
@@ -129,9 +128,9 @@ export default function PokemonDetailsScreen() {
     
     return (
       <YStack
-        bg={(theme.background.val || '#FFFFFF') as GetThemeValueForKey<"backgroundColor">}
-        paddingHorizontal={16}
-        paddingTop={60}
+        bg="$background"
+        paddingHorizontal="$4"
+        paddingTop="$6"
         items="center"
       >
         {/* Background Circle */}
@@ -172,7 +171,6 @@ export default function PokemonDetailsScreen() {
     )
    }, [
      currentPokemon,
-     theme.background.val,
      isBookmarked,
      toggleBookmark,
      renderPokemonHeader,
@@ -204,7 +202,7 @@ export default function PokemonDetailsScreen() {
     <YStack flex={1} bg={primaryTypeColor as GetThemeValueForKey<"backgroundColor">}>
       <ScrollView 
         ref={scrollViewRef} 
-        style={{ flex: 1, backgroundColor: theme.background.val }}
+        style={{ flex: 1, backgroundColor: baseColors.white }}
       >
         <SafeAreaView style={{ flex: 1 }}>
         <YStack flex={1}>
@@ -213,13 +211,13 @@ export default function PokemonDetailsScreen() {
 
           {/* Details Section - White Background */}
           <YStack 
-            bg="white"
-            marginTop={0}
-            gap={8}
+            bg="$white"
+            marginTop="$4"
+            gap="$2"
           >
             {/* Types */}
-            <XStack justify="center" items="center" width="100%">
-              <TypeChips types={currentPokemon.types} size="medium" gap={8} />
+            <XStack justify="center" items="center" width="100%" mb="$2">
+              <TypeChips types={currentPokemon.types} size="medium" gap="$2" />
             </XStack>
 
             {/* Attributes: Species, Height, Weight */}

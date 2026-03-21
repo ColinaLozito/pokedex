@@ -1,12 +1,13 @@
+import { baseColors } from '@theme/colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Text, useTheme, YStack } from 'tamagui'
+import { GetThemeValueForKey, Text, YStack } from 'tamagui'
 
 interface EmptyStateScreenProps {
   title: string
   subtitle?: string
   backgroundColor?: string
-  titleColor?: string
-  subtitleColor?: string
+  titleColor?: GetThemeValueForKey<"color"> 
+  subtitleColor?: GetThemeValueForKey<"color"> 
 }
 
 export default function EmptyStateScreen({
@@ -16,33 +17,31 @@ export default function EmptyStateScreen({
   titleColor,
   subtitleColor,
 }: EmptyStateScreenProps) {
-  const theme = useTheme()
-
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: backgroundColor || theme.background.val,
+        backgroundColor: backgroundColor || baseColors.white,
       }}
     >
       <YStack
         flex={1}
-        justifyContent='center'
-        alignItems='center'
-        padding={16}
+        justifyContent="center"
+        alignItems="center"
+        padding="$4"
       >
         <Text
-          fontSize={20}
-          textAlign='center'
-          color={titleColor || theme.text.val}
+          fontSize="$4"
+          textAlign="center"
+          color={titleColor || '$text'}
         >
           {title}
         </Text>
         {subtitle && (
           <Text
-            fontSize={14}
-            color={subtitleColor || theme.gray10?.val || '#737373'}
-            marginTop={8}
+            fontSize="$2"
+            color={subtitleColor || '$text'}
+            marginTop="$2"
           >
             {subtitle}
           </Text>

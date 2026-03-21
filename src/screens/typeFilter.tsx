@@ -1,5 +1,5 @@
-import ErrorScreen from '@/components/ErrorScreen'
-import PokemonCard from '@/components/PokemonCard'
+import ErrorScreen from '@/components/common/ErrorScreen'
+import PokemonCard from '@/components/pokemon/PokemonCard'
 import { useLoadingModal } from '@/hooks/useLoadingModal'
 import type { PokemonListItem } from '@/services/types'
 import { usePokemonDataStore } from '@/store/pokemonDataStore'

@@ -1,7 +1,7 @@
-import AutocompleteDropdownList from '@/components/AutocompleteDropdown'
-import BookmarkedPokemon from '@/components/BookmarkedPokemon'
-import RecentSelections from '@/components/RecentSelections'
-import TypeGrid from '@/components/TypeGrid'
+import { AutocompleteDropdown } from '@/components/common/AutocompleteDropdown'
+import BookmarkedPokemon from '@/components/pokemon/BookmarkedPokemon'
+import PokemonTypeGrid from '@/components/pokemon/PokemonTypeGrid'
+import RecentSelections from '@/components/pokemon/RecentSelections'
 import { useLoadingModal } from '@/hooks/useLoadingModal'
 import { usePokemonDataStore } from '@/store/pokemonDataStore'
 import { usePokemonGeneralStore } from '@/store/pokemonGeneralStore'
@@ -146,7 +146,7 @@ export default function PokedexScreen() {
               <YStack paddingTop={insets.top}>
                 <H3 color="$text">Search for a Pokemon</H3>
                 <YStack height="$6" />
-                 <AutocompleteDropdownList
+                 <AutocompleteDropdown
                   onSelectItem={handleSelectItem}
                   dataSet={pokemonListDataSet}
                 />
@@ -165,7 +165,7 @@ export default function PokedexScreen() {
                   onSelect={handleSelectItem}
                 />
                 <YStack height="$5" />
-                <TypeGrid
+                <PokemonTypeGrid
                   typeList={typeList}
                   onTypeSelect={handleTypeSelect}
                 />

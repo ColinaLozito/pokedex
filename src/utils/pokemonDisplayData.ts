@@ -1,4 +1,4 @@
-import { PokemonCardData } from '@/components/PokemonCard/types'
+import { PokemonCardData } from '@/components/pokemon/PokemonCard/types'
 import type { CombinedPokemonDetail } from 'src/services/types'
 import { getPokemonSprite, getPokemonSpriteUrl } from './pokemonSprites'
 

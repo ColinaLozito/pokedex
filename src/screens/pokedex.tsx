@@ -13,22 +13,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FlatList } from 'react-native'
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GetThemeValueForKey, H3, useTheme, YStack } from 'tamagui'
-
-// Spacing constants for consistent layout
-const SPACING = {
-  SCREEN_PADDING_TOP: 50,
-  SCREEN_PADDING_HORIZONTAL: 16,
-  HEADER_TITLE_GAP: 24,
-  SMALL_GAP: 10,
-  MEDIUM_GAP: 20,
-  LARGE_GAP: 40,
-} as const
+import { GetThemeValueForKey, H3, YStack } from 'tamagui'
 
 export default function PokedexScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
-  const theme = useTheme()
   const toast = useToastController()
   
   // Use data store for Pokemon details
@@ -61,7 +50,7 @@ export default function PokedexScreen() {
     }
     
     // Find the selected Pokémon in list
-    const selectedPokemon = pokemonList.find((p) => p.id === id)
+    const selectedPokemon = pokemonList.find((pokemon) => pokemon.id === id)
 
     // Check if Pokemon is already cached
     const isCached = getPokemonDetail(id) !== undefined
@@ -119,10 +108,7 @@ export default function PokedexScreen() {
     })), [pokemonList]
   )
 
-  const backgroundColor = useMemo(() => (
-    theme.background?.val || theme.white1.val
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  ) as GetThemeValueForKey<"backgroundColor">, [theme.background?.val])
+  const backgroundColor = '$background' as GetThemeValueForKey<"backgroundColor">
   
   // Show loading modal when fetching a new Pokemon
   useLoadingModal(isFetchingPokemon, 'LOADING POKEMON')
@@ -149,8 +135,8 @@ export default function PokedexScreen() {
           height="100%"
           width="100%"
           bg={backgroundColor}
-          paddingTop={SPACING.SCREEN_PADDING_TOP}
-          paddingHorizontal={SPACING.SCREEN_PADDING_HORIZONTAL}
+          paddingTop="$12"
+          paddingHorizontal="$4"
         >
           <FlatList 
             data={null}
@@ -158,32 +144,32 @@ export default function PokedexScreen() {
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={
               <YStack paddingTop={insets.top}>
-                <H3 color={theme.text.val}>Search for a Pokemon</H3>
-                <YStack height={SPACING.HEADER_TITLE_GAP} />
+                <H3 color="$text">Search for a Pokemon</H3>
+                <YStack height="$6" />
                  <AutocompleteDropdownList
                   onSelectItem={handleSelectItem}
                   dataSet={pokemonListDataSet}
                 />
-                <YStack height={SPACING.SMALL_GAP} />
+                <YStack height="$3" />
                 <BookmarkedPokemon
                    bookmarkedPokemonIds={bookmarkedPokemonIds}
                    getPokemonDetail={getPokemonDetail}
                    onRemove={toggleBookmark}
                    onSelect={handleSelectItem}
                  />
-                <YStack height={SPACING.MEDIUM_GAP} />
+                <YStack height="$5" />
                 <RecentSelections
                   recentSelections={recentSelections}
                   getPokemonDetail={getPokemonDetail}
                   onRemove={removeRecentSelection}
                   onSelect={handleSelectItem}
                 />
-                <YStack height={SPACING.MEDIUM_GAP} />
+                <YStack height="$5" />
                 <TypeGrid
                   typeList={typeList}
                   onTypeSelect={handleTypeSelect}
                 />
-                <YStack height={SPACING.LARGE_GAP} />
+                <YStack height="$7" />
               </YStack>
             }
           />

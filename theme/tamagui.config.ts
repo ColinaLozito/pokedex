@@ -2,28 +2,29 @@ import { defaultConfig } from '@tamagui/config/v4'
 import { createTamagui, createTokens } from 'tamagui'
 import { baseColors, pokemonTypeColors } from './colors'
 import { montserrat } from './fonts'
-
-const defaultTokens = defaultConfig.tokens
+import { radius } from './radius'
+import { size } from './space'
 
 const tokens = createTokens({
-  ...defaultTokens,
+  ...defaultConfig.tokens,
   color: {
     ...baseColors,
     ...pokemonTypeColors,
   },
+  size: size,
+  radius: radius,
 })
 
 export const config = createTamagui({
   ...defaultConfig,
   tokens,
   fonts: {
-    ...defaultConfig.fonts,
     body: montserrat,
     heading: montserrat,
   },
   settings: {
     ...defaultConfig.settings,
-    onlyAllowShorthands:false
+    onlyAllowShorthands: false,
   },
 })
 

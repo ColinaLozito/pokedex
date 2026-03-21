@@ -18,7 +18,6 @@ function PokemonCardComponent({
   variant = PokemonCardVariant.LIST,
   primaryType = '',
   types = [],
-  displayRemoveButton = false,
   onRemove,
   onSelect,
   onNavigate
@@ -45,8 +44,8 @@ function PokemonCardComponent({
   }, [id, onSelect, onNavigate, router])
 
   const backgroundColor = useMemo(() => (
-    getTypeColor(primaryType, variant)
-  ) as GetThemeValueForKey<"backgroundColor">, [primaryType, variant])
+    getTypeColor(primaryType)
+  ) as GetThemeValueForKey<"backgroundColor">, [primaryType])
 
   return (
     <Pressable
@@ -59,18 +58,19 @@ function PokemonCardComponent({
     >
       <Card
         elevate
-        borderRadius={16}
+        borderRadius="$3"
         overflow="hidden"
         bg={backgroundColor}
         height={150}
-        width='100%'
+        width="100%"
       >
-        <YStack p={10} height='100%' position='relative'>
-          <PokemonCardRemoveButton 
-            displayRemoveButton={displayRemoveButton}
-            onRemove={onRemove}
-            id={id}
-          />
+        <YStack p="$3" height="100%" position="relative">
+          { variant !== PokemonCardVariant.LIST && 
+            <PokemonCardRemoveButton 
+              onRemove={onRemove}
+              id={id}
+            />
+          }
           <PokemonCardHeader id={id} name={name} />
           
           {/* Middle Section: Pokemon Sprite with Circular Background */}

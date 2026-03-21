@@ -1,4 +1,4 @@
-import { Card, Text, XStack, YStack, useTheme } from 'tamagui'
+import { Card, Text, XStack, YStack } from 'tamagui'
 
 interface PokemonAttributesProps {
   species?: string
@@ -7,46 +7,44 @@ interface PokemonAttributesProps {
 }
 
 export default function PokemonAttributes({ species, height, weight }: PokemonAttributesProps) {
-  const theme = useTheme()
-  
   return (
     <Card>
       <Card.Header padded>
-        <XStack justify='space-around' items='flex-start'>
+        <XStack justify="space-around" items="flex-start">
           {/* Species */}
           {species && (
             <>
-              <YStack flex={1} items='center'>
-                <Text fontSize={12} color={theme.text.val} mb={4}>
+              <YStack flex={1} items="center">
+                <Text fontSize="$1" color="$text" mb="$1">
                   Species
                 </Text>
-                <Text fontSize={14} fontWeight={600} textAlign='center' color={theme.text.val}>
+                <Text fontSize="$2" fontWeight="$6" textAlign="center" color="$text">
                   {species}
                 </Text>
               </YStack>
-              <YStack width={1} height='100%' bg={theme.border?.val || theme.gray5?.val || '#E0E0E0'} mx={8} />
+              <YStack width={1} height="100%" bg="$border" mx="$2" />
             </>
           )}
           
           {/* Height */}
-          <YStack flex={1} items='center'>
-            <Text fontSize={12} color={theme.text.val} mb={4}>
+          <YStack flex={1} items="center">
+            <Text fontSize="$1" color="$text" mb="$1">
               Height
             </Text>
-            <Text fontSize={14} fontWeight={600} textAlign='center' color={theme.text.val}>
+            <Text fontSize="$2" fontWeight="$6" textAlign="center" color="$text">
               {(height / 10).toFixed(1)} m
             </Text>
           </YStack>
           
           {/* Vertical Divider */}
-          <YStack width={1} height='100%' bg={theme.border?.val || theme.gray5?.val || '#E0E0E0'} mx={8} />
+          <YStack width={1} height="100%" bg="$border" mx="$2" />
           
           {/* Weight */}
-          <YStack flex={1} items='center'>
-            <Text fontSize={12} color={theme.text.val} mb={4}>
+          <YStack flex={1} items="center">
+            <Text fontSize="$1" color="$text" mb="$1">
               Weight
             </Text>
-            <Text fontSize={14} fontWeight={600} textAlign='center' color={theme.text.val}>
+            <Text fontSize="$2" fontWeight="$6" textAlign="center" color="$text">
               {(weight / 10).toFixed(1)} kg
             </Text>
           </YStack>

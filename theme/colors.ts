@@ -6,6 +6,20 @@ export const baseColors = {
   border: '#E0E0E0',     // general border
   disabled: '#C4C4C4',   // disabled state
   red: '#FF0000',
+  white: '#FFFFFF',
+  doveGray: '#737373',
+  mercury: '#E5E5E5',
+  wildSand: '#F5F5F5',
+  hillary: '#A8A77A',
+  opacity1: 'rgba(255, 255, 255, 0.1)',
+  opacity2: 'rgba(255, 255, 255, 0.2)',
+  opacity3: 'rgba(255, 255, 255, 0.3)',
+  opacity4: 'rgba(255, 255, 255, 0.4)',
+  opacity5: 'rgba(255, 255, 255, 0.5)',
+  opacity6: 'rgba(255, 255, 255, 0.6)',
+  opacity7: 'rgba(255, 255, 255, 0.7)',
+  opacity8: 'rgba(255, 255, 255, 0.8)',
+  opacity9: 'rgba(255, 255, 255, 0.9)',
 }
 
 export const pokemonTypeColors = {

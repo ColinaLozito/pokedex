@@ -1,20 +1,20 @@
 import { PokemonTypeSlot } from '@/services/types'
-import { XStack } from 'tamagui'
+import { GetThemeValueForKey, XStack } from 'tamagui'
 import TypeBadge from './TypeBadge'
 
 interface TypeChipsProps {
   types: Array<PokemonTypeSlot>
   size?: 'small' | 'medium' | 'large'
-  gap?: number
+  gap?: number | GetThemeValueForKey<"gap">
 }
 
-export default function TypeChips({ types, size = 'medium', gap = 8 }: TypeChipsProps) {
+export default function TypeChips({ types, size = 'medium', gap = '$2' }: TypeChipsProps) {
   if (!types || types.length === 0) {
     return null
   }
 
   return (
-    <XStack flexWrap='wrap' gap={gap} justify="center" minWidth="100%">
+    <XStack flexWrap="wrap" gap={gap} justify="center" minWidth="100%">
       {types.map((typeInfo) => (
         <TypeBadge
           key={typeInfo.slot}

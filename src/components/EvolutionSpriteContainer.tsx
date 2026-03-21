@@ -1,5 +1,5 @@
 import { Pressable } from 'react-native'
-import { GetThemeValueForKey, Image, Text, useTheme, YStack } from 'tamagui'
+import { GetThemeValueForKey, Image, Text, YStack } from 'tamagui'
 
 interface EvolutionSpriteContainerProps {
   sprite: string
@@ -18,40 +18,38 @@ export default function EvolutionSpriteContainer({
   onPress,
   variant = 'linear',
 }: EvolutionSpriteContainerProps) {
-  const theme = useTheme()
-
-  // Variant-specific configurations
+  // Variant-specific configurations using tokens
   const config = {
     linear: {
-      imageSize: 90,
-      padding: 8,
-      nameFontSize: 12,
-      idFontSize: 14,
-      nameMarginTop: 8,
-      idMarginTop: 4,
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      imageSize: 90, // Keep as hardcoded for specific sprite sizing
+      padding: '$2',
+      nameFontSize: '$1',
+      idFontSize: '$2',
+      nameMarginTop: '$2',
+      idMarginTop: '$1',
+      backgroundColor: '$opacity1',
       minWidth: '20%',
       maxWidth: '100%',
     },
     'branching-initial': {
-      imageSize: 90,
-      padding: 12,
-      nameFontSize: 14,
-      idFontSize: 16,
-      nameMarginTop: 12,
-      idMarginTop: 6,
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      imageSize: 90, // Keep as hardcoded for specific sprite sizing
+      padding: '$3',
+      nameFontSize: '$2',
+      idFontSize: '$3',
+      nameMarginTop: '$3',
+      idMarginTop: '$1',
+      backgroundColor: '$opacity1',
       minWidth: undefined,
       maxWidth: undefined,
     },
     'branching-variant': {
-      imageSize: 70,
-      padding: 8,
-      nameFontSize: 14,
-      idFontSize: 14,
-      nameMarginTop: 6,
-      idMarginTop: 4,
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      imageSize: 70, // Keep as hardcoded for specific sprite sizing
+      padding: '$2',
+      nameFontSize: '$2',
+      idFontSize: '$2',
+      nameMarginTop: '$1',
+      idMarginTop: '$1',
+      backgroundColor: '$opacity4',
       minWidth: undefined,
       maxWidth: undefined,
     },
@@ -67,9 +65,9 @@ export default function EvolutionSpriteContainer({
       })}
     >
       <YStack
-        items='center'
-        p={variantConfig.padding}
-        borderRadius={12}
+        items="center"
+        p={variantConfig.padding as GetThemeValueForKey<"padding">}
+        borderRadius="$3"
         bg={isCurrent ? (variantConfig.backgroundColor as GetThemeValueForKey<"backgroundColor">) : undefined}
         width={variant === 'branching-variant' ? '100%' : undefined}
         style={{
@@ -84,19 +82,19 @@ export default function EvolutionSpriteContainer({
           objectFit="contain"
         />
         <Text
-          fontSize={variantConfig.nameFontSize}
-          fontWeight={700}
+          fontSize={variantConfig.nameFontSize as GetThemeValueForKey<"fontSize">}
+          fontWeight="$7"
           textTransform="capitalize"
-          mt={variantConfig.nameMarginTop}
-          text='center'
-          color={theme.text.val}
+          mt={variantConfig.nameMarginTop as GetThemeValueForKey<"marginTop">}
+          textAlign="center"
+          color="$text"
         >
           {name}
         </Text>
         <Text
-          fontSize={variantConfig.idFontSize}
-          mt={variantConfig.idMarginTop}
-          color={theme.text.val}
+          fontSize={variantConfig.idFontSize as GetThemeValueForKey<"fontSize">}
+          mt={variantConfig.idMarginTop as GetThemeValueForKey<"marginTop">}
+          color="$text"
         >
           #{id.toString().padStart(3, '0')}
         </Text>

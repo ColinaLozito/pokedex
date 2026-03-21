@@ -1,7 +1,7 @@
 import imageNotFound from '@images/notFound.png';
 import { useState } from 'react';
 import { Image as RNImage } from 'react-native';
-import { Image, Text, YStack } from 'tamagui';
+import { Image, YStack } from 'tamagui';
 import { POKEMON_CARD_COLORS } from '../constants';
 import { PokemonCardSpriteProps } from '../types';
 
@@ -17,14 +17,14 @@ export default function PokemonCardSprite({
       justify='flex-start' 
       alignItems='flex-end'
       position='relative' 
-      minHeight={60}
+      minHeight="$7"
     >
       {/* Circular Background */}
       <YStack
         position='absolute'
-        width={150}
-        height={150}
-        borderRadius={100}
+        width="$12"
+        height="$12"
+        borderRadius="$100"
         right={-15}
         top={-10}
         bg={circularBackgroundColor}
@@ -34,25 +34,21 @@ export default function PokemonCardSprite({
       {sprite ? (
           <Image
             source={{ uri: imageError ? RNImage.resolveAssetSource(imageNotFound).uri : sprite }}
-            width={90}
-            height={90}
+            width="$8"
+            height="$8"
             zIndex={1}
             objectFit="contain"
             onError={() => setImageError(true)}
           />
       ) : (
-        <YStack
-          width={70}
-          height={70}
-          bg={POKEMON_CARD_COLORS.noImageBackground}
-          borderRadius={8}
-          justify='center'
-          items='center'
-        >
-          <Text fontSize={12} color={POKEMON_CARD_COLORS.mutedText}>
-            No Image
-          </Text>
-        </YStack>
+        <Image
+          source={{ uri: RNImage.resolveAssetSource(imageNotFound).uri }}
+          width="$8"
+          height="$8"
+          zIndex={1}
+          objectFit="contain"
+          onError={() => setImageError(true)}
+        />
       )}
     </YStack>
   );

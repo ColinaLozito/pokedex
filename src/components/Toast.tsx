@@ -14,14 +14,14 @@ export function CurrentToast() {
       enterStyle={{ opacity: 0, scale: 0.5, y: -25 }}
       exitStyle={{ opacity: 0, scale: 1, y: -20 }}
       theme="accent"
-      rounded={16}
+      rounded="$4"
       animation="quick"
       maxWidth={300}
     >
-      <YStack items="center" p={7} gap={7}>
-        <Toast.Title fontWeight={700}>{currentToast.title}</Toast.Title>
+      <YStack items="center" p="$2" gap="$2">
+        <Toast.Title fontWeight="$7">{currentToast.title}</Toast.Title>
         {!!currentToast.message && (
-          <Toast.Description color="black">{currentToast.message}</Toast.Description>
+          <Toast.Description color="$text">{currentToast.message}</Toast.Description>
         )}
       </YStack>
     </Toast>

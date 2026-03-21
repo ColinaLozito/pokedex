@@ -1,23 +1,23 @@
-import { XStack, Text } from 'tamagui'
+import { Text, XStack } from 'tamagui'
 import { PokemonCardHeaderProps } from '../types'
 
 export default function PokemonCardHeader({ id, name }: PokemonCardHeaderProps) {
   return (
-    <XStack justify='space-between' items='center'>
-      <Text 
-        fontSize={14} 
-        color="white" 
+    <XStack justify="space-between" items="center">
+      <Text
+        fontSize="$2"
+        lineHeight="$3"
+        fontWeight="$8"
+        color="$white"
         textTransform="capitalize"
         numberOfLines={1}
-        lineHeight={24}
-        fontWeight={800}
       >
         {name}
       </Text>
-      <Text 
-        fontSize={14} 
-        color="white"
-        fontWeight={500}
+      <Text
+        fontSize="$2"
+        fontWeight="$5"
+        color="$white"
       >
         #{id.toString().padStart(3, '0')}
       </Text>

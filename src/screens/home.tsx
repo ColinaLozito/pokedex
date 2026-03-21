@@ -1,6 +1,7 @@
 import { ActionButton } from '@/components/ActionButton'
 import { useClearData } from '@/hooks/useClearData'
 import { Trash2 } from '@tamagui/lucide-icons'
+import { size } from '@theme/space'
 import { router } from 'expo-router'
 import { ImageBackground } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -21,27 +22,33 @@ export default function HomeScreen() {
       <YStack flex={1} justifyContent='flex-end' alignItems='flex-end'>
         {/* Clear Data Button - Top Right */}
         {hasStoredData && (
-          <YStack position="absolute" top={insets.top + 16} right={16} zIndex={10}>
+          <YStack position="absolute" top={insets.top + size[4]} right="$4" zIndex={10}>
             <Button
               onPress={handleClearData}
-              size={64}
+              size="$7"
               circular
-              backgroundColor={'rgba(0, 0, 0, 0.1)'}
+              backgroundColor="$opacity2"
               pressStyle={{ scale: 0.9 }}
               icon={Trash2}
             />
           </YStack>
         )}
 
-        <YStack width="100%" height={90} position="absolute" top="35%">
+        <YStack width="100%" height="$9" position="absolute" top="35%">
           <Image
             source={PokedexLogo}
-            width={256}
-            height={84}
+            width="$19"
+            height="$8"
             alignSelf='center'
           />
         </YStack>
-        <XStack width='100%' alignItems='center' justifyContent='center' gap={24} marginBottom={68}>
+        <XStack 
+          width='100%' 
+          alignItems='center' 
+          justifyContent='center' 
+          gap="$6" 
+          marginBottom="$11"
+        >
            <ActionButton
              text="Pokedex"
              onPress={() => router.push('/pokedex')}

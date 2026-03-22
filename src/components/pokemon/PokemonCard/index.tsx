@@ -1,3 +1,4 @@
+import PokemonSprite from '@/components/pokemon/PokemonCard/_parts/PokemonSprite';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { useCallback, useMemo } from 'react';
@@ -5,7 +6,6 @@ import { Pressable } from 'react-native';
 import { PokemonCardVariant } from 'src/types/pokemonCardVariant';
 import { getTypeColor } from 'src/utils/getTypeColor';
 import { Card, GetThemeValueForKey, YStack } from 'tamagui';
-import PokemonSprite from '../PokemonSprite';
 import PokemonCardHeader from './_parts/PokemonCardHeader';
 import PokemonCardRemoveButton from './_parts/PokemonCardRemoveButton';
 import PokemonCardTypes from './_parts/PokemonCardTypes';

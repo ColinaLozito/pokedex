@@ -79,7 +79,7 @@ function PokemonCardComponent({
           />
           
           {/* Bottom Section: Type Chips */}
-          <PokemonCardTypes types={types} />
+          <PokemonCardTypes types={types} primaryType={primaryType} />
         </YStack>
       </Card>
     </Pressable>

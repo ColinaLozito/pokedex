@@ -54,4 +54,5 @@ export type PokemonCardSpriteProps = {
 
 export type PokemonCardTypesProps = {
   types: Array<PokemonTypeSlot>
+  primaryType?: string
 }

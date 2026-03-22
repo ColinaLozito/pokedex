@@ -1,48 +1,27 @@
-import { Card, Text, XStack, YStack } from 'tamagui'
-import { PokemonAttributesProps } from './types'
+import { Card, XStack } from 'tamagui'
+import AttributeDivider from './_parts/AttributeDivider'
+import AttributeRow from './_parts/AttributeRow'
+import type { PokemonAttributesProps } from './types'
 
 export default function PokemonAttributes({ species, height, weight }: PokemonAttributesProps) {
+  
+  const heightAtribute = height ? `${(height / 10).toFixed(1)} m` : 'Unknown'
+  const weightAtribute = weight ? `${(weight / 10).toFixed(1)} kg` : 'Unknown'
+  
   return (
     <Card>
       <Card.Header padded>
         <XStack justify="space-around" items="flex-start">
-          {/* Species */}
           {species && (
             <>
-              <YStack flex={1} items="center">
-                <Text fontSize="$1" color="$text" mb="$1">
-                  Species
-                </Text>
-                <Text fontSize="$2" fontWeight="$6" textAlign="center" color="$text">
-                  {species}
-                </Text>
-              </YStack>
-              <YStack width={1} height="100%" bg="$border" mx="$2" />
+              <AttributeRow label="Species" value={species} />
+              <AttributeDivider />
             </>
           )}
           
-          {/* Height */}
-          <YStack flex={1} items="center">
-            <Text fontSize="$1" color="$text" mb="$1">
-              Height
-            </Text>
-            <Text fontSize="$2" fontWeight="$6" textAlign="center" color="$text">
-              {(height / 10).toFixed(1)} m
-            </Text>
-          </YStack>
-          
-          {/* Vertical Divider */}
-          <YStack width={1} height="100%" bg="$border" mx="$2" />
-          
-          {/* Weight */}
-          <YStack flex={1} items="center">
-            <Text fontSize="$1" color="$text" mb="$1">
-              Weight
-            </Text>
-            <Text fontSize="$2" fontWeight="$6" textAlign="center" color="$text">
-              {(weight / 10).toFixed(1)} kg
-            </Text>
-          </YStack>
+          <AttributeRow label="Height" value={heightAtribute} />
+          <AttributeDivider />
+          <AttributeRow label="Weight" value={weightAtribute} />
         </XStack>
       </Card.Header>
     </Card>

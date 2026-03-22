@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import type { PokemonListItem } from 'src/services/types'
+import type { PokemonListItem, TypeListItem } from 'src/services/types'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { fetchPokemonByType, fetchPokemonList } from '../services/api'
@@ -11,6 +11,10 @@ export type { PokemonGeneralState, RecentSelection } from './types/general'
 // PokemonGeneralState moved to src/store/types/general.ts and imported below
 
 const MAX_RECENT_SELECTIONS = 5
+
+const filterStellarType = (list: TypeListItem[]): TypeListItem[] => {
+  return list.filter((type) => type.name !== 'stellar')
+}
 
 export const usePokemonGeneralStore = create<PokemonGeneralState>()(
   persist(
@@ -42,12 +46,10 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
       },
 
       /**
-       * Set the type list
+       * Set the type list (filters out stellar type)
        */
       setTypeList: (list) => {
-        // Filter out stellar type for now
-        const filteredList = list.filter((type) => type.name !== 'stellar')
-        set({ typeList: filteredList })
+        set({ typeList: filterStellarType(list) })
       },
 
       /**
@@ -137,7 +139,12 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
          typeList: state.typeList,
          recentSelections: state.recentSelections,
          bookmarkedPokemonIds: state.bookmarkedPokemonIds,
-       })
+       }),
+       onRehydrateStorage: () => (state) => {
+         if (state) {
+           state.typeList = filterStellarType(state.typeList)
+         }
+       },
     }
   )
 )

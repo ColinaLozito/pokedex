@@ -1,5 +1,5 @@
 import type { PokemonListItem, TypeListItem } from 'src/services/types'
-import type { PokemonDisplayDataArray } from 'src/utils/pokemonDisplayUtils'
+import type { PokemonDisplayDataArray } from 'src/utils/getPokemonDisplayData'
 
 export interface RecentSelection {
   readonly id: number

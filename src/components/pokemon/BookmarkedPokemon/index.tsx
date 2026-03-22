@@ -2,7 +2,7 @@ import PokemonCard from '@/components/pokemon/PokemonCard'
 import { Bookmark } from '@tamagui/lucide-icons'
 import { useMemo } from 'react'
 import { PokemonCardVariant } from 'src/types/pokemonCardVariant'
-import { transformPokemonToDisplayData } from 'src/utils/pokemonDisplayData'
+import { transformPokemonToDisplayData } from 'src/utils/transformPokemon'
 import { H4, XStack, YStack } from 'tamagui'
 import { BookmarkedPokemonProps } from './types'
 

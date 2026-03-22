@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { PokemonCardVariant } from 'src/types/pokemonCardVariant'
-import { transformPokemonToDisplayData } from 'src/utils/pokemonDisplayData'
+import { transformPokemonToDisplayData } from 'src/utils/transformPokemon'
 import { H4, XStack, YStack } from 'tamagui'
 import PokemonCard from '../PokemonCard'
 import type { RecentSelectionsProps } from './types'

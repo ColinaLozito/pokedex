@@ -1,5 +1,5 @@
 import type { CombinedPokemonDetail, PokemonListItem } from '../services/types'
-import { PokemonDisplayData } from './pokemonDisplayData'
+import { PokemonDisplayData } from './transformPokemon'
 import { getPokemonSprite, getPokemonSpriteUrl } from './pokemonSprites'
 
 /**

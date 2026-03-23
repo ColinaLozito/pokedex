@@ -7,26 +7,16 @@ import TypeFilterHeader from './_parts/TypeFilterHeader'
 import { useTypeFilterScreen } from './hooks/useTypeFilterScreen'
 
 export default function TypeFilterScreen() {
-  const {
-    filteredData,
-    loading,
-    isLoading,
-    error,
-    typeName,
-    typeColor,
-    typeIcon,
-    handleSelect,
-    onGoBack,
-  } = useTypeFilterScreen()
+  const { data, status, actions } = useTypeFilterScreen()
 
-  useLoadingModal(loading || isLoading, 'LOADING POKEMON')
+  useLoadingModal(status.loading || status.isLoading, 'LOADING POKEMON')
 
-  if (error) {
+  if (status.error) {
     return (
       <ErrorScreen
-        error={error}
-        onGoBack={onGoBack}
-        backgroundColor={typeColor as string}
+        error={status.error}
+        onGoBack={actions.onGoBack}
+        backgroundColor={data.typeColor as string}
         errorColor="white"
         goBackColor="white"
       />
@@ -34,9 +24,9 @@ export default function TypeFilterScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: typeColor as string }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: data.typeColor as string }}>
       <YStack flex={1}>
-        <TypeFilterHeader typeName={typeName} typeIcon={typeIcon} />
+        <TypeFilterHeader typeName={data.typeName} typeIcon={data.typeIcon} />
 
         <YStack
           flex={1}
@@ -47,7 +37,7 @@ export default function TypeFilterScreen() {
           pt={16}
           px={8}
         >
-          <PokemonGrid data={filteredData} onSelect={handleSelect} />
+          <PokemonGrid data={data.filteredData} onSelect={actions.handleSelect} />
         </YStack>
       </YStack>
     </SafeAreaView>

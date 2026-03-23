@@ -22,17 +22,24 @@ export interface PokemonDetailsEmptyStateProps {
   subtitle?: string
 }
 
+interface PokemonDetailsDataData {
+  currentPokemon: CombinedPokemonDetail | undefined
+  currentPokemonId: number | null
+  bookmarkedPokemonIds: number[]
+  isBookmarked: boolean
+}
+
+interface PokemonDetailsScreenData {
+  currentPokemon: CombinedPokemonDetail | undefined
+  isBookmarked: boolean
+  primaryTypeColor: PrimaryTypeColor
+}
+
+type PokemonDetailsStatus = Pick<import('@/types/screen').ScreenStatus, 'loading' | 'error'>
+
 export interface UsePokemonDetailsDataReturn {
-  data: {
-    currentPokemon: CombinedPokemonDetail | undefined
-    currentPokemonId: number | null
-    bookmarkedPokemonIds: number[]
-    isBookmarked: boolean
-  }
-  status: {
-    loading: boolean
-    error: string | null
-  }
+  data: PokemonDetailsDataData
+  status: PokemonDetailsStatus
   actions: {
     getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
     fetchPokemonDetail: (id: number) => Promise<CombinedPokemonDetail>
@@ -42,15 +49,8 @@ export interface UsePokemonDetailsDataReturn {
 }
 
 export interface UsePokemonDetailsScreenReturn {
-  data: {
-    currentPokemon: CombinedPokemonDetail | undefined
-    isBookmarked: boolean
-    primaryTypeColor: string | GetThemeValueForKey<'backgroundColor'>
-  }
-  status: {
-    loading: boolean
-    error: string | null
-  }
+  data: PokemonDetailsScreenData
+  status: PokemonDetailsStatus
   actions: {
     handleEvolutionPress: (id: number) => Promise<void>
     handleBookmarkPress: () => void

@@ -2,10 +2,10 @@ import type { BookmarkedPokemonProps } from '@/components/pokemon/BookmarkedPoke
 import type { TypeGridItem } from '@/components/pokemon/PokemonTypeGrid/types'
 import type { RecentSelectionsProps } from '@/components/pokemon/RecentSelections/types'
 import type { CombinedPokemonDetail } from 'src/services/types'
-import type { RecentSelection } from 'src/store/pokemonGeneralStore'
+import type { PokemonListDataSet } from '@/types/screen'
 
 export interface PokedexBodyProps {
-  pokemonListDataSet: Array<{ id: string; title: string }>
+  pokemonListDataSet: PokemonListDataSet
   bookmarkedPokemonIds: BookmarkedPokemonProps['bookmarkedPokemonIds']
   getPokemonDetail: BookmarkedPokemonProps['getPokemonDetail']
   toggleBookmark: BookmarkedPokemonProps['onRemove']
@@ -16,19 +16,28 @@ export interface PokedexBodyProps {
   onTypeSelect: (typeId: number, typeName: string) => void
 }
 
-export type UsePokedexDataReturn = Pick<PokedexBodyProps, 
-  'pokemonListDataSet' | 
-  'bookmarkedPokemonIds' | 
-  'getPokemonDetail' | 
-  'toggleBookmark' | 
-  'recentSelections' | 
-  'removeRecentSelection' | 
-  'typeList'
-> & {
-  isLoading: boolean
+interface PokedexDataData {
+  pokemonListDataSet: PokemonListDataSet
+  bookmarkedPokemonIds: number[]
+  recentSelections: RecentSelectionsProps['recentSelections']
+  typeList: TypeGridItem[]
+}
+
+type PokedexActions = {
+  getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
+  toggleBookmark: (id: number) => void
+  removeRecentSelection: (id: number) => void
   handleSelect: (id: number) => Promise<void>
 }
 
-export type UsePokedexScreenReturn = UsePokedexDataReturn & {
-  handleTypeSelect: (typeId: number, typeName: string) => void
+export interface UsePokedexDataReturn {
+  data: PokedexDataData
+  actions: PokedexActions
+}
+
+export interface UsePokedexScreenReturn {
+  data: PokedexDataData
+  actions: PokedexActions & {
+    handleTypeSelect: (typeId: number, typeName: string) => void
+  }
 }

@@ -9,20 +9,9 @@ import { usePokedexScreen } from './hooks/usePokedexScreen'
 export default function PokedexScreen() {
   const insets = useSafeAreaInsets()
 
-  const {
-    pokemonListDataSet,
-    bookmarkedPokemonIds,
-    getPokemonDetail,
-    toggleBookmark,
-    recentSelections,
-    removeRecentSelection,
-    typeList,
-    isLoading,
-    handleSelect,
-    handleTypeSelect,
-  } = usePokedexScreen()
+  const { data, actions } = usePokedexScreen()
 
-  useLoadingModal(isLoading, 'LOADING POKEMON')
+  useLoadingModal(false, 'LOADING POKEMON')
 
   return (
     <AutocompleteDropdownContextProvider headerOffset={insets.top}>
@@ -41,15 +30,15 @@ export default function PokedexScreen() {
           ListHeaderComponent={
             <YStack paddingTop={insets.top}>
               <PokedexBody
-                pokemonListDataSet={pokemonListDataSet}
-                bookmarkedPokemonIds={bookmarkedPokemonIds}
-                getPokemonDetail={getPokemonDetail}
-                toggleBookmark={toggleBookmark}
-                recentSelections={recentSelections}
-                removeRecentSelection={removeRecentSelection}
-                onSelect={handleSelect}
-                typeList={typeList}
-                onTypeSelect={handleTypeSelect}
+                pokemonListDataSet={data.pokemonListDataSet}
+                bookmarkedPokemonIds={data.bookmarkedPokemonIds}
+                getPokemonDetail={actions.getPokemonDetail}
+                toggleBookmark={actions.toggleBookmark}
+                recentSelections={data.recentSelections}
+                removeRecentSelection={actions.removeRecentSelection}
+                onSelect={actions.handleSelect}
+                typeList={data.typeList}
+                onTypeSelect={actions.handleTypeSelect}
               />
             </YStack>
           }

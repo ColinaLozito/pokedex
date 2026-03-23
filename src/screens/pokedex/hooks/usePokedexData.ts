@@ -1,62 +1,68 @@
-import { useMemo } from 'react'
-import { useShallow } from 'zustand/react/shallow'
+import { usePokemonSelection } from '@/hooks/usePokemonSelection'
 import { usePokemonDataStore } from '@/store/pokemonDataStore'
 import { usePokemonGeneralStore } from '@/store/pokemonGeneralStore'
-import { usePokemonSelection } from '@/hooks/usePokemonSelection'
+import { useMemo } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import type { UsePokedexDataReturn } from '../types'
 
 export function usePokedexData(): UsePokedexDataReturn {
-  const {
-    pokemonList,
-    addRecentSelection,
-    bookmarkedPokemonIds,
-    recentSelections,
-    removeRecentSelection,
-    typeList,
-    toggleBookmark,
-  } = usePokemonGeneralStore(
+  const storeData = usePokemonGeneralStore(
     useShallow(store => ({
       pokemonList: store.pokemonList,
-      addRecentSelection: store.addRecentSelection,
       bookmarkedPokemonIds: store.bookmarkedPokemonIds,
       recentSelections: store.recentSelections,
       removeRecentSelection: store.removeRecentSelection,
       typeList: store.typeList,
+      addRecentSelection: store.addRecentSelection,
       toggleBookmark: store.toggleBookmark,
     }))
   )
 
-  const { fetchPokemonDetail, getPokemonDetail } = usePokemonDataStore(
-    useShallow(s => ({
-      fetchPokemonDetail: s.fetchPokemonDetail,
-      getPokemonDetail: s.getPokemonDetail,
+  const pokemonStoreData = usePokemonDataStore(
+    useShallow(store => ({
+      fetchPokemonDetail: store.fetchPokemonDetail,
+      getPokemonDetail: store.getPokemonDetail,
     }))
   )
 
   const pokemonListDataSet = useMemo(() =>
-    pokemonList.map((pokemon) => ({
+    storeData.pokemonList.map((pokemon) => ({
       id: pokemon.id.toString(),
       title: pokemon.name,
-    })), [pokemonList]
+    })), [storeData.pokemonList]
   )
 
-  const { isLoading, handleSelect } = usePokemonSelection({
-    pokemonList,
-    addRecentSelection,
-    fetchPokemonDetail,
-    getPokemonDetail,
+  const { handleSelect } = usePokemonSelection({
+    pokemonList: storeData.pokemonList,
+    addRecentSelection: storeData.addRecentSelection,
+    fetchPokemonDetail: pokemonStoreData.fetchPokemonDetail,
+    getPokemonDetail: pokemonStoreData.getPokemonDetail,
     pokemonListDataSet,
   })
 
-  return {
+  const data = useMemo(() => ({
     pokemonListDataSet,
-    bookmarkedPokemonIds,
-    getPokemonDetail,
-    toggleBookmark,
-    recentSelections,
-    removeRecentSelection,
-    typeList,
-    isLoading,
+    bookmarkedPokemonIds: storeData.bookmarkedPokemonIds,
+    recentSelections: storeData.recentSelections,
+    typeList: storeData.typeList,
+  }), [
+    pokemonListDataSet,
+    storeData.bookmarkedPokemonIds,
+    storeData.recentSelections,
+    storeData.typeList,
+  ])
+
+  const actions = useMemo(() => ({
+    getPokemonDetail: pokemonStoreData.getPokemonDetail,
+    toggleBookmark: storeData.toggleBookmark,
+    removeRecentSelection: storeData.removeRecentSelection,
     handleSelect,
-  }
+  }), [
+    pokemonStoreData.getPokemonDetail,
+    storeData.toggleBookmark,
+    storeData.removeRecentSelection,
+    handleSelect,
+  ])
+
+  return { data, actions }
 }

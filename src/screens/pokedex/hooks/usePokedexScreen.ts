@@ -1,13 +1,13 @@
+import { useCallback, useMemo } from 'react'
 import { useRouter } from 'expo-router'
 import { usePokedexData } from './usePokedexData'
 import type { UsePokedexScreenReturn } from '../types'
 
 export function usePokedexScreen(): UsePokedexScreenReturn {
   const router = useRouter()
+  const { data, actions } = usePokedexData()
 
-  const data = usePokedexData()
-
-  const handleTypeSelect = (typeId: number, typeName: string) => {
+  const handleTypeSelect = useCallback((typeId: number, typeName: string) => {
     router.push({
       pathname: '/typeFilter',
       params: {
@@ -15,10 +15,17 @@ export function usePokedexScreen(): UsePokedexScreenReturn {
         typeName: typeName,
       },
     })
-  }
+  }, [router])
+
+  const dataMemo = useMemo(() => data, [data])
+
+  const actionsMemo = useMemo(() => ({
+    ...actions,
+    handleTypeSelect,
+  }), [actions, handleTypeSelect])
 
   return {
-    ...data,
-    handleTypeSelect,
+    data: dataMemo,
+    actions: actionsMemo,
   }
 }

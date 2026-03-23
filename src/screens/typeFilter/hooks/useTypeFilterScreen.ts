@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { getPokemonTypeStyles } from 'src/utils/pokemonThemeUtils'
-import { UseTypeFilterScreenReturn } from '../types'
+import type { UseTypeFilterScreenReturn } from '../types'
 import { useTypeFilterData } from './useTypeFilterData'
 
 export function useTypeFilterScreen(): UseTypeFilterScreenReturn {
@@ -11,35 +11,39 @@ export function useTypeFilterScreen(): UseTypeFilterScreenReturn {
   const typeId = params.typeId ? parseInt(params.typeId, 10) : null
   const typeName = params.typeName || 'Unknown'
 
-  const { 
-    filteredData, 
-    loading, 
-    isLoading, 
-    error, 
-    handleSelect, 
-    loadPokemon 
-  } = useTypeFilterData(
-    typeId,
-    typeName
-  )
+  const { data, status, actions } = useTypeFilterData(typeId, typeName)
 
   const { typeColor, typeIcon } = getPokemonTypeStyles(typeName)
 
-  const onGoBack = () => router.back()
+  const onGoBack = useCallback(() => router.back(), [router])
 
   useEffect(() => {
-    loadPokemon()
-  }, [loadPokemon])
+    actions.loadPokemon()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actions.loadPokemon])
 
-  return {
-    filteredData,
-    loading,
-    isLoading,
-    error,
+  const dataMemo = useMemo(() => ({
+    filteredData: data.filteredData,
+    pokemonListForRecent: data.pokemonListForRecent,
     typeName,
     typeColor,
     typeIcon,
-    handleSelect,
+  }), [data.filteredData, data.pokemonListForRecent, typeName, typeColor, typeIcon])
+
+  const statusMemo = useMemo(() => ({
+    loading: status.loading,
+    isLoading: status.isLoading,
+    error: status.error,
+  }), [status.loading, status.isLoading, status.error])
+
+  const actionsMemo = useMemo(() => ({
+    handleSelect: actions.handleSelect,
     onGoBack,
+  }), [actions.handleSelect, onGoBack])
+
+  return {
+    data: dataMemo,
+    status: statusMemo,
+    actions: actionsMemo,
   }
 }

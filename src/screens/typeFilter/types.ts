@@ -1,30 +1,40 @@
 import { ImageSourcePropType } from 'react-native'
 import { GetThemeValueForKey } from 'tamagui'
-import { getPokemonTypeStyles } from '@/utils/pokemonThemeUtils'
 import type { PokemonDisplayDataArray } from 'src/utils/getPokemonDisplayData'
+import type { ScreenStatus, PokemonListItem } from '@/types/screen'
+
+type PrimaryTypeColor = string | GetThemeValueForKey<'backgroundColor'>
 
 export interface TypeFilterHeaderProps {
   typeName: string
   typeIcon: ImageSourcePropType | undefined
 }
 
-export interface UseTypeFilterDataReturn {
+interface TypeFilterDataData {
   filteredData: PokemonDisplayDataArray
-  loading: boolean
-  isLoading: boolean
-  error: string | null
-  handleSelect: (id: number) => Promise<void>
-  loadPokemon: () => Promise<void>
+  pokemonListForRecent: PokemonListItem[]
+}
+
+interface TypeFilterScreenData extends TypeFilterDataData {
+  typeName: string
+  typeColor: PrimaryTypeColor
+  typeIcon: ImageSourcePropType | undefined
+}
+
+export interface UseTypeFilterDataReturn {
+  data: TypeFilterDataData
+  status: ScreenStatus
+  actions: {
+    handleSelect: (id: number) => Promise<void>
+    loadPokemon: () => Promise<void>
+  }
 }
 
 export interface UseTypeFilterScreenReturn {
-  filteredData: PokemonDisplayDataArray
-  loading: boolean
-  isLoading: boolean
-  error: string | null
-  typeName: string
-  typeColor: string | GetThemeValueForKey<'backgroundColor'>
-  typeIcon: ReturnType<typeof getPokemonTypeStyles>['typeIcon']
-  handleSelect: (id: number) => Promise<void>
-  onGoBack: () => void
+  data: TypeFilterScreenData
+  status: ScreenStatus
+  actions: {
+    handleSelect: (id: number) => Promise<void>
+    onGoBack: () => void
+  }
 }

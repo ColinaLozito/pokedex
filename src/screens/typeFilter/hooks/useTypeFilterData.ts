@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { usePokemonSelection } from '@/hooks/usePokemonSelection'
 import { usePokemonDataStore } from '@/store/pokemonDataStore'
 import { usePokemonGeneralStore } from '@/store/pokemonGeneralStore'
@@ -5,7 +6,7 @@ import { useCallback, useMemo, useState } from 'react'
 import type { PokemonListItem } from 'src/services/types'
 import type { PokemonDisplayDataArray } from 'src/utils/getPokemonDisplayData'
 import { useShallow } from 'zustand/react/shallow'
-import { UseTypeFilterDataReturn } from '../types'
+import type { UseTypeFilterDataReturn } from '../types'
 
 export function useTypeFilterData(
   typeId: number | null,
@@ -15,42 +16,41 @@ export function useTypeFilterData(
   const [error, setError] = useState<string | null>(null)
   const [rawData, setRawData] = useState<PokemonDisplayDataArray>([])
 
-  const { fetchPokemonByTypeAndGetDisplayData, getPokemonDisplayData } = usePokemonGeneralStore(
-    useShallow(s => ({
-      fetchPokemonByTypeAndGetDisplayData: s.fetchPokemonByTypeAndGetDisplayData,
-      getPokemonDisplayData: s.getPokemonDisplayData,
+  const storeData = usePokemonGeneralStore(
+    useShallow(store => ({
+      fetchPokemonByTypeAndGetDisplayData: store.fetchPokemonByTypeAndGetDisplayData,
+      getPokemonDisplayData: store.getPokemonDisplayData,
+      addRecentSelection: store.addRecentSelection,
     }))
   )
 
-  const { fetchPokemonDetail, getPokemonDetail, pokemonDetails } = usePokemonDataStore(
-    useShallow(s => ({
-      fetchPokemonDetail: s.fetchPokemonDetail,
-      getPokemonDetail: s.getPokemonDetail,
-      pokemonDetails: s.pokemonDetails,
+  const pokemonStoreData = usePokemonDataStore(
+    useShallow(store => ({
+      fetchPokemonDetail: store.fetchPokemonDetail,
+      getPokemonDetail: store.getPokemonDetail,
+      pokemonDetails: store.pokemonDetails,
     }))
   )
-
-  const addRecentSelection = usePokemonGeneralStore(s => s.addRecentSelection)
 
   const filteredData = useMemo(() => {
     if (rawData.length === 0) return rawData
-    return getPokemonDisplayData(
-      rawData.map(p => ({ id: p.id, name: p.name })),
+    return storeData.getPokemonDisplayData(
+      rawData.map(pokemon => ({ id: pokemon.id, name: pokemon.name })),
       typeName
     )
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rawData, typeName, getPokemonDisplayData, pokemonDetails])
+   
+  }, [rawData, typeName, storeData.getPokemonDisplayData, pokemonStoreData.pokemonDetails])
 
   const pokemonListForRecent = useMemo<PokemonListItem[]>(
-    () => rawData.map(p => ({ id: p.id, name: p.name })),
+    () => rawData.map(pokemon => ({ id: pokemon.id, name: pokemon.name })),
     [rawData]
   )
 
   const { isLoading, handleSelect } = usePokemonSelection({
     pokemonList: pokemonListForRecent,
-    fetchPokemonDetail,
-    getPokemonDetail,
-    addRecentSelection,
+    fetchPokemonDetail: pokemonStoreData.fetchPokemonDetail,
+    getPokemonDetail: pokemonStoreData.getPokemonDetail,
+    addRecentSelection: storeData.addRecentSelection,
   })
 
   const loadPokemon = useCallback(async () => {
@@ -63,21 +63,30 @@ export function useTypeFilterData(
     try {
       setError(null)
       setLoading(true)
-      const data = await fetchPokemonByTypeAndGetDisplayData(typeId, typeName)
+      const data = await storeData.fetchPokemonByTypeAndGetDisplayData(typeId, typeName)
       setRawData(data)
     } catch (_err) {
       setError('Failed to load Pokemon')
     } finally {
       setLoading(false)
     }
-  }, [typeId, typeName, fetchPokemonByTypeAndGetDisplayData])
+  }, [typeId, typeName, storeData.fetchPokemonByTypeAndGetDisplayData])
 
-  return {
+  const data = useMemo(() => ({
     filteredData,
+    pokemonListForRecent,
+  }), [filteredData, pokemonListForRecent])
+
+  const status = useMemo(() => ({
     loading,
     isLoading,
     error,
+  }), [loading, isLoading, error])
+
+  const actions = useMemo(() => ({
     handleSelect,
     loadPokemon,
-  }
+  }), [handleSelect, loadPokemon])
+
+  return { data, status, actions }
 }

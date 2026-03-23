@@ -27,4 +27,6 @@ export interface PokemonGeneralState {
     typeId: number,
     typeName: string
   ) => Promise<PokemonDisplayDataArray>
+
+  $reset: () => void
 }

@@ -13,4 +13,5 @@ export interface ModalState {
   openModal: (type: 'loading', props: LoadingModalProps) => void
   closeModal: () => void
   isOpen: (type: ModalType) => boolean
+  $reset: () => void
 }

@@ -98,6 +98,16 @@ export const usePokemonDataStore = create<PokemonDataState>()(
         clearError: () => {
           set({ error: null })
         },
+
+        $reset: () => {
+          set({
+            pokemonDetails: {},
+            currentPokemonId: null,
+            loading: false,
+            error: null,
+            pendingFetches: new Map(),
+          })
+        },
       }
     },
     {

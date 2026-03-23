@@ -88,10 +88,19 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
              ? state.bookmarkedPokemonIds.filter((bookmarkId) => bookmarkId !== id)
              : [...state.bookmarkedPokemonIds, id]
            
-           return { bookmarkedPokemonIds: newBookmarkedIds }
-         })
-       },
-      
+            return { bookmarkedPokemonIds: newBookmarkedIds }
+          })
+        },
+
+        $reset: () => {
+          set({
+            pokemonList: [],
+            typeList: [],
+            recentSelections: [],
+            bookmarkedPokemonIds: [],
+          })
+        },
+       
       /**
        * Transform Pokemon list to display-ready data with sprites and types
        * Note: This method needs access to pokemonDataStore for details

@@ -13,6 +13,7 @@ import MontserratRegular from '../assets/fonts/Montserrat-Regular.ttf'
 import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf'
 import MontserratThin from '../assets/fonts/Montserrat-Thin.ttf'
 import { Provider as TamaguiProvider } from '../src/providers/TamaguiProvider'
+import GlobalErrorBoundary from '../src/components/common/GlobalErrorBoundary'
 import { fetchTypeList } from '../src/services/api'
 import { usePokemonGeneralStore } from '../src/store/pokemonGeneralStore'
 
@@ -83,7 +84,13 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     }
   }, [fetchPokemonListAction, typeList.length, setTypeList])
 
-  return <TamaguiProvider>{children}</TamaguiProvider>
+  return (
+    <TamaguiProvider>
+      <GlobalErrorBoundary onReset={() => {}}>
+        {children}
+      </GlobalErrorBoundary>
+    </TamaguiProvider>
+  )
 }
 
 const defaultStackOptions: React.ComponentProps<typeof Stack.Screen>['options'] = {

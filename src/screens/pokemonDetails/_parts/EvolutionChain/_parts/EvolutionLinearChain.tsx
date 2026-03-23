@@ -1,4 +1,4 @@
-import EvolutionSpriteContainer from '@/components/pokemon/EvolutionSpriteContainer'
+import EvolutionSpriteContainer from '../../EvolutionSpriteContainer'
 import { getPokemonSprite } from 'src/utils/pokemonSprites'
 import { XStack } from 'tamagui'
 import type { EvolutionLinearChainProps } from '../types'

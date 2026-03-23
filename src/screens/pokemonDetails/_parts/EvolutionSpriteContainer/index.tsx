@@ -11,8 +11,6 @@ export default function EvolutionSpriteContainer({
   onPress,
   variant = 'linear',
 }: EvolutionSpriteContainerProps) {
-  // Variant-specific configurations using tokens
-
   const variantConfig = styleConfig[variant]
 
   return (

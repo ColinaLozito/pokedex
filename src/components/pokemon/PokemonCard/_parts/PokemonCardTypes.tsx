@@ -1,5 +1,5 @@
+import TypeChips from '@/components/pokemon/PokemonTypeChips'
 import { Text, XStack } from 'tamagui'
-import TypeChips from '../../PokemonTypeChips'
 import { POKEMON_CARD_COLORS } from '../constants'
 import { PokemonCardTypesProps } from '../types'
 

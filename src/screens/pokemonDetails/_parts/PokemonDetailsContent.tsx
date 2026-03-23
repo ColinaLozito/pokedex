@@ -1,11 +1,10 @@
-import EvolutionChain from '@/components/pokemon/EvolutionChain'
-import PokemonAbilities from '@/components/pokemon/PokemonAbilities'
-import PokemonAttributes from '@/components/pokemon/PokemonAttributes'
-import PokemonBaseStats from '@/components/pokemon/PokemonBaseStats'
-import TypeChips from '@/components/pokemon/PokemonTypeChips'
-import type { CombinedPokemonDetail } from 'src/services/types'
 import { XStack, YStack } from 'tamagui'
+import TypeChips from '../../../components/pokemon/PokemonTypeChips'
 import type { PokemonDetailsContentProps } from '../types'
+import EvolutionChain from './EvolutionChain'
+import PokemonAbilities from './PokemonAbilities'
+import PokemonAttributes from './PokemonAttributes'
+import PokemonBaseStats from './PokemonBaseStats'
 
 export default function PokemonDetailsContent({
   pokemon,
@@ -13,6 +12,12 @@ export default function PokemonDetailsContent({
   onEvolutionPress,
   getPokemonDetail,
 }: PokemonDetailsContentProps) {
+
+  const hasEvolutionChain = 
+    pokemon.evolutionChain && 
+    pokemon.evolutionChain.length > 1 && 
+    pokemon.evolutionChainTree
+
   return (
     <YStack
       bg="$white"
@@ -29,7 +34,7 @@ export default function PokemonDetailsContent({
         weight={pokemon.weight}
       />
 
-      {pokemon.evolutionChain && pokemon.evolutionChain.length > 1 && pokemon.evolutionChainTree && (
+      {hasEvolutionChain && (
         <YStack>
           <EvolutionChain
             evolutionChainTree={pokemon.evolutionChainTree}

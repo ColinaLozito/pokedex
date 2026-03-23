@@ -1,7 +1,7 @@
 import type { CombinedPokemonDetail } from 'src/services/types'
 import { GetThemeValueForKey } from 'tamagui'
 
-type PrimaryTypeColor = string | GetThemeValueForKey<'backgroundColor'>
+type PrimaryTypeColor = string | GetThemeValueForKey<'backgroundColor' | 'color'>
 
 export interface PokemonDetailsHeaderProps {
   pokemon: CombinedPokemonDetail
@@ -58,3 +58,9 @@ export interface UsePokemonDetailsScreenReturn {
     getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
   }
 }
+
+export type { PokemonTypeSlot, TypeChipsProps } from '../../components/pokemon/PokemonTypeChips/types'
+export type { AbilityInfo } from './_parts/PokemonAbilities/types'
+export type { AttributeRowProps, PokemonAttributesProps } from './_parts/PokemonAttributes/types'
+export type { PokemonBaseStatsProps, StatInfo } from './_parts/PokemonBaseStats/types'
+

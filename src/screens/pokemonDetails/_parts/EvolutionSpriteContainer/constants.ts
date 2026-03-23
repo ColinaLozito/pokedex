@@ -1,6 +1,6 @@
 export const styleConfig = {
     linear: {
-      imageSize: 90, // Keep as hardcoded for specific sprite sizing
+      imageSize: 90,
       padding: '$2',
       nameFontSize: '$1',
       idFontSize: '$2',
@@ -11,7 +11,7 @@ export const styleConfig = {
       maxWidth: '100%',
     },
     'branching-initial': {
-      imageSize: 90, // Keep as hardcoded for specific sprite sizing
+      imageSize: 90,
       padding: '$3',
       nameFontSize: '$2',
       idFontSize: '$3',
@@ -22,7 +22,7 @@ export const styleConfig = {
       maxWidth: undefined,
     },
     'branching-variant': {
-      imageSize: 70, // Keep as hardcoded for specific sprite sizing
+      imageSize: 70,
       padding: '$2',
       nameFontSize: '$2',
       idFontSize: '$2',

@@ -1,3 +1,5 @@
+import { GetThemeValueForKey } from 'tamagui'
+
 export interface StatInfo {
   base_stat: number
   stat: {
@@ -8,5 +10,5 @@ export interface StatInfo {
 
 export interface PokemonBaseStatsProps {
   stats: StatInfo[]
-  primaryTypeColor: string
+  primaryTypeColor: string | GetThemeValueForKey<'backgroundColor'>
 }

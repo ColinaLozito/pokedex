@@ -1,15 +1,30 @@
 import { ImageSourcePropType } from 'react-native'
+import { GetThemeValueForKey } from 'tamagui'
+import { getPokemonTypeStyles } from '@/utils/pokemonThemeUtils'
 import type { PokemonDisplayDataArray } from 'src/utils/getPokemonDisplayData'
 
-export interface TypeFilterData {
-  filteredData: PokemonDisplayDataArray
-  loading: boolean
-  error: string | null
+export interface TypeFilterHeaderProps {
   typeName: string
-  typeColor: string
-  typeIcon: ImageSourcePropType
-  handleSelect: (id: number) => Promise<void>
+  typeIcon: ImageSourcePropType | undefined
 }
 
+export interface UseTypeFilterDataReturn {
+  filteredData: PokemonDisplayDataArray
+  loading: boolean
+  isLoading: boolean
+  error: string | null
+  handleSelect: (id: number) => Promise<void>
+  loadPokemon: () => Promise<void>
+}
 
-export type TypeFilterHeaderProps = Pick<TypeFilterData, 'typeName' | 'typeIcon'>
+export interface UseTypeFilterScreenReturn {
+  filteredData: PokemonDisplayDataArray
+  loading: boolean
+  isLoading: boolean
+  error: string | null
+  typeName: string
+  typeColor: string | GetThemeValueForKey<'backgroundColor'>
+  typeIcon: ReturnType<typeof getPokemonTypeStyles>['typeIcon']
+  handleSelect: (id: number) => Promise<void>
+  onGoBack: () => void
+}

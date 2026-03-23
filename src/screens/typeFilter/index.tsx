@@ -1,28 +1,23 @@
 import ErrorScreen from '@/components/common/ErrorScreen'
 import { useLoadingModal } from '@/hooks/useLoadingModal'
-import { useLocalSearchParams, useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { YStack } from 'tamagui'
 import PokemonGrid from './_parts/PokemonGrid'
 import TypeFilterHeader from './_parts/TypeFilterHeader'
-import { useTypeFilterData } from './hooks/useTypeFilterData'
+import { useTypeFilterScreen } from './hooks/useTypeFilterScreen'
 
 export default function TypeFilterScreen() {
-  const router = useRouter()
-  const params = useLocalSearchParams<{ typeId: string; typeName: string }>()
-  
-  const typeId = params.typeId ? parseInt(params.typeId, 10) : null
-  const typeName = params.typeName || 'Unknown'
-
   const {
     filteredData,
     loading,
     isLoading,
     error,
+    typeName,
     typeColor,
     typeIcon,
     handleSelect,
-  } = useTypeFilterData(typeId, typeName)
+    onGoBack,
+  } = useTypeFilterScreen()
 
   useLoadingModal(loading || isLoading, 'LOADING POKEMON')
 
@@ -30,8 +25,8 @@ export default function TypeFilterScreen() {
     return (
       <ErrorScreen
         error={error}
-        onGoBack={() => router.back()}
-        backgroundColor={typeColor}
+        onGoBack={onGoBack}
+        backgroundColor={typeColor as string}
         errorColor="white"
         goBackColor="white"
       />
@@ -39,13 +34,9 @@ export default function TypeFilterScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: typeColor }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: typeColor as string }}>
       <YStack flex={1}>
-        <TypeFilterHeader
-          typeName={typeName}
-          typeColor={typeColor}
-          typeIcon={typeIcon}
-        />
+        <TypeFilterHeader typeName={typeName} typeIcon={typeIcon} />
 
         <YStack
           flex={1}

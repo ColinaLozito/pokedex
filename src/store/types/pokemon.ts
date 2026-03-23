@@ -12,4 +12,5 @@ export interface PokemonDataState {
   setCurrentPokemonId: (id: number | null) => void
   getCurrentPokemon: () => CombinedPokemonDetail | undefined
   clearError: () => void
+  $reset: () => void
 }

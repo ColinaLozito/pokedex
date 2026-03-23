@@ -12,7 +12,7 @@ import MontserratMedium from '../assets/fonts/Montserrat-Medium.ttf'
 import MontserratRegular from '../assets/fonts/Montserrat-Regular.ttf'
 import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf'
 import MontserratThin from '../assets/fonts/Montserrat-Thin.ttf'
-import { Provider as TamaguiProvider } from '../src/components/TamaguiProvider'
+import { Provider as TamaguiProvider } from '../src/providers/TamaguiProvider'
 import { fetchTypeList } from '../src/services/api'
 import { usePokemonGeneralStore } from '../src/store/pokemonGeneralStore'
 

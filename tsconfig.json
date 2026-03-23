@@ -12,7 +12,9 @@
       "@fonts/*": ["assets/fonts/*"],
       "@colors/*": ["theme/colors/*"],
       "@screens/*": ["src/screens/*"],
-      "@components/*": ["src/components/*"]
+      "@components/*": ["src/components/*"],
+      "@common/*": ["src/components/common/*"],
+      "@pokemon/*": ["src/components/pokemon/*"]
     }
   },
   "include": [

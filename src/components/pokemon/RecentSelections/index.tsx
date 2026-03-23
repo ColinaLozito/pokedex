@@ -1,0 +1,52 @@
+import { useMemo } from 'react'
+import { PokemonCardVariant } from 'src/types/pokemonCardVariant'
+import { transformPokemonToDisplayData } from 'src/utils/transformPokemon'
+import { H4, XStack, YStack } from 'tamagui'
+import PokemonCard from '../PokemonCard'
+import type { RecentSelectionsProps } from './types'
+
+export default function RecentSelections({ 
+  recentSelections,
+  getPokemonDetail,
+  onRemove,
+  onSelect 
+}: RecentSelectionsProps) {
+  
+  // Get Pokemon data with sprites for each recent selection
+  // Must be called before early return to follow Rules of Hooks
+  const recentPokemonData = useMemo(() => {
+    return recentSelections.map((pokemon) => 
+      transformPokemonToDisplayData(
+        pokemon.id,
+        pokemon.name,
+        getPokemonDetail
+      )
+    )
+  }, [recentSelections, getPokemonDetail])
+
+  if (recentSelections.length === 0) {
+    return null
+  }
+
+  return (
+    <YStack gap="$4">
+      <H4 color="$text">Recently Inspected</H4>
+      <XStack gap="$2" flexWrap='wrap' justify='space-between'>
+        {recentPokemonData.map((pokemon) => (
+          <YStack key={pokemon.id} width='48%'>
+            <PokemonCard
+              id={pokemon.id}
+              name={pokemon.name}
+              sprite={pokemon.sprite}
+              variant={PokemonCardVariant.RECENT}
+              primaryType={pokemon.primaryType}
+              types={pokemon.types}
+              onRemove={onRemove}
+              onSelect={onSelect}
+            />
+          </YStack>
+        ))}
+      </XStack>
+    </YStack>
+  )
+}

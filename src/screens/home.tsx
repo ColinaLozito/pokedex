@@ -1,4 +1,4 @@
-import { ActionButton } from '@/components/ActionButton'
+import { ActionButton } from '@/components/common/ActionButton'
 import { useClearData } from '@/hooks/useClearData'
 import { Trash2 } from '@tamagui/lucide-icons'
 import { size } from '@theme/space'

@@ -23,6 +23,18 @@ export function buildEvolutionTree(chain: EvolutionChainLink): EvolutionNode {
   }
 }
 
+export function flattenLinearChain(node: EvolutionNode): EvolutionNode[] {
+  const nodes: EvolutionNode[] = []
+  let current: EvolutionNode | null = node
+
+  while (current) {
+    nodes.push(current)
+    current = current.evolvesTo.length > 0 ? current.evolvesTo[0] : null
+  }
+
+  return nodes
+}
+
 /**
  * Check if evolution chain is branching (has multiple paths)
  * For branching: initial Pokemon has more than 1 direct evolution

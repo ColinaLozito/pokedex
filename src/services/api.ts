@@ -196,7 +196,7 @@ export async function fetchTypeList(): Promise<TypeListItem[]> {
   
   // Filter out "unknown" and "shadow" types (special types not commonly used)
   const filteredList = transformedList.filter(
-    (type) => type.name !== 'unknown' && type.name !== 'shadow'
+    (type) => type.name !== 'unknown' && type.name !== 'shadow' && type.name !== 'stellar'
   )
   
   return filteredList

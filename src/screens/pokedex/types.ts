@@ -1,8 +1,8 @@
-import type { BookmarkedPokemonProps } from '@/components/pokemon/BookmarkedPokemon/types'
-import type { TypeGridItem } from '@/components/pokemon/PokemonTypeGrid/types'
-import type { RecentSelectionsProps } from '@/components/pokemon/RecentSelections/types'
-import type { CombinedPokemonDetail } from 'src/services/types'
+import type { BookmarkedPokemonProps } from '@/screens/pokedex/_parts/BookmarkedPokemon/types'
+import type { TypeGridItem } from '@/screens/pokedex/_parts/PokemonTypeGrid/types'
+import type { RecentSelectionsProps } from '@/screens/pokedex/_parts/RecentSelections/types'
 import type { PokemonListDataSet } from '@/types/screen'
+import type { CombinedPokemonDetail } from 'src/services/types'
 
 export interface PokedexBodyProps {
   pokemonListDataSet: PokemonListDataSet

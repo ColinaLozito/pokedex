@@ -1,7 +1,7 @@
 import { AutocompleteDropdown } from '@/components/common/AutocompleteDropdown'
-import BookmarkedPokemon from '@/components/pokemon/BookmarkedPokemon'
-import PokemonTypeGrid from '@/components/pokemon/PokemonTypeGrid'
-import RecentSelections from '@/components/pokemon/RecentSelections'
+import BookmarkedPokemon from '@/screens/pokedex/_parts/BookmarkedPokemon'
+import PokemonTypeGrid from '@/screens/pokedex/_parts/PokemonTypeGrid'
+import RecentSelections from '@/screens/pokedex/_parts/RecentSelections'
 import { H3, YStack } from 'tamagui'
 import type { PokedexBodyProps } from '../types'
 

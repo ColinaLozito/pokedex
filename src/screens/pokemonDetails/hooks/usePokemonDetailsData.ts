@@ -1,44 +1,58 @@
 import { usePokemonDataStore } from '@/store/pokemonDataStore'
 import { usePokemonGeneralStore } from '@/store/pokemonGeneralStore'
+import { useMemo } from 'react'
+import { useShallow } from 'zustand/react/shallow'
+import type { UsePokemonDetailsDataReturn } from '../types'
 
-export function usePokemonDetailsData() {
-  const loading = usePokemonDataStore((state) => state.loading)
-  const error = usePokemonDataStore((state) => state.error)
-  const currentPokemonId = usePokemonDataStore(
-    (state) => state.currentPokemonId
-  )
-  const currentPokemon = usePokemonDataStore((state) => {
-    const id = state.currentPokemonId
-    return id ? state.pokemonDetails[id] : undefined
-  })
-  const getPokemonDetail = usePokemonDataStore((state) => state.getPokemonDetail)
-  const fetchPokemonDetail = usePokemonDataStore(
-    (state) => state.fetchPokemonDetail
-  )
-  const clearError = usePokemonDataStore((state) => state.clearError)
-
-  const bookmarkedPokemonIds = usePokemonGeneralStore(
-    (state) => state.bookmarkedPokemonIds
-  )
-  const toggleBookmark = usePokemonGeneralStore(
-    (state) => state.toggleBookmark
+export function usePokemonDetailsData(): UsePokemonDetailsDataReturn {
+  // 1. UNA SOLA SUSCRIPCIÓN POR STORE (Limpio y eficiente)
+  const storeData = usePokemonDataStore(
+    useShallow(store => ({
+      loading: store.loading,
+      error: store.error,
+      currentId: store.currentPokemonId,
+      pokemon: store.currentPokemonId ? store.pokemonDetails[store.currentPokemonId] : undefined,
+      getPokemonDetail: store.getPokemonDetail,
+      fetchPokemonDetail: store.fetchPokemonDetail,
+      clearError: store.clearError,
+    }))
   )
 
-  return {
-    data: {
-      currentPokemon,
-      currentPokemonId,
-      bookmarkedPokemonIds,
-    },
-    status: {
-      loading,
-      error,
-    },
-    actions: {
-      getPokemonDetail,
-      fetchPokemonDetail,
-      toggleBookmark,
-      clearError,
-    },
-  }
+  const { bookmarkedIds, toggleBookmark } = usePokemonGeneralStore(
+    useShallow(store => ({
+      bookmarkedIds: store.bookmarkedPokemonIds,
+      toggleBookmark: store.toggleBookmark,
+    }))
+  )
+
+  const isBookmarked = useMemo(
+    () => storeData.currentId ? bookmarkedIds.includes(storeData.currentId) : false,
+    [bookmarkedIds, storeData.currentId]
+  )
+
+  const data = useMemo(() => ({
+    currentPokemon: storeData.pokemon,
+    currentPokemonId: storeData.currentId,
+    bookmarkedPokemonIds: bookmarkedIds,
+    isBookmarked,
+  }), [storeData.pokemon, storeData.currentId, bookmarkedIds, isBookmarked])
+
+  const status = useMemo(() => ({
+    loading: storeData.loading,
+    error: storeData.error,
+  }), [storeData.loading, storeData.error])
+
+  const actions = useMemo(() => ({
+    getPokemonDetail: storeData.getPokemonDetail,
+    fetchPokemonDetail: storeData.fetchPokemonDetail,
+    toggleBookmark,
+    clearError: storeData.clearError,
+  }), [
+    storeData.getPokemonDetail,
+    storeData.fetchPokemonDetail,
+    toggleBookmark,
+    storeData.clearError,
+  ])
+
+  return { data, status, actions }
 }

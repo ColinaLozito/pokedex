@@ -1,6 +1,6 @@
-import { baseColors } from '@theme/colors'
 import ErrorScreen from '@/components/common/ErrorScreen'
 import { useLoadingModal } from '@/hooks/useLoadingModal'
+import { baseColors } from '@theme/colors'
 import { useRouter } from 'expo-router'
 import { useEffect, useRef } from 'react'
 import { ScrollView } from 'react-native'
@@ -15,8 +15,7 @@ export default function PokemonDetailsScreen() {
   const router = useRouter()
   const scrollViewRef = useRef<ScrollView>(null)
 
-  const { pokemon, theme, status, handlers, actions } =
-    usePokemonDetailsScreen()
+  const { data, status, actions } = usePokemonDetailsScreen()
 
   useLoadingModal(status.loading, 'Loading Pokémon...')
 
@@ -24,28 +23,30 @@ export default function PokemonDetailsScreen() {
     return () => {
       actions.clearError()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actions.clearError])
 
   useEffect(() => {
-    if (pokemon.currentPokemon && scrollViewRef.current) {
+    if (data.currentPokemon && scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true })
     }
-  }, [pokemon.currentPokemon?.id])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.currentPokemon?.id])
 
-  if (status.error && !pokemon.currentPokemon) {
+  if (status.error && !data.currentPokemon) {
     return (
       <ErrorScreen error={status.error} onGoBack={() => router.back()} />
     )
   }
 
-  if (!pokemon.currentPokemon) {
+  if (!data.currentPokemon) {
     return <PokemonDetailsEmptyState />
   }
 
   return (
     <YStack
       flex={1}
-      bg={theme.primaryTypeColor as GetThemeValueForKey<'backgroundColor'>}
+      bg={data.primaryTypeColor as GetThemeValueForKey<'backgroundColor'>}
     >
       <ScrollView
         ref={scrollViewRef}
@@ -54,16 +55,16 @@ export default function PokemonDetailsScreen() {
         <SafeAreaView style={{ flex: 1 }}>
           <YStack flex={1}>
             <PokemonDetailsHeader
-              pokemon={pokemon.currentPokemon}
-              isBookmarked={pokemon.isBookmarked}
-              onBookmarkPress={handlers.handleBookmarkPress}
-              primaryTypeColor={theme.primaryTypeColor}
+              pokemon={data.currentPokemon}
+              isBookmarked={data.isBookmarked}
+              onBookmarkPress={actions.handleBookmarkPress}
+              primaryTypeColor={data.primaryTypeColor}
             />
 
             <PokemonDetailsContent
-              pokemon={pokemon.currentPokemon}
-              primaryTypeColor={theme.primaryTypeColor}
-              onEvolutionPress={handlers.handleEvolutionPress}
+              pokemon={data.currentPokemon}
+              primaryTypeColor={data.primaryTypeColor}
+              onEvolutionPress={actions.handleEvolutionPress}
               getPokemonDetail={actions.getPokemonDetail}
             />
           </YStack>

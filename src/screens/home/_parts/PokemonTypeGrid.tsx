@@ -1,5 +1,5 @@
-import { getTypeColor } from '@/utils/getTypeColor'
-import typeSymbolsIcons from '@/utils/typeSymbolsIcons'
+import { getTypeColor } from '@/utils/pokemon/typeColor'
+import typeSymbolsIcons from '@/utils/ui/typeIcons'
 import { Card, GetThemeValueForKey, H4, Image, Text, XStack, YStack } from 'tamagui'
 import type { TypeCardProps, TypeGridProps } from '../types'
 

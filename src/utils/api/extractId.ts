@@ -8,7 +8,6 @@
  * extractPokemonId("https://pokeapi.co/api/v2/pokemon-species/25/") // Returns 25
  */
 export function extractPokemonId(url: string): number {
-  // Match both /pokemon/{id} and /pokemon-species/{id}
   const matches = url.match(/\/pokemon(?:-species)?\/(\d+)\/?/)
   return matches ? parseInt(matches[1], 10) : 0
 }

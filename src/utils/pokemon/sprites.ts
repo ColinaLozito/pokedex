@@ -1,4 +1,4 @@
-import type { CombinedPokemonDetail, PokemonDetail } from '../services/types'
+import type { CombinedPokemonDetail, PokemonDetail } from '../../services/types'
 
 /**
  * Base URL for Pokemon official artwork sprites

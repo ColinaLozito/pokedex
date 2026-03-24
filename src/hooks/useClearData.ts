@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { Alert } from 'react-native'
 import { usePokemonDataStore } from '../store/pokemonDataStore'
 import { usePokemonGeneralStore } from '../store/pokemonGeneralStore'
-import { clearAllStoredData } from '../utils/clearStorage'
+import { clearAllStoredData } from '../utils/storage/clearStorage'
 
 /**
  * Custom hook for managing data clearing functionality

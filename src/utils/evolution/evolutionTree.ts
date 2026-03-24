@@ -1,6 +1,6 @@
 import type { EvolutionChainLink } from "src/services/types"
-import { extractPokemonId } from "./extractPokemonId"
-import { getPokemonSpriteUrl } from "./pokemonSprites"
+import { extractPokemonId } from "../api/extractId"
+import { getPokemonSpriteUrl } from "../pokemon/sprites"
 
 export interface EvolutionNode {
   id: number

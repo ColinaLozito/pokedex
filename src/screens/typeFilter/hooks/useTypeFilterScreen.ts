@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useEffect, useMemo } from 'react'
-import { getPokemonTypeStyles } from 'src/utils/pokemonThemeUtils'
+import { getPokemonTypeStyles } from 'src/utils/pokemon/typeStyles'
 import type { UseTypeFilterScreenReturn } from '../types'
 import { useTypeFilterData } from './useTypeFilterData'
 import { POKEMON_TYPES, type PokemonType } from '@theme/pokemonTypes'

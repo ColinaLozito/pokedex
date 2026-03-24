@@ -1,8 +1,8 @@
 // PokéAPI service layer
 // This file will contain all API calls to PokéAPI
 
-import { extractEvolutionChain } from "src/utils/evolutionTree"
-import { extractPokemonId, extractTypeId } from "src/utils/extractPokemonId"
+import { extractEvolutionChain } from "src/utils/evolution/evolutionTree"
+import { extractPokemonId, extractTypeId } from "src/utils/api/extractId"
 import type {
   CombinedPokemonDetail,
   EvolutionChain,

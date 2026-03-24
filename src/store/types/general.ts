@@ -1,5 +1,5 @@
 import type { PokemonListItem, TypeListItem } from 'src/services/types'
-import type { PokemonDisplayDataArray } from 'src/utils/getPokemonDisplayData'
+import type { PokemonDisplayDataArray } from 'src/utils/pokemon/displayData'
 import type { PokemonType } from '@theme/pokemonTypes'
 
 export interface RecentSelection {

@@ -3,13 +3,12 @@ import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { useCallback, useMemo } from 'react';
 import { Pressable } from 'react-native';
-import { PokemonCardVariant } from 'src/types/pokemonCardVariant';
-import { getTypeColor } from 'src/utils/getTypeColor';
+import { getTypeColor } from 'src/utils/pokemon/typeColor';
 import { Card, GetThemeValueForKey, YStack } from 'tamagui';
 import PokemonCardHeader from './_parts/PokemonCardHeader';
 import PokemonCardRemoveButton from './_parts/PokemonCardRemoveButton';
 import PokemonCardTypes from './_parts/PokemonCardTypes';
-import { PokemonCardProps } from './types';
+import { PokemonCardProps, PokemonCardVariant } from './types';
 
 function PokemonCardComponent({ 
   id, 

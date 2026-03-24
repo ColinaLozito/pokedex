@@ -5,8 +5,8 @@ import {
   collectEvolutionVariants,
   flattenLinearChain,
   isBranchingEvolution
-} from '@/utils/evolutionTree'
-import { getPokemonSprite } from '@/utils/pokemonSprites'
+} from '@/utils/evolution/evolutionTree'
+import { getPokemonSprite } from '@/utils/pokemon/sprites'
 import { H4, XStack, YStack } from 'tamagui'
 import EvolutionSpriteContainer from './EvolutionSpriteContainer'
 

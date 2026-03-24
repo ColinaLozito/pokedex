@@ -4,6 +4,8 @@ module.exports = {
   moduleNameMapper: {
     '^src/(.*)$': '<rootDir>/src/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@theme/(.*)$': '<rootDir>/theme/$1',
+    '^theme/(.*)$': '<rootDir>/theme/$1',
   },
   transformIgnorePatterns: [
     'node_modules/(?!(react-native|@react-native|expo|@expo|@unimodules|unimodules|expo-modules-core)/)',

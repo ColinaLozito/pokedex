@@ -45,16 +45,35 @@ https://github.com/user-attachments/assets/7d2d91ef-3d8a-443e-8c8f-a1d07c74d227
 
 ## 📁 Project Structure
 
-```
-app/
-├── components/    # Reusable UI components (cards, buttons, badges, etc.)
-├── hooks/         # Custom React hooks (modal management, loading states)
-├── modals/        # Modal screens (loading)
-├── screens/       # Main application screens (home, parent, kid, details, filters)
-├── services/      # API services and type definitions
-├── store/         # Zustand stores (data, general, daily, modal state)
-└── utils/         # Utility functions (date, evolution tree, sprites, colors)
-```
+- `/app`: Expo Router entrypoint.
+  - `/_layout.tsx`: Root navigation + providers.
+  - `/index.tsx`: Home route wrapper (`@/screens/home`).
+  - `/home.tsx`: Home screen.
+  - `/pokemonDetails.tsx`: Pokémon detail screen.
+  - `/typeFilter.tsx`: Type filter screen.
+  - `/modals/loading.tsx`: Loading modal route.
+- `/src`: main app logic (linked into `app/*`).
+  - `/screens`: screen components + state/navigation logic.
+    - `/home`: Home screen logic.
+    - `/pokemonDetails`: Detail screen logic.
+    - `/typeFilter`: Type filter logic.
+  - `/components`: UI components / small reusable pieces.
+    - `/common`: Shared components (Button, Badge, Toast, etc.).
+    - `/pokemon`: Pokémon-specific components (Card, Types, etc.).
+  - `/hooks`: custom hooks.
+  - `/modals`: modal business logic components.
+    - `/loading`: Loading modal.
+  - `/services`: API + fetching logic.
+  - `/store`: Zustand stores.
+    - `pokemonDataStore.ts`: Pokémon data state.
+    - `pokemonGeneralStore.ts`: General app state.
+    - `modalStore.ts`: Modal state.
+  - `/utils`: utilities/helpers.
+  - `/providers`: React providers (Tamagui, etc.).
+- `/config`: UI constants.
+  - `tamagui.config.ts`, `colors.ts`, `fonts.ts`.
+- `/assets`: images/icons/fonts.
+- `/types`: global types/asset typings.
 
 ## 🚀 Getting Started
 

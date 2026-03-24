@@ -1,7 +1,5 @@
-import { Card, XStack } from 'tamagui'
-import AttributeDivider from './_parts/AttributeDivider'
-import AttributeRow from './_parts/AttributeRow'
-import type { PokemonAttributesProps } from './types'
+import { AttributeRowProps, PokemonAttributesProps } from '@/screens/pokemonDetails/types'
+import { Card, Text, XStack, YStack } from 'tamagui'
 
 export default function PokemonAttributes({ species, height, weight }: PokemonAttributesProps) {
   
@@ -27,3 +25,22 @@ export default function PokemonAttributes({ species, height, weight }: PokemonAt
     </Card>
   )
 }
+
+function AttributeRow({ label, value }: AttributeRowProps) {
+  return (
+    <YStack flex={1} items="center">
+      <Text fontSize="$1" color="$text" mb="$1">
+        {label}
+      </Text>
+      <Text fontSize="$2" fontWeight="$6" textAlign="center" color="$text">
+        {value}
+      </Text>
+    </YStack>
+  )
+}
+
+function AttributeDivider() {
+  return <YStack width={1} height="100%" bg="$border" mx="$2" />
+}
+
+

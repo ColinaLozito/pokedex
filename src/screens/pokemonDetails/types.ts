@@ -1,18 +1,23 @@
-import type { CombinedPokemonDetail } from 'src/services/types'
+import type { CombinedPokemonDetail, PokemonAbilityEntry, PokemonStatEntry } from 'src/services/types/pokemon'
+import type { EvolutionChainLink } from 'src/services/types/evolution'
+import type { ScreenStatus } from '@/types/screen'
 import { GetThemeValueForKey } from 'tamagui'
 
 type PrimaryTypeColor = string | GetThemeValueForKey<'backgroundColor' | 'color'>
 
-export interface PokemonDetailsHeaderProps {
+type PokemonDetailsStatus = Pick<ScreenStatus, 'loading' | 'error'>
+
+interface PokemonDetailsBaseProps {
   pokemon: CombinedPokemonDetail
-  isBookmarked: boolean
-  onBookmarkPress: () => void
   primaryTypeColor: PrimaryTypeColor
 }
 
-export interface PokemonDetailsContentProps {
-  pokemon: CombinedPokemonDetail
-  primaryTypeColor: PrimaryTypeColor
+export interface PokemonDetailsHeaderProps extends PokemonDetailsBaseProps {
+  isBookmarked: boolean
+  onBookmarkPress: () => void
+}
+
+export interface PokemonDetailsContentProps extends PokemonDetailsBaseProps {
   onEvolutionPress: (id: number) => Promise<void>
   getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
 }
@@ -35,32 +40,65 @@ interface PokemonDetailsScreenData {
   primaryTypeColor: PrimaryTypeColor
 }
 
-type PokemonDetailsStatus = Pick<import('@/types/screen').ScreenStatus, 'loading' | 'error'>
+interface PokemonDetailsActionsBase {
+  clearError: () => void
+  getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
+}
+
+interface UsePokemonDetailsDataActions extends PokemonDetailsActionsBase {
+  fetchPokemonDetail: (id: number) => Promise<CombinedPokemonDetail>
+  toggleBookmark: (id: number) => void
+}
+
+interface UsePokemonDetailsScreenActions extends PokemonDetailsActionsBase {
+  handleEvolutionPress: (id: number) => Promise<void>
+  handleBookmarkPress: () => void
+}
 
 export interface UsePokemonDetailsDataReturn {
   data: PokemonDetailsDataData
   status: PokemonDetailsStatus
-  actions: {
-    getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
-    fetchPokemonDetail: (id: number) => Promise<CombinedPokemonDetail>
-    toggleBookmark: (id: number) => void
-    clearError: () => void
-  }
+  actions: UsePokemonDetailsDataActions
 }
 
 export interface UsePokemonDetailsScreenReturn {
   data: PokemonDetailsScreenData
   status: PokemonDetailsStatus
-  actions: {
-    handleEvolutionPress: (id: number) => Promise<void>
-    handleBookmarkPress: () => void
-    clearError: () => void
-    getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
-  }
+  actions: UsePokemonDetailsScreenActions
 }
 
-export type { PokemonTypeSlot, TypeChipsProps } from '../../components/pokemon/PokemonTypeChips/types'
-export type { AbilityInfo } from './_parts/PokemonAbilities/types'
-export type { AttributeRowProps, PokemonAttributesProps } from './_parts/PokemonAttributes/types'
-export type { PokemonBaseStatsProps, StatInfo } from './_parts/PokemonBaseStats/types'
+export interface EvolutionChainProps {
+  evolutionChainTree: EvolutionChainLink
+  currentPokemonId: number
+  onPokemonPress: (id: number) => void
+  getPokemonDetail?: (id: number) => CombinedPokemonDetail | undefined
+}
 
+export type EvolutionSpriteContainerProps = {
+  sprite: string
+  name: string
+  id: number
+  isCurrent: boolean
+  onPress: () => void
+  variant?: 'linear' | 'branching-initial' | 'branching-variant'
+}
+
+export type PokemonAbilitiesProps = {
+  abilities: PokemonAbilityEntry[]
+}
+
+export interface PokemonAttributesProps {
+  species?: string
+  height?: number
+  weight?: number
+}
+
+export interface AttributeRowProps {
+  label: string
+  value: string | number
+}
+
+export interface PokemonBaseStatsProps {
+  stats: PokemonStatEntry[]
+  primaryTypeColor: string | GetThemeValueForKey<'backgroundColor'>
+}

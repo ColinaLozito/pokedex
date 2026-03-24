@@ -1,7 +1,7 @@
+import { evolutionSpriteVariantStyleConfig } from '@/screens/pokemonDetails/constants'
+import { EvolutionSpriteContainerProps } from '@/screens/pokemonDetails/types'
 import { Pressable } from 'react-native'
 import { GetThemeValueForKey, Image, Text, YStack } from 'tamagui'
-import { styleConfig } from './constants'
-import type { EvolutionSpriteContainerProps } from './types'
 
 export default function EvolutionSpriteContainer({
   sprite,
@@ -11,7 +11,7 @@ export default function EvolutionSpriteContainer({
   onPress,
   variant = 'linear',
 }: EvolutionSpriteContainerProps) {
-  const variantConfig = styleConfig[variant]
+  const variantConfig = evolutionSpriteVariantStyleConfig[variant]
 
   return (
     <Pressable

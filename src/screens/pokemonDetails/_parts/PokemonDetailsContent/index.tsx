@@ -1,10 +1,10 @@
+import TypeChips from '@components/pokemon/PokemonTypeChips'
 import { XStack, YStack } from 'tamagui'
-import TypeChips from '../../../components/pokemon/PokemonTypeChips'
-import type { PokemonDetailsContentProps } from '../types'
-import EvolutionChain from './EvolutionChain'
-import PokemonAbilities from './PokemonAbilities'
-import PokemonAttributes from './PokemonAttributes'
-import PokemonBaseStats from './PokemonBaseStats'
+import type { PokemonDetailsContentProps } from '../../types'
+import EvolutionChain from './_parts/EvolutionChain'
+import PokemonAbilities from './_parts/PokemonAbilities'
+import PokemonAttributes from './_parts/PokemonAttributes'
+import PokemonBaseStats from './_parts/PokemonBaseStats'
 
 export default function PokemonDetailsContent({
   pokemon,

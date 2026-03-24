@@ -1,6 +1,6 @@
+import { calculateStatBarPercentage } from '@/screens/pokemonDetails/constants'
+import { PokemonBaseStatsProps } from '@/screens/pokemonDetails/types'
 import { Card, GetThemeValueForKey, H4, Text, XStack, YStack } from 'tamagui'
-import { calculateStatBarPercentage } from './constants'
-import type { PokemonBaseStatsProps } from './types'
 
 export default function PokemonBaseStats({ stats, primaryTypeColor }: PokemonBaseStatsProps) {
   return (
@@ -30,7 +30,7 @@ export default function PokemonBaseStats({ stats, primaryTypeColor }: PokemonBas
               >
                 <YStack
                   height="100%"
-                  width={calculateStatBarPercentage(statInfo.base_stat)}
+                  width={calculateStatBarPercentage(statInfo.base_stat) as GetThemeValueForKey<"width">}
                   bg={primaryTypeColor as GetThemeValueForKey<"backgroundColor">}
                 />
               </YStack>

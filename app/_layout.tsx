@@ -58,38 +58,6 @@ export default function RootLayout() {
   )
 }
 
-/* const Providers = ({ children }: { children: React.ReactNode }) => {
-  const typeList = usePokemonGeneralStore((state) => state.typeList)
-  const setTypeList = usePokemonGeneralStore((state) => state.setTypeList)
-  
-  // Use general store for Pokemon list
-  const fetchPokemonListAction = usePokemonGeneralStore((state) => state.fetchPokemonListAction)
-
-  useEffect(() => {
-    // Fetch Pokemon list using new store (handles caching internally)
-    fetchPokemonListAction()
-
-    // Only fetch if typeList is empty (not cached)
-    if (typeList.length === 0) {
-      fetchTypeList()
-        .then((list) => {
-          setTypeList(list)
-        })
-        .catch((_error) => {
-          // Error is handled silently
-        })
-    }
-  }, [fetchPokemonListAction, typeList.length, setTypeList])
-
-  return (
-    <TamaguiProvider>
-      <GlobalErrorBoundary onReset={() => {}}>
-        {children}
-      </GlobalErrorBoundary>
-    </TamaguiProvider>
-  )
-} */
-
 const defaultStackOptions: React.ComponentProps<typeof Stack.Screen>['options'] = {
   title: '',
   headerShown: true,

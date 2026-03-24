@@ -120,9 +120,9 @@ function RootLayoutNav() {
         />
 
          <Stack.Screen
-           name="pokedex"
-           options={defaultStackOptions}
-         />
+            name="home"
+            options={defaultStackOptions}
+          />
         <Stack.Screen
           name="pokemonDetails"
           options={defaultStackOptions}

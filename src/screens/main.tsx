@@ -9,7 +9,7 @@ import { Button, Image, XStack, YStack } from 'tamagui'
 import PokedexLogo from "../../assets/images/pokedex-logo.png"
 import PokedexWallpaper from "../../assets/images/pokedex-wallpaper.jpg"
 
-export default function HomeScreen() {
+export default function MainScreen() {
   const insets = useSafeAreaInsets()
   const { hasStoredData, handleClearData } = useClearData()
 
@@ -50,8 +50,8 @@ export default function HomeScreen() {
           marginBottom="$11"
         >
            <ActionButton
-             text="Pokedex"
-             onPress={() => router.push('/pokedex')}
+             text="ENTER"
+              onPress={() => router.push('/home')}
            />
          </XStack>
       </YStack>

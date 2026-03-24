@@ -3,9 +3,9 @@ import { usePokemonDataStore } from '@/store/pokemonDataStore'
 import { usePokemonGeneralStore } from '@/store/pokemonGeneralStore'
 import { useMemo } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import type { UsePokedexDataReturn } from '../types'
+import type { UseHomeDataReturn } from '../types'
 
-export function usePokedexData(): UsePokedexDataReturn {
+export function useHomeData(): UseHomeDataReturn {
   const storeData = usePokemonGeneralStore(
     useShallow(store => ({
       pokemonList: store.pokemonList,

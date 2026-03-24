@@ -3,13 +3,13 @@ import { FlatList } from 'react-native'
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { YStack } from 'tamagui'
-import PokedexBody from './_parts/PokedexBody'
-import { usePokedexScreen } from './hooks/usePokedexScreen'
+import HomeBody from './_parts/HomeBody'
+import { useHomeScreen } from './hooks/useHomeScreen'
 
-export default function PokedexScreen() {
+export default function HomeScreen() {
   const insets = useSafeAreaInsets()
 
-  const { data, actions } = usePokedexScreen()
+  const { data, actions } = useHomeScreen()
 
   useLoadingModal(false, 'LOADING POKEMON')
 
@@ -29,7 +29,7 @@ export default function PokedexScreen() {
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={
             <YStack paddingTop={insets.top}>
-              <PokedexBody
+              <HomeBody
                 pokemonListDataSet={data.pokemonListDataSet}
                 bookmarkedPokemonIds={data.bookmarkedPokemonIds}
                 getPokemonDetail={actions.getPokemonDetail}

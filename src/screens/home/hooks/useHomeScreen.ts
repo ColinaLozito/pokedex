@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react'
 import { useRouter } from 'expo-router'
-import { usePokedexData } from './usePokedexData'
-import type { UsePokedexScreenReturn } from '../types'
+import { useHomeData } from './useHomeData'
+import type { UseHomeScreenReturn } from '../types'
 
-export function usePokedexScreen(): UsePokedexScreenReturn {
+export function useHomeScreen(): UseHomeScreenReturn {
   const router = useRouter()
-  const { data, actions } = usePokedexData()
+  const { data, actions } = useHomeData()
 
   const handleTypeSelect = useCallback((typeId: number, typeName: string) => {
     router.push({

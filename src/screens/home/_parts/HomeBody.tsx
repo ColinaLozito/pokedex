@@ -1,11 +1,11 @@
 import { AutocompleteDropdown } from '@/components/common/AutocompleteDropdown'
-import BookmarkedPokemon from '@/screens/pokedex/_parts/BookmarkedPokemon'
-import PokemonTypeGrid from '@/screens/pokedex/_parts/PokemonTypeGrid'
-import RecentSelections from '@/screens/pokedex/_parts/RecentSelections'
+import BookmarkedPokemon from '@/screens/home/_parts/BookmarkedPokemon'
+import PokemonTypeGrid from '@/screens/home/_parts/PokemonTypeGrid'
+import RecentSelections from '@/screens/home/_parts/RecentSelections'
 import { H3, YStack } from 'tamagui'
-import type { PokedexBodyProps } from '../types'
+import type { HomeBodyProps } from '../types'
 
-export default function PokedexBody({
+export default function HomeBody({
   pokemonListDataSet,
   bookmarkedPokemonIds,
   getPokemonDetail,
@@ -15,7 +15,7 @@ export default function PokedexBody({
   onSelect,
   typeList,
   onTypeSelect,
-}: PokedexBodyProps) {
+}: HomeBodyProps) {
   return (
     <YStack gap="$4">
       <YStack gap="$6">

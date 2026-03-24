@@ -31,7 +31,7 @@ export interface RecentSelectionsProps extends PokemonListActionsBase {
   recentSelections: RecentSelection[]
 }
 
-export interface PokedexBodyProps {
+export interface HomeBodyProps {
   pokemonListDataSet: PokemonListDataSet
   bookmarkedPokemonIds: BookmarkedPokemonProps['bookmarkedPokemonIds']
   getPokemonDetail: BookmarkedPokemonProps['getPokemonDetail']
@@ -43,28 +43,28 @@ export interface PokedexBodyProps {
   onTypeSelect: (typeId: number, typeName: string) => void
 }
 
-export interface PokedexDataData {
+export interface HomeDataData {
   pokemonListDataSet: PokemonListDataSet
   bookmarkedPokemonIds: number[]
   recentSelections: RecentSelection[]
   typeList: TypeGridItem[]
 }
 
-export interface PokedexActionsBase {
+export interface HomeActionsBase {
   getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
   toggleBookmark: (id: number) => void
   removeRecentSelection: (id: number) => void
   handleSelect: (id: number) => Promise<void>
 }
 
-export interface UsePokedexDataReturn {
-  data: PokedexDataData
-  actions: PokedexActionsBase
+export interface UseHomeDataReturn {
+  data: HomeDataData
+  actions: HomeActionsBase
 }
 
-export interface UsePokedexScreenReturn {
-  data: PokedexDataData
-  actions: PokedexActionsBase & {
+export interface UseHomeScreenReturn {
+  data: HomeDataData
+  actions: HomeActionsBase & {
     handleTypeSelect: (typeId: number, typeName: string) => void
   }
 }

@@ -1,3 +1,3 @@
-import Home from '@screens/home'; // Importas la lógica de src
+import Main from '@/screens/main'; // Importas la lógica de src
 
-export default Home
+export default Main

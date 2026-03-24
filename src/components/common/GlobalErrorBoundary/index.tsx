@@ -17,7 +17,7 @@ export default function GlobalErrorBoundary({
     usePokemonDataStore.getState().$reset()
     useModalStore.getState().$reset()
     onReset?.()
-    router.replace('/')
+    router.replace('/main')
   }
 
   return (

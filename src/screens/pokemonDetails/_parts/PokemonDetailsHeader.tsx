@@ -1,5 +1,4 @@
 import BookmarkButton from '@/components/common/BookmarkButton'
-import { baseColors } from '@theme/colors'
 import { GetThemeValueForKey, H2, Image, Text, XStack, YStack } from 'tamagui'
 import type { PokemonDetailsHeaderProps } from '../types'
 

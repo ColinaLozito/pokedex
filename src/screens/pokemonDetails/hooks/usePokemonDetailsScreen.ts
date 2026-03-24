@@ -1,6 +1,6 @@
 import { baseColors } from '@theme/colors'
 import { useCallback, useMemo } from 'react'
-import { getPokemonTypeStyles } from 'src/utils/pokemonThemeUtils'
+import { getPokemonTypeStyles } from 'src/utils/pokemon/typeStyles'
 import type { UsePokemonDetailsScreenReturn } from '../types'
 import { usePokemonDetailsData } from './usePokemonDetailsData'
 

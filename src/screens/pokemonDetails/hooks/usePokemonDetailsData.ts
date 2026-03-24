@@ -5,7 +5,6 @@ import { useShallow } from 'zustand/react/shallow'
 import type { UsePokemonDetailsDataReturn } from '../types'
 
 export function usePokemonDetailsData(): UsePokemonDetailsDataReturn {
-  // 1. UNA SOLA SUSCRIPCIÓN POR STORE (Limpio y eficiente)
   const storeData = usePokemonDataStore(
     useShallow(store => ({
       loading: store.loading,

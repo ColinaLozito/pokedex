@@ -1,7 +1,7 @@
 import { fetchCompletePokemonDetail } from "src/services/api"
 import type { CombinedPokemonDetail } from "src/services/types"
 import type { PokemonDataState } from '../types/pokemon'
-import { showToast } from "src/utils/toast"
+import { showToast } from "src/utils/ui/toast"
 import { StateCreator } from "zustand"
 
 // PokemonDataState moved to src/store/types/pokemon.ts for reuse

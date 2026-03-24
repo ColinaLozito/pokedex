@@ -1,3 +1,4 @@
+import { MainProvidersWrapper } from '@/providers/MainProvidersWrapper'
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
@@ -12,10 +13,6 @@ import MontserratMedium from '../assets/fonts/Montserrat-Medium.ttf'
 import MontserratRegular from '../assets/fonts/Montserrat-Regular.ttf'
 import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf'
 import MontserratThin from '../assets/fonts/Montserrat-Thin.ttf'
-import { Provider as TamaguiProvider } from '../src/providers/TamaguiProvider'
-import GlobalErrorBoundary from '../src/components/common/GlobalErrorBoundary'
-import { fetchTypeList } from '../src/services/api'
-import { usePokemonGeneralStore } from '../src/store/pokemonGeneralStore'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -55,41 +52,9 @@ export default function RootLayout() {
   }
 
   return (
-    <Providers>
+    <MainProvidersWrapper>
       <RootLayoutNav />
-    </Providers>
-  )
-}
-
-const Providers = ({ children }: { children: React.ReactNode }) => {
-  const typeList = usePokemonGeneralStore((state) => state.typeList)
-  const setTypeList = usePokemonGeneralStore((state) => state.setTypeList)
-  
-  // Use general store for Pokemon list
-  const fetchPokemonListAction = usePokemonGeneralStore((state) => state.fetchPokemonListAction)
-
-  useEffect(() => {
-    // Fetch Pokemon list using new store (handles caching internally)
-    fetchPokemonListAction()
-
-    // Only fetch if typeList is empty (not cached)
-    if (typeList.length === 0) {
-      fetchTypeList()
-        .then((list) => {
-          setTypeList(list)
-        })
-        .catch((_error) => {
-          // Error is handled silently
-        })
-    }
-  }, [fetchPokemonListAction, typeList.length, setTypeList])
-
-  return (
-    <TamaguiProvider>
-      <GlobalErrorBoundary onReset={() => {}}>
-        {children}
-      </GlobalErrorBoundary>
-    </TamaguiProvider>
+    </MainProvidersWrapper>
   )
 }
 
@@ -120,9 +85,9 @@ function RootLayoutNav() {
         />
 
          <Stack.Screen
-           name="pokedex"
-           options={defaultStackOptions}
-         />
+            name="home"
+            options={defaultStackOptions}
+          />
         <Stack.Screen
           name="pokemonDetails"
           options={defaultStackOptions}

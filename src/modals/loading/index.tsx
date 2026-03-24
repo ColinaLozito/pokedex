@@ -1,4 +1,4 @@
-import { DISMISSAL_DELAY, MODAL_STYLES } from '@/utils/modalConstants'
+import { DISMISSAL_DELAY, MODAL_STYLES } from '@/modals/constants'
 import { useRouter } from 'expo-router'
 import { useEffect, useRef } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'

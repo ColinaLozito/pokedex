@@ -1,8 +1,8 @@
 import PokemonCard from '@/components/pokemon/PokemonCard'
-import { PokemonCardVariant } from '@/types/pokemonCardVariant'
+import { PokemonCardVariant } from '@/components/pokemon/PokemonCard/types'
+import { PokemonDisplayDataArray } from '@/types/global'
 import { LegendList } from '@legendapp/list'
 import { useCallback } from 'react'
-import type { PokemonDisplayDataArray } from 'src/utils/getPokemonDisplayData'
 import { YStack } from 'tamagui'
 import { PokemonGridProps } from '../types'
 

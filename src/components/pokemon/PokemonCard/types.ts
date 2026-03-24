@@ -1,7 +1,12 @@
 import type { PokemonTypeSlot } from "src/services/types/pokemon"
-import { PokemonCardVariant } from "src/types/pokemonCardVariant"
 
 // Base data for the PokemonCard module
+
+export enum PokemonCardVariant {
+  LIST = 'list',
+  BOOKMARK = 'bookmark',
+  RECENT = 'recent', // Added a new variant for recently viewed Pokemon
+}
 export interface PokemonCardData {
   id: number
   name: string

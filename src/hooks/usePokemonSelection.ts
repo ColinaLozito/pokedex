@@ -1,9 +1,9 @@
-import type { CombinedPokemonDetail, PokemonListItem } from 'src/services/types'
-import { NAVIGATION_DELAY } from 'src/utils/modalConstants'
-import { setToastController } from 'src/utils/toast'
+import { NAVIGATION_DELAY } from '@/modals/constants'
 import { useToastController } from '@tamagui/toast'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
+import type { CombinedPokemonDetail, PokemonListItem } from 'src/services/types'
+import { setToastController } from 'src/utils/ui/toast'
 
 interface UsePokemonSelectionOptions {
   pokemonList?: PokemonListItem[]

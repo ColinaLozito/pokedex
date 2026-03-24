@@ -12,6 +12,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "test": "jest --watchAll",
+    "test:coverage": "jest --coverage",
     "lint": "eslint app",
     "lint:fix": "eslint app --fix",
     "typecheck": "tsc --noEmit",

@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { PokemonCardVariant } from 'src/types/pokemonCardVariant'
 import { transformPokemonToDisplayData } from 'src/utils/transformPokemon'
 import { H4, XStack, YStack } from 'tamagui'
-import { BookmarkedPokemonProps } from './types'
+import type { BookmarkedPokemonProps } from '../types'
 
 export default function BookmarkedPokemon({ 
    bookmarkedPokemonIds,
@@ -12,8 +12,6 @@ export default function BookmarkedPokemon({
    onRemove,
    onSelect
  }: BookmarkedPokemonProps) {
-  // Get Pokemon data for each bookmarked ID
-  // Must be called before early return to follow Rules of Hooks
   const bookmarkedPokemonData = useMemo(() => {
     return bookmarkedPokemonIds.map((id) => 
       transformPokemonToDisplayData(

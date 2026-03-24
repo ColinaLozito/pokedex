@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import { PokemonCardVariant } from 'src/types/pokemonCardVariant'
 import { transformPokemonToDisplayData } from 'src/utils/transformPokemon'
 import { H4, XStack, YStack } from 'tamagui'
-import PokemonCard from '../../../../components/pokemon/PokemonCard'
-import type { RecentSelectionsProps } from './types'
+import PokemonCard from '@/components/pokemon/PokemonCard'
+import type { RecentSelectionsProps } from '../types'
 
 export default function RecentSelections({ 
   recentSelections,
@@ -12,8 +12,6 @@ export default function RecentSelections({
   onSelect 
 }: RecentSelectionsProps) {
   
-  // Get Pokemon data with sprites for each recent selection
-  // Must be called before early return to follow Rules of Hooks
   const recentPokemonData = useMemo(() => {
     return recentSelections.map((pokemon) => 
       transformPokemonToDisplayData(

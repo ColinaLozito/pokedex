@@ -1,8 +1,35 @@
-import type { BookmarkedPokemonProps } from '@/screens/pokedex/_parts/BookmarkedPokemon/types'
-import type { TypeGridItem } from '@/screens/pokedex/_parts/PokemonTypeGrid/types'
-import type { RecentSelectionsProps } from '@/screens/pokedex/_parts/RecentSelections/types'
 import type { PokemonListDataSet } from '@/types/screen'
-import type { CombinedPokemonDetail } from 'src/services/types'
+import type { CombinedPokemonDetail } from 'src/services/types/pokemon'
+import type { RecentSelection } from 'src/store/pokemonGeneralStore'
+
+export interface TypeGridItem {
+  id: number
+  name: string
+}
+
+export interface TypeGridProps {
+  typeList: TypeGridItem[]
+  onTypeSelect?: (typeId: number, typeName: string) => void
+}
+
+export interface TypeCardProps {
+  type: TypeGridItem
+  onPress: (typeId: number, typeName: string) => void
+}
+
+interface PokemonListActionsBase {
+  getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
+  onRemove: (id: number) => void
+  onSelect?: (id: number) => void
+}
+
+export interface BookmarkedPokemonProps extends PokemonListActionsBase {
+  bookmarkedPokemonIds: number[]
+}
+
+export interface RecentSelectionsProps extends PokemonListActionsBase {
+  recentSelections: RecentSelection[]
+}
 
 export interface PokedexBodyProps {
   pokemonListDataSet: PokemonListDataSet
@@ -16,14 +43,14 @@ export interface PokedexBodyProps {
   onTypeSelect: (typeId: number, typeName: string) => void
 }
 
-interface PokedexDataData {
+export interface PokedexDataData {
   pokemonListDataSet: PokemonListDataSet
   bookmarkedPokemonIds: number[]
-  recentSelections: RecentSelectionsProps['recentSelections']
+  recentSelections: RecentSelection[]
   typeList: TypeGridItem[]
 }
 
-type PokedexActions = {
+export interface PokedexActionsBase {
   getPokemonDetail: (id: number) => CombinedPokemonDetail | undefined
   toggleBookmark: (id: number) => void
   removeRecentSelection: (id: number) => void
@@ -32,12 +59,12 @@ type PokedexActions = {
 
 export interface UsePokedexDataReturn {
   data: PokedexDataData
-  actions: PokedexActions
+  actions: PokedexActionsBase
 }
 
 export interface UsePokedexScreenReturn {
   data: PokedexDataData
-  actions: PokedexActions & {
+  actions: PokedexActionsBase & {
     handleTypeSelect: (typeId: number, typeName: string) => void
   }
 }

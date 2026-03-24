@@ -1,7 +1,7 @@
 import { getTypeColor } from '@/utils/getTypeColor'
 import typeSymbolsIcons from '@/utils/typeSymbolsIcons'
 import { Card, GetThemeValueForKey, H4, Image, Text, XStack, YStack } from 'tamagui'
-import type { TypeCardProps, TypeGridProps } from './types'
+import type { TypeCardProps, TypeGridProps } from '../types'
 
 export default function PokemonTypeGrid({ typeList, onTypeSelect }: TypeGridProps) {
   const handleTypePress = (typeId: number, typeName: string) => {

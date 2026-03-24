@@ -1,16 +1,12 @@
-import { useCallback, useMemo } from 'react'
 import PokemonCard from '@/components/pokemon/PokemonCard'
 import { PokemonCardVariant } from '@/types/pokemonCardVariant'
-import type { PokemonDisplayDataArray } from 'src/utils/getPokemonDisplayData'
 import { LegendList } from '@legendapp/list'
+import { useCallback } from 'react'
+import type { PokemonDisplayDataArray } from 'src/utils/getPokemonDisplayData'
 import { YStack } from 'tamagui'
+import { PokemonGridProps } from '../types'
 
-interface PokemonGridProps {
-  data: PokemonDisplayDataArray
-  onSelect: (id: number) => Promise<void>
-}
-
-export default function PokemonGrid({ data, onSelect }: PokemonGridProps) {
+export default function PokemonGrid({ data, onSelect, onLoadMore, hasMore }: PokemonGridProps) {
   const renderItem = useCallback(({ item }: { item: PokemonDisplayDataArray[number] }) => (
     <YStack p={4}>
       <PokemonCard
@@ -30,6 +26,12 @@ export default function PokemonGrid({ data, onSelect }: PokemonGridProps) {
 
   const ItemSeparator = useCallback(() => <YStack height={8} />, [])
 
+  const onEndReached = useCallback(() => {
+    if (hasMore && onLoadMore) {
+      onLoadMore()
+    }
+  }, [hasMore, onLoadMore])
+
   return (
     <LegendList
       data={data}
@@ -39,6 +41,7 @@ export default function PokemonGrid({ data, onSelect }: PokemonGridProps) {
       ItemSeparatorComponent={ItemSeparator}
       drawDistance={500}
       initialScrollIndex={0}
+      onEndReached={onEndReached}
       style={{ flex: 1 }}
     />
   )

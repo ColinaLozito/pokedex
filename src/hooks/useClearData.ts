@@ -19,18 +19,22 @@ export function useClearData() {
    const pokemonDetails = usePokemonDataStore((state) => state.pokemonDetails)
    const bookmarkedPokemonIds = usePokemonGeneralStore((state) => state.bookmarkedPokemonIds)
    const recentSelections = usePokemonGeneralStore((state) => state.recentSelections)
+   const pokemonByType = usePokemonGeneralStore((state) => state.pokemonByType)
 
    // Check if there's any data to clear
    const hasStoredData = useMemo(() => {
+     const hasPokemonByType = Object.keys(pokemonByType).length > 0
      return (
        Object.keys(pokemonDetails).length > 0 ||
        bookmarkedPokemonIds.length > 0 ||
-       recentSelections.length > 0
+       recentSelections.length > 0 ||
+       hasPokemonByType
      )
    }, [
      pokemonDetails,
      bookmarkedPokemonIds,
      recentSelections,
+     pokemonByType,
    ])
 
   const handleClearData = useCallback(() => {
@@ -50,16 +54,9 @@ export function useClearData() {
               // Clear AsyncStorage
               await clearAllStoredData()
 
-              // Reset all stores to initial state using setState
-              usePokemonDataStore.setState({
-                pokemonDetails: {},
-                currentPokemonId: null,
-              })
-
-               usePokemonGeneralStore.setState({
-                 bookmarkedPokemonIds: [],
-                 recentSelections: [],
-               })
+              // Reset all stores to initial state
+              usePokemonDataStore.getState().$reset()
+              usePokemonGeneralStore.getState().$reset()
 
               toast.show('All stored data cleared', {
                 message: 'All stored data has been cleared successfully',

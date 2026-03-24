@@ -6,6 +6,7 @@ import { fetchPokemonByType, fetchPokemonList } from '../services/api'
 import { getPokemonDisplayData } from '../utils/getPokemonDisplayData'
 import { usePokemonDataStore } from './pokemonDataStore'
 import type { PokemonGeneralState } from './types/general'
+import type { PokemonType } from '@theme/pokemonTypes'
 export type { PokemonGeneralState, RecentSelection } from './types/general'
 
 // PokemonGeneralState moved to src/store/types/general.ts and imported below
@@ -24,6 +25,7 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
        typeList: [],
        recentSelections: [],
        bookmarkedPokemonIds: [],
+       pokemonByType: {} as Record<PokemonType, PokemonListItem[]>,
 
       /**
        * Fetch the complete Pokemon list (lightweight)
@@ -90,16 +92,39 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
            
             return { bookmarkedPokemonIds: newBookmarkedIds }
           })
-        },
+       },
 
-        $reset: () => {
-          set({
-            pokemonList: [],
-            typeList: [],
-            recentSelections: [],
-            bookmarkedPokemonIds: [],
-          })
-        },
+       /**
+        * Clear cached Pokemon by type
+        * If typeName provided, clears only that type; otherwise clears all
+        */
+       clearTypeCache: (typeName?: PokemonType) => {
+         set((state) => {
+           if (typeName) {
+             const { [typeName]: _, ...rest } = state.pokemonByType
+             return { pokemonByType: rest as Record<PokemonType, PokemonListItem[]> }
+           }
+           return { pokemonByType: {} as Record<PokemonType, PokemonListItem[]> }
+         })
+       },
+
+       /**
+        * Check if Pokemon list for a type is cached
+        */
+       isTypeCached: (typeName: PokemonType) => {
+         const state = get()
+         return !!state.pokemonByType[typeName] && state.pokemonByType[typeName].length > 0
+       },
+
+       $reset: () => {
+         set({
+           pokemonList: [],
+           typeList: [],
+           recentSelections: [],
+           bookmarkedPokemonIds: [],
+           pokemonByType: {} as Record<PokemonType, PokemonListItem[]>,
+         })
+       },
        
       /**
        * Transform Pokemon list to display-ready data with sprites and types
@@ -121,18 +146,38 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
 
       /**
        * Fetch Pokemon by type and return display-ready data
-       * This combines fetching and enriching in a single operation
+       * Checks cache first before fetching from API
        */
       fetchPokemonByTypeAndGetDisplayData: async (
         typeId: number,
-        typeName: string
+        typeName: PokemonType
       ) => {
-        // Fetch the filtered list from API
+        const state = get()
+        
+        // Check cache first
+        const cachedList = state.pokemonByType[typeName]
+        if (cachedList) {
+          const pokemonDataState = usePokemonDataStore.getState()
+          return getPokemonDisplayData(
+            cachedList,
+            pokemonDataState.pokemonDetails,
+            typeName
+          )
+        }
+
+        // Fetch from API
         const filteredList = await fetchPokemonByType(typeId)
-        // Cache pokemonDataState to avoid multiple .getState() calls
-        const pokemonDataState = usePokemonDataStore.getState()
+        
+        // Cache the result
+        set((state) => ({
+          pokemonByType: {
+            ...state.pokemonByType,
+            [typeName]: filteredList,
+          },
+        }))
         
         // Enrich with cached data and return
+        const pokemonDataState = usePokemonDataStore.getState()
         return getPokemonDisplayData(
           filteredList,
           pokemonDataState.pokemonDetails,
@@ -148,6 +193,7 @@ export const usePokemonGeneralStore = create<PokemonGeneralState>()(
          typeList: state.typeList,
          recentSelections: state.recentSelections,
          bookmarkedPokemonIds: state.bookmarkedPokemonIds,
+         pokemonByType: state.pokemonByType,
        }),
        onRehydrateStorage: () => (state) => {
          if (state) {

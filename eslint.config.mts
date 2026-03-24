@@ -46,6 +46,7 @@ export default tseslint.config(
       ...pluginReactHooks.configs.recommended.rules,
       ...prettierConfig.rules,
       'react/react-in-jsx-scope': 'off', // React 17+ JSX transform
+      'react/prop-types': 'off', // TypeScript interfaces replace PropTypes
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-require-imports': 'off', // Allow require() for assets
       'no-unused-vars': 'off', // Turn off base rule as it conflicts with TypeScript version

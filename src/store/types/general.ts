@@ -1,5 +1,6 @@
 import type { PokemonListItem, TypeListItem } from 'src/services/types'
 import type { PokemonDisplayDataArray } from 'src/utils/getPokemonDisplayData'
+import type { PokemonType } from '@theme/pokemonTypes'
 
 export interface RecentSelection {
   readonly id: number
@@ -12,12 +13,15 @@ export interface PokemonGeneralState {
   typeList: TypeListItem[]
   recentSelections: RecentSelection[]
   bookmarkedPokemonIds: number[]
+  pokemonByType: Record<PokemonType, PokemonListItem[]>
 
   fetchPokemonListAction: () => Promise<void>
   setTypeList: (list: TypeListItem[]) => void
   addRecentSelection: (pokemon: PokemonListItem) => void
   removeRecentSelection: (pokemonId: number) => void
   toggleBookmark: (id: number) => void
+  clearTypeCache: (typeName?: PokemonType) => void
+  isTypeCached: (typeName: PokemonType) => boolean
 
   getPokemonDisplayData: (
     pokemonList: PokemonListItem[],
@@ -25,7 +29,7 @@ export interface PokemonGeneralState {
   ) => PokemonDisplayDataArray
   fetchPokemonByTypeAndGetDisplayData: (
     typeId: number,
-    typeName: string
+    typeName: PokemonType
   ) => Promise<PokemonDisplayDataArray>
 
   $reset: () => void

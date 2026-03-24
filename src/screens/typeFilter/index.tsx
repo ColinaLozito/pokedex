@@ -9,7 +9,8 @@ import { useTypeFilterScreen } from './hooks/useTypeFilterScreen'
 export default function TypeFilterScreen() {
   const { data, status, actions } = useTypeFilterScreen()
 
-  useLoadingModal(status.loading || status.isLoading, 'LOADING POKEMON')
+  const showLoading = status.loading || status.isLoading
+  useLoadingModal(showLoading && !status.isCached, 'LOADING POKEMON')
 
   if (status.error) {
     return (
@@ -31,13 +32,18 @@ export default function TypeFilterScreen() {
         <YStack
           flex={1}
           bg="white"
-          borderTopLeftRadius={24}
-          borderTopRightRadius={24}
-          mt={8}
-          pt={16}
-          px={8}
+          borderTopLeftRadius="$4"
+          borderTopRightRadius="$4"
+          mt="$2"
+          pt="$2"
+          px="$2"
         >
-          <PokemonGrid data={data.filteredData} onSelect={actions.handleSelect} />
+          <PokemonGrid 
+            data={data.filteredData} 
+            onSelect={actions.handleSelect}
+            hasMore={data.hasMore}
+            onLoadMore={actions.loadMore}
+          />
         </YStack>
       </YStack>
     </SafeAreaView>

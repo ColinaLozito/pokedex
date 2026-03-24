@@ -1,7 +1,7 @@
+import type { PokemonListItem, ScreenStatusWithCache } from '@/types/screen'
 import { ImageSourcePropType } from 'react-native'
-import { GetThemeValueForKey } from 'tamagui'
 import type { PokemonDisplayDataArray } from 'src/utils/getPokemonDisplayData'
-import type { ScreenStatus, PokemonListItem } from '@/types/screen'
+import { GetThemeValueForKey } from 'tamagui'
 
 type PrimaryTypeColor = string | GetThemeValueForKey<'backgroundColor'>
 
@@ -13,6 +13,7 @@ export interface TypeFilterHeaderProps {
 interface TypeFilterDataData {
   filteredData: PokemonDisplayDataArray
   pokemonListForRecent: PokemonListItem[]
+  hasMore: boolean
 }
 
 interface TypeFilterScreenData extends TypeFilterDataData {
@@ -23,18 +24,27 @@ interface TypeFilterScreenData extends TypeFilterDataData {
 
 export interface UseTypeFilterDataReturn {
   data: TypeFilterDataData
-  status: ScreenStatus
+  status: ScreenStatusWithCache
   actions: {
     handleSelect: (id: number) => Promise<void>
     loadPokemon: () => Promise<void>
+    loadMore: () => void
   }
 }
 
 export interface UseTypeFilterScreenReturn {
   data: TypeFilterScreenData
-  status: ScreenStatus
+  status: ScreenStatusWithCache
   actions: {
     handleSelect: (id: number) => Promise<void>
     onGoBack: () => void
+    loadMore: () => void
   }
+}
+
+export interface PokemonGridProps {
+  data: PokemonDisplayDataArray
+  onSelect: (id: number) => Promise<void>
+  onLoadMore?: () => void
+  hasMore?: boolean
 }

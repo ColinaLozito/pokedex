@@ -2,12 +2,12 @@
 import { usePokemonSelection } from '@/hooks/usePokemonSelection'
 import { usePokemonDataStore } from '@/store/pokemonDataStore'
 import { usePokemonGeneralStore } from '@/store/pokemonGeneralStore'
+import type { PokemonType } from '@theme/pokemonTypes'
 import { useCallback, useMemo, useState } from 'react'
 import type { PokemonListItem } from 'src/services/types'
 import type { PokemonDisplayDataArray } from 'src/utils/pokemon/displayData'
 import { useShallow } from 'zustand/react/shallow'
 import type { UseTypeFilterDataReturn } from '../types'
-import type { PokemonType } from '@theme/pokemonTypes'
 
 const INITIAL_LOAD_COUNT = 10
 
@@ -50,7 +50,11 @@ export function useTypeFilterData(
       displayed.map(pokemon => ({ id: pokemon.id, name: pokemon.name })),
       typeName
     )
-  }, [rawData, displayedCount, typeName, storeData.getPokemonDisplayData, pokemonStoreData.pokemonDetails])
+  }, [rawData, 
+    displayedCount, 
+    typeName, 
+    storeData.getPokemonDisplayData, 
+    pokemonStoreData.pokemonDetails])
 
   const hasMore = useMemo(() => {
     return displayedCount < rawData.length
@@ -98,7 +102,12 @@ export function useTypeFilterData(
     } finally {
       setLoading(false)
     }
-  }, [typeId, typeName, storeData.fetchPokemonByTypeAndGetDisplayData, storeData.getPokemonDisplayData, storeData.pokemonByType, storeData.isTypeCached])
+  }, [typeId, 
+      typeName, 
+      storeData.fetchPokemonByTypeAndGetDisplayData, 
+      storeData.getPokemonDisplayData, 
+      storeData.pokemonByType, 
+      storeData.isTypeCached])
 
   const data = useMemo(() => ({
     filteredData,

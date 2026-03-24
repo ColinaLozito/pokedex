@@ -1,19 +1,16 @@
-export const typeadgeSizeStyles = {
+export const typeBadgeSizeStyles = {
   small: {
-    px: '$3',
-    py: '$2',
+    p: '$2',
     borderRadius: '$1',
     fontSize: '$1',
   },
   medium: {
-    px: '$3',
-    py: '$2',
+    p: '$3',
     borderRadius: '$2',
     fontSize: '$2',
   },
   large: {
-    px: '$4',
-    py: '$3',
+    p: '$4',
     borderRadius: '$2',
     fontSize: '$3',
   },

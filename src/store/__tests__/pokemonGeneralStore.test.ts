@@ -1,5 +1,5 @@
+import { fetchPokemonList } from 'src/services/api'
 import { usePokemonGeneralStore } from '../pokemonGeneralStore'
-import { fetchPokemonList, fetchPokemonByType } from 'src/services/api'
 
 jest.mock('src/services/api', () => ({
   fetchPokemonList: jest.fn(),
@@ -19,7 +19,6 @@ jest.mock('src/utils/pokemon/displayData', () => ({
 }))
 
 const mockFetchPokemonList = fetchPokemonList as jest.MockedFunction<typeof fetchPokemonList>
-const mockFetchPokemonByType = fetchPokemonByType as jest.MockedFunction<typeof fetchPokemonByType>
 
 describe('pokemonGeneralStore', () => {
   beforeEach(() => {

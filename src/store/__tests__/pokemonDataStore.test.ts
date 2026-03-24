@@ -1,6 +1,6 @@
-import { usePokemonDataStore } from '../pokemonDataStore'
 import { fetchCompletePokemonDetail } from 'src/services/api'
 import type { CombinedPokemonDetail } from 'src/services/types'
+import { usePokemonDataStore } from '../pokemonDataStore'
 
 jest.mock('src/services/api', () => ({
   fetchCompletePokemonDetail: jest.fn(),
@@ -10,7 +10,8 @@ jest.mock('src/utils/ui/toast', () => ({
   showToast: jest.fn(),
 }))
 
-const mockFetchCompletePokemonDetail = fetchCompletePokemonDetail as jest.MockedFunction<typeof fetchCompletePokemonDetail>
+const mockFetchCompletePokemonDetail = 
+  fetchCompletePokemonDetail as jest.MockedFunction<typeof fetchCompletePokemonDetail>
 
 const createMockPokemonDetail = (id: number): CombinedPokemonDetail => ({
   id,

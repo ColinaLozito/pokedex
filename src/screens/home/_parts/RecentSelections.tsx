@@ -31,7 +31,7 @@ export default function RecentSelections({
       <H4 color="$text">Recently Inspected</H4>
       <XStack gap="$2" flexWrap='wrap' justify='space-between'>
         {recentPokemonData.map((pokemon) => (
-          <YStack key={pokemon.id} width='48%'>
+          <YStack key={pokemon.id} width='49%'>
             <PokemonCard
               id={pokemon.id}
               name={pokemon.name}

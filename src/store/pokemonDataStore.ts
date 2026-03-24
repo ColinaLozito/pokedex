@@ -1,119 +1,167 @@
+/**
+ * Pokemon Data Store
+ * 
+ * Manages individual Pokemon details with caching, fetch deduplication, and background pre-fetching.
+ * 
+ * State:
+ * - pokemonDetails: Cache of fetched Pokemon details keyed by ID
+ * - currentPokemonId: Currently selected Pokemon ID
+ * - loading: Loading state for async operations
+ * - error: Error state for failed fetches
+ * - pendingFetches: Map of in-flight fetch promises for deduplication
+ * 
+ * Features:
+ * - Returns cached data if available
+ * - Promise-based deduplication to prevent duplicate API calls
+ * - Background pre-fetching of evolution chain Pokemon
+ * - Persistent storage for offline access
+ */
+
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import type { CombinedPokemonDetail } from 'src/services/types'
+import { showToast } from 'src/utils/ui/toast'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import {
-  fetchCompletePokemonDetail,
-} from '../services/api'
-import { createFetchHelpers } from './helpers/createFetchHelpers'
+import { fetchCompletePokemonDetail } from '../services/api'
 import type { PokemonDataState } from './types/pokemon'
+
+const STORAGE_NAME = 'pokemon-data-storage'
 
 export const usePokemonDataStore = create<PokemonDataState>()(
   persist(
-    (set, get) => {
-      const helpers = createFetchHelpers(set, get)
+    (set, get) => ({
+      pokemonDetails: {},
+      currentPokemonId: null,
+      loading: false,
+      error: null,
+      pendingFetches: new Map(),
 
-      return {
-        // Initial state
-        pokemonDetails: {},
-        currentPokemonId: null,
-        loading: false,
-        error: null,
-        pendingFetches: new Map(),
-
-        /**
-         * Fetch complete Pokemon details (with species and evolution chain)
-         * Returns cached data if available, otherwise fetches from API
-         * Uses Promise-based deduplication to prevent duplicate fetches
-         */
-        fetchPokemonDetail: async (id: number): Promise<CombinedPokemonDetail> => {
-          // Clear any previous errors at the start
-          set({ error: null })
-
-          // Check cache first
-          const cached = helpers.getCachedPokemon(id)
-          if (cached) {
-            return cached
+      fetchPokemonDetail: async (id: number): Promise<CombinedPokemonDetail> => {
+        const state = get()
+        
+        const cached = state.pokemonDetails[id]
+        if (cached) {
+          if (state.currentPokemonId !== id) {
+            set({ currentPokemonId: id })
           }
+          return cached
+        }
 
-          // Check if already fetching - return existing Promise
-          const existingFetch = helpers.getExistingFetch(id)
-          if (existingFetch) {
-            return existingFetch
+        const existingFetch = state.pendingFetches.get(id)
+        if (existingFetch) {
+          if (state.currentPokemonId !== id) {
+            set({ currentPokemonId: id })
           }
+          return existingFetch
+        }
 
-          // Create new fetch Promise
-          const fetchPromise = (async () => {
-            try {
-              helpers.setLoadingState(true)
-              
-              const detail = await fetchCompletePokemonDetail(id)
-              helpers.cachePokemon(id, detail)
+        set({ error: null })
 
-              // Pre-fetch evolutions in background
-              const evolutionsToFetch = helpers.getEvolutionsToFetch(detail, id)
-              helpers.prefetchEvolutions(evolutionsToFetch)
+        const fetchPromise = (async () => {
+          try {
+            set({ loading: true, error: null })
+            
+            const detail = await fetchCompletePokemonDetail(id)
+            
+            set((state) => ({
+              pokemonDetails: {
+                ...state.pokemonDetails,
+                [id]: detail
+              },
+              currentPokemonId: id,
+              loading: false,
+            }))
 
-              return detail
-            } catch (error) {
-              helpers.handleFetchError(id, error)
-              throw error
-            } finally {
-              helpers.cleanupPendingFetch(id)
+            const evolutionIds = detail.evolutionChain
+              .map((evo) => evo.id)
+              .filter((evoId) => evoId !== id)
+
+            const evolutionsToFetch = evolutionIds.filter(
+              (evoId) =>
+                !state.pokemonDetails[evoId] &&
+                !state.pendingFetches.has(evoId)
+            )
+
+            if (evolutionsToFetch.length > 0) {
+              Promise.allSettled(
+                evolutionsToFetch.map(async (evoId) => {
+                  try {
+                    const evoDetail = await fetchCompletePokemonDetail(evoId)
+                    set((state) => ({
+                      pokemonDetails: {
+                        ...state.pokemonDetails,
+                        [evoId]: evoDetail,
+                      },
+                    }))
+                  } catch (_error) {
+                    /// 
+                  }
+                })
+              ).catch(() => {})
             }
-          })()
 
-          // Track the pending fetch
-          helpers.trackPendingFetch(id, fetchPromise)
+            return detail
+          } catch (error) {
+            const errorMessage = error instanceof Error 
+              ? error.message 
+              : `Failed to fetch Pokemon ${id}`
+            
+            showToast('Pokemon Not Found', `Could not load Pokemon #${id}. It may not exist or there was a network error.`)
+            
+            set({
+              error: errorMessage,
+              loading: false,
+            })
+            throw error
+          } finally {
+            set((state) => {
+              const newPendingFetches = new Map(state.pendingFetches)
+              newPendingFetches.delete(id)
+              return { pendingFetches: newPendingFetches }
+            })
+          }
+        })()
 
-          return fetchPromise
-        },
+        set((state) => {
+          const newPendingFetches = new Map(state.pendingFetches)
+          newPendingFetches.set(id, fetchPromise)
+          return { pendingFetches: newPendingFetches }
+        })
 
-        /**
-         * Get Pokemon detail from cache (does not fetch)
-         */
-        getPokemonDetail: (id: number) => {
-          return get().pokemonDetails[id]
-        },
+        return fetchPromise
+      },
 
-        /**
-         * Set the current Pokemon ID
-         */
-        setCurrentPokemonId: (id: number | null) => {
-          set({ currentPokemonId: id })
-        },
+      getPokemonDetail: (id: number) => {
+        return get().pokemonDetails[id]
+      },
 
-        /**
-         * Get the current Pokemon detail
-         */
-        getCurrentPokemon: () => {
-          const state = get()
-          if (state.currentPokemonId === null) return undefined
-          return state.pokemonDetails[state.currentPokemonId]
-        },
+      setCurrentPokemonId: (id: number | null) => {
+        set({ currentPokemonId: id })
+      },
 
-        /**
-         * Clear error state
-         */
-        clearError: () => {
-          set({ error: null })
-        },
+      getCurrentPokemon: () => {
+        const state = get()
+        if (state.currentPokemonId === null) return undefined
+        return state.pokemonDetails[state.currentPokemonId]
+      },
 
-        $reset: () => {
-          set({
-            pokemonDetails: {},
-            currentPokemonId: null,
-            loading: false,
-            error: null,
-            pendingFetches: new Map(),
-          })
-        },
-      }
-    },
+      clearError: () => {
+        set({ error: null })
+      },
+
+      $reset: () => {
+        set({
+          pokemonDetails: {},
+          currentPokemonId: null,
+          loading: false,
+          error: null,
+          pendingFetches: new Map(),
+        })
+      },
+    }),
     {
-      name: 'pokemon-data-storage',
+      name: STORAGE_NAME,
       storage: createJSONStorage(() => AsyncStorage),
-      // Only persist details, not loading/error states
       partialize: (state) => ({
         pokemonDetails: state.pokemonDetails,
         currentPokemonId: state.currentPokemonId,

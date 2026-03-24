@@ -1,3 +1,4 @@
+import { baseColors } from '@theme/colors';
 import { useCallback, useMemo } from 'react';
 import { AutocompleteDropdown as Autocomplete, AutocompleteDropdownItem } from 'react-native-autocomplete-dropdown';
 import type { AutocompleteDropdownProps } from './types';
@@ -15,16 +16,16 @@ export const AutocompleteDropdown = ({ onSelectItem, dataSet }: AutocompleteDrop
   }, [onSelectItem])
   
   const inputContainerStyle = useMemo(() => ({
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E0E0E0',
-    borderWidth: 1,
+    backgroundColor: baseColors.white,
+    borderColor: baseColors.text,
+    borderWidth: 2,
   }), [])
   
   const textInputProps = useMemo(() => ({
     style: {
-      color: '#333333',
+      color: baseColors.text,
     },
-    placeholderTextColor: '#737373',
+    placeholderTextColor: baseColors.doveGray,
   }), [])
   
   const suggestionsListContainerStyle = useMemo(() => ({

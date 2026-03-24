@@ -1,18 +1,17 @@
 import { pokemonTypeColors } from '@theme/colors'
 import { Text, YStack } from 'tamagui'
-import { typeadgeSizeStyles } from './constant'
+import { typeBadgeSizeStyles } from './constant'
 import { TypeBadgeProps } from './types'
 
 export default function TypeBadge({ typeName, size = 'medium' }: TypeBadgeProps) {
   const typeColor = pokemonTypeColors[typeName]
-  const styles = typeadgeSizeStyles[size]
+  const styles = typeBadgeSizeStyles[size]
 
   return (
     <YStack
       elevation={1}
       bg={typeColor}
-      px={styles.px}
-      py={styles.py}
+      p={styles.p}
       borderRadius={styles.borderRadius}
       alignSelf="flex-start"
     >

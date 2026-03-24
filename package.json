@@ -12,14 +12,19 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "test": "jest --watchAll",
+    "test:coverage": "jest --coverage",
     "lint": "eslint app",
     "lint:fix": "eslint app --fix",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "postinstall": "husky install"
   },
-  "jest": {
-    "preset": "jest-expo"
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@expo/router-server": "^55.0.11",
@@ -64,7 +69,10 @@
     "@tamagui/babel-plugin": "^1.138.0",
     "@tamagui/cli": "^1.138.0",
     "@tamagui/metro-plugin": "^1.138.0",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.1.10",
+    "@types/react-test-renderer": "^19",
     "@typescript-eslint/eslint-plugin": "^8.47.0",
     "@typescript-eslint/parser": "^8.47.0",
     "eslint": "^9.39.1",
@@ -74,8 +82,13 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-native": "^5.0.0",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "jest": "^30.3.0",
+    "jest-expo": "^55.0.11",
     "jiti": "^2.6.1",
+    "lint-staged": "^16.4.0",
     "prettier": "^3.6.2",
+    "react-test-renderer": "19.1.0",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.47.0"
   },

@@ -17,7 +17,7 @@ export interface PokemonTypeSlot {
   readonly slot: number
   readonly type: {
     readonly name: string
-    readonly url: string
+    readonly url?: string
   }
 }
 

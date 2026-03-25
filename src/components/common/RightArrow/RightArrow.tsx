@@ -3,8 +3,6 @@ import { Text } from 'tamagui'
 
 export default function RightArrow() {
   return (
-    <View style={{ transform: [{ rotate: '90deg' }] }}>
-      <Text color="$doveGray" fontSize="$4">➡</Text>
-    </View>
+    <Text color="$doveGray" fontSize="$4">➡</Text>
   )
 }

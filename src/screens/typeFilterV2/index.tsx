@@ -24,8 +24,6 @@ export default function TypeFilterV2Screen() {
     )
   }
 
-  console.log("TYPE FILTER SCREEN")
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: data.typeColor }}>
       <YStack flex={1}>

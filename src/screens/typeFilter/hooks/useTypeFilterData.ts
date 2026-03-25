@@ -91,23 +91,20 @@ export function useTypeFilterData(
     }
 
     try {
-      setError(null)
-      setLoading(true)
-      setDisplayedCount(INITIAL_LOAD_COUNT)
       const data = await storeData.fetchPokemonByTypeAndGetDisplayData(typeId, typeName)
       setRawData(data)
-      setIsCached(true)
-    } catch (_err) {
-      setError('Failed to load Pokemon')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load Pokémon')
     } finally {
       setLoading(false)
     }
-  }, [typeId, 
-      typeName, 
-      storeData.fetchPokemonByTypeAndGetDisplayData, 
-      storeData.getPokemonDisplayData, 
-      storeData.pokemonByType, 
-      storeData.isTypeCached])
+  }, [typeId, typeName, storeData])
+
+  const actions = useMemo(() => ({
+    loadPokemon,
+    loadMore,
+    handleSelect,
+  }), [loadPokemon, loadMore, handleSelect])
 
   const data = useMemo(() => ({
     filteredData,
@@ -116,17 +113,11 @@ export function useTypeFilterData(
   }), [filteredData, pokemonListForRecent, hasMore])
 
   const status = useMemo(() => ({
-    loading,
-    isLoading,
+    loading: loading || isLoading,
+    isLoading: loading || isLoading,
     error,
     isCached,
   }), [loading, isLoading, error, isCached])
-
-  const actions = useMemo(() => ({
-    handleSelect,
-    loadPokemon,
-    loadMore,
-  }), [handleSelect, loadPokemon, loadMore])
 
   return { data, status, actions }
 }

@@ -1,6 +1,6 @@
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import graphqlRequest from 'graphql-request'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import type { PokemonTypeSlot } from 'src/services/types'
 import type { PokemonDisplayDataArray } from 'src/utils/pokemon/displayData'
 import { getPokemonSpriteUrl } from 'src/utils/pokemon/sprites'
@@ -31,9 +31,9 @@ export interface UsePokemonByTypeGQLReturn {
 }
 
 function transformData(
-  data: GQLPokemonByTypeResponse | undefined, typeName: string
+  data: GQLPokemonByTypeResponse | undefined, 
+  typeName: string
 ): PokemonDisplayDataArray {
-  
   if (!data?.pokemon_v2_pokemon) return []
   
   return data.pokemon_v2_pokemon.map((pokemon) => {
@@ -103,9 +103,9 @@ export function usePokemonByTypeGQL({
     return pokemonList.length < totalCount
   }, [pokemonList.length, totalCount])
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     setDisplayedCount((prev) => prev + INITIAL_LOAD_COUNT)
-  }
+  }, [])
 
   return {
     data: pokemonList,

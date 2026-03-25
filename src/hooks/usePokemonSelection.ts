@@ -59,7 +59,7 @@ export function usePokemonSelection({
       if (!isCached) {
         setPendingNavigationId(id)
       } else {
-        router.push({ pathname: '/pokemonDetails' })
+        router.push({ pathname: '/pokemonDetailsV2', params: { id: id.toString() } })
       }
     } catch (_error) {
       setIsLoading(false)
@@ -74,7 +74,7 @@ export function usePokemonSelection({
   useEffect(() => {
     if (!isLoading && pendingNavigationId !== null) {
       const timer = setTimeout(() => {
-        router.push({ pathname: '/pokemonDetails' })
+        router.push({ pathname: '/pokemonDetailsV2', params: { id: pendingNavigationId.toString() } })
         setPendingNavigationId(null)
       }, NAVIGATION_DELAY)
 

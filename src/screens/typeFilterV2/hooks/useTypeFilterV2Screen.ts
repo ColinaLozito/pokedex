@@ -8,7 +8,6 @@ import type { PokemonListItem } from 'src/services/types'
 import { usePokemonDataStore } from '@/store/pokemonDataStore'
 import { usePokemonGeneralStore } from '@/store/pokemonGeneralStore'
 import { POKEMON_TYPES, type PokemonType } from '@theme/pokemonTypes'
-import { useShallow } from 'zustand/react/shallow'
 
 const isValidPokemonType = (type: string): type is PokemonType => {
   return Object.values(POKEMON_TYPES).includes(type as PokemonType)
@@ -67,30 +66,22 @@ export function useTypeFilterV2Screen(): UseTypeFilterV2ScreenReturn {
   const typeColor = typeStyles.typeColor as string
   const typeIcon = typeStyles.typeIcon
 
-  const pokemonStoreData = usePokemonDataStore(
-    useShallow(store => ({
-      fetchPokemonDetail: store.fetchPokemonDetail,
-      getPokemonDetail: store.getPokemonDetail,
-    }))
-  )
-
-  const storeActions = usePokemonGeneralStore(
-    useShallow(store => ({
-      addRecentSelection: store.addRecentSelection,
-    }))
-  )
+  const fetchPokemonDetail = usePokemonDataStore((store) => store.fetchPokemonDetail)
+  const getPokemonDetail = usePokemonDataStore((store) => store.getPokemonDetail)
+  const addRecentSelection = usePokemonGeneralStore((store) => store.addRecentSelection)
 
   const handleSelect = useCallback(async (id: number) => {
-    const pokemonDetail = pokemonStoreData.getPokemonDetail(id)
+    const pokemonDetail = getPokemonDetail(id)
     if (!pokemonDetail) {
-      await pokemonStoreData.fetchPokemonDetail(id)
+      await fetchPokemonDetail(id)
     }
-    storeActions.addRecentSelection({ id, name: gqlData.find(p => p.id === id)?.name || '' })
+    const pokemon = gqlData.find(p => p.id === id)
+    addRecentSelection({ id, name: pokemon?.name || '' })
     router.push({
-      pathname: '/pokemonDetails',
+      pathname: '/pokemonDetailsV2',
       params: { id: id.toString() },
     })
-  }, [router, pokemonStoreData, storeActions, gqlData])
+  }, [router, fetchPokemonDetail, getPokemonDetail, addRecentSelection, gqlData])
 
   const onGoBack = useCallback(() => router.back(), [router])
 

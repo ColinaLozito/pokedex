@@ -9,7 +9,7 @@ export function useHomeScreen(): UseHomeScreenReturn {
 
   const handleTypeSelect = useCallback((typeId: number, typeName: string) => {
     router.push({
-      pathname: '/typeFilter',
+      pathname: '/typeFilterV2',
       params: {
         typeId: typeId.toString(),
         typeName: typeName,

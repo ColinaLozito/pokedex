@@ -97,6 +97,10 @@ function RootLayoutNav() {
           options={defaultStackOptions}
         />
         <Stack.Screen
+          name="typeFilterV2"
+          options={defaultStackOptions}
+        />
+        <Stack.Screen
           name="modals/loading"
           options={defaultModalOptions}
         />

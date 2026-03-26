@@ -7,6 +7,7 @@ import type { PokemonDisplayDataArray } from 'src/utils/pokemon/displayData'
 import { usePokemonByTypeGQL } from '@/hooks/usePokemonByTypeGQL'
 import type { PokemonListItem } from 'src/services/types'
 import { useUserStore } from '@/store/userStore'
+import { usePokemonSelect } from '@/hooks/usePokemonSelect'
 import { POKEMON_TYPES, type PokemonType } from '@theme/pokemonTypes'
 
 const isValidPokemonType = (type: string): type is PokemonType => {
@@ -72,14 +73,10 @@ export function useTypeFilterScreen(): UseTypeFilterScreenReturn {
     }))
   )
 
-  const handleSelect = useCallback(async (id: number) => {
-    const pokemon = gqlData.find(p => p.id === id)
-    addRecentSelection({ id, name: pokemon?.name || '' })
-    router.push({
-      pathname: '/pokemonDetails',
-      params: { id: id.toString() },
-    })
-  }, [router, addRecentSelection, gqlData])
+  const { handleSelect } = usePokemonSelect({
+    pokemonList: gqlData.map(p => ({ id: p.id, name: p.name })),
+    addRecentSelection,
+  })
 
   const onGoBack = useCallback(() => router.back(), [router])
 

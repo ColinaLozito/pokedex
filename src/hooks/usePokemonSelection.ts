@@ -1,13 +1,9 @@
-import { useToastController } from '@tamagui/toast'
-import { useRouter } from 'expo-router'
-import { useCallback } from 'react'
 import type { PokemonListItem } from 'src/services/types'
+import { usePokemonSelect } from './usePokemonSelect'
 
 interface UsePokemonSelectionOptions {
   pokemonList?: PokemonListItem[]
   addRecentSelection?: (pokemon: PokemonListItem) => void
-  fetchPokemonDetail?: (id: number) => Promise<unknown>
-  getPokemonDetail?: (id: number) => unknown
   pokemonListDataSet?: Array<{ id: string; title: string }>
 }
 
@@ -22,23 +18,10 @@ export function usePokemonSelection({
   addRecentSelection,
   pokemonListDataSet,
 }: UsePokemonSelectionOptions = {}): UsePokemonSelectionReturn {
-  const router = useRouter()
-  const toast = useToastController()
-
-  const handleSelect = useCallback(async (id: number) => {
-    if (!id || id === 0 || isNaN(id)) {
-      toast.show('Invalid Selection', { message: 'Please select a valid Pokemon' })
-      return
-    }
-
-    const selectedPokemon = pokemonList?.find((p) => p.id === id)
-
-    if (selectedPokemon && addRecentSelection) {
-      addRecentSelection(selectedPokemon)
-    }
-
-    router.push({ pathname: '/pokemonDetails', params: { id: id.toString() } })
-  }, [pokemonList, addRecentSelection, router, toast])
+  const { handleSelect } = usePokemonSelect({
+    pokemonList,
+    addRecentSelection,
+  })
 
   return {
     isLoading: false,

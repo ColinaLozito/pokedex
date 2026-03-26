@@ -4,6 +4,8 @@ import { useCallback, useMemo } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import { usePokemonDetailsGQL } from '@/hooks/usePokemonDetailsGQL'
 import { useUserStore } from '@/store/userStore'
+import { usePokemonSelect } from '@/hooks/usePokemonSelect'
+import { useGetCachedPokemonDetail } from '@/hooks/useGetCachedPokemonDetail'
 import { getPokemonTypeStyles } from 'src/utils/pokemon/typeStyles'
 import type { UsePokemonDetailsReturn } from '../types'
 
@@ -42,30 +44,22 @@ export function usePokemonDetailsScreen(): UsePokemonDetailsReturn {
     return id ? bookmarkedPokemonIds.includes(id) : false
   }, [bookmarkedPokemonIds, id])
 
+  const getPokemonDetail = useGetCachedPokemonDetail()
+
+  const { handleSelect: handleEvolutionPress } = usePokemonSelect({
+    pokemonList: pokemonData?.evolutionChain.map(e => ({ id: e.id, name: e.name })),
+    skipPrefetch: true,
+    replaceNavigation: true,
+  })
+
   const handleBookmarkPress = useCallback(() => {
     if (id) {
       toggleBookmark(id)
     }
   }, [id, toggleBookmark])
 
-  const handleEvolutionPress = useCallback(async (evolutionId: number) => {
-    if (evolutionId === id) {
-      return
-    }
-    
-    router.replace({
-      pathname: '/pokemonDetails',
-      params: { id: evolutionId.toString() },
-    })
-  }, [id, router])
-
   const clearError = useCallback(() => {
     // Error handled by React Query
-  }, [])
-
-  const getPokemonDetail = useCallback((pokemonId: number) => {
-    // This is handled by React Query now
-    return undefined
   }, [])
 
   const dataMemo = useMemo(() => ({

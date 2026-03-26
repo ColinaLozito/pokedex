@@ -1,6 +1,7 @@
 import { usePokemonSelection } from '@/hooks/usePokemonSelection'
 import { usePokemonSearchGQL } from '@/hooks/usePokemonSearchGQL'
 import { usePokemonTypesGQL } from '@/hooks/usePokemonTypesGQL'
+import { useGetCachedPokemonDetail } from '@/hooks/useGetCachedPokemonDetail'
 import { useUserStore } from '@/store/userStore'
 import { useMemo, useState, useCallback } from 'react'
 import { useShallow } from 'zustand/react/shallow'
@@ -10,6 +11,7 @@ export function useHomeData(): UseHomeDataReturn {
   const [searchTerm, setSearchTerm] = useState('')
 
   const { data: typeList } = usePokemonTypesGQL()
+  const getPokemonDetail = useGetCachedPokemonDetail()
 
   const userStoreData = useUserStore(
     useShallow((store) => ({
@@ -56,12 +58,13 @@ export function useHomeData(): UseHomeDataReturn {
   ])
 
   const actions = useMemo(() => ({
-    getPokemonDetail: (_id: number) => undefined,
+    getPokemonDetail,
     toggleBookmark: userStoreData.toggleBookmark,
     removeRecentSelection: userStoreData.removeRecentSelection,
     handleSelect,
     onSearchChange,
   }), [
+    getPokemonDetail,
     userStoreData.toggleBookmark,
     userStoreData.removeRecentSelection,
     handleSelect,

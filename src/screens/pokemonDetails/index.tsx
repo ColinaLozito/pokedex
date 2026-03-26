@@ -1,5 +1,4 @@
 import ErrorScreen from '@/components/common/ErrorScreen'
-import { useLoadingModal } from '@/hooks/useLoadingModal'
 import { baseColors } from '@theme/colors'
 import { useRouter } from 'expo-router'
 import { useEffect, useRef } from 'react'
@@ -16,8 +15,6 @@ export default function PokemonDetailsScreen() {
   const scrollViewRef = useRef<ScrollView>(null)
 
   const { data, status, actions } = usePokemonDetailsScreen()
-
-  useLoadingModal(status.loading, 'Loading Pokémon...')
 
   useEffect(() => {
     return () => {

@@ -1,7 +1,6 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { useRouter } from 'expo-router'
-import { usePokemonGeneralStore } from '../../../store/pokemonGeneralStore'
-import { usePokemonDataStore } from '../../../store/pokemonDataStore'
+import { useUserStore } from '../../../store/userStore'
 import { useModalStore } from '../../../store/modalStore'
 import ErrorFallback from './ErrorFallback'
 import type { GlobalErrorBoundaryProps } from './types'
@@ -13,8 +12,7 @@ export default function GlobalErrorBoundary({
   const router = useRouter()
 
   const handleReset = () => {
-    usePokemonGeneralStore.getState().$reset()
-    usePokemonDataStore.getState().$reset()
+    useUserStore.getState().$reset()
     useModalStore.getState().$reset()
     onReset?.()
     router.replace('/main')
@@ -26,8 +24,6 @@ export default function GlobalErrorBoundary({
       onError={(error, info) => {
         console.error('GlobalErrorBoundary caught an error:', error)
         console.error('Component stack:', info.componentStack)
-        // TODO: Integrate Sentry here
-        // Sentry.captureException(error, { extra: { componentStack: info.componentStack } })
       }}
       fallbackRender={(props) => <ErrorFallback {...props} resetErrorBoundary={handleReset} />}
     >

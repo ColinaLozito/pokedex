@@ -1,4 +1,3 @@
-// Evolution chain link domain (split for reuse)
 export interface EvolutionChainLink {
   readonly species: {
     readonly name: string

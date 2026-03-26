@@ -38,7 +38,7 @@ function PokemonCardComponent({
 
     // Fallback: direct navigation (not recommended, but kept for backward compatibility)
     router.push({
-      pathname: '/pokemonDetailsV2'
+      pathname: '/pokemonDetails'
     })
   }, [id, onSelect, onNavigate, router])
 

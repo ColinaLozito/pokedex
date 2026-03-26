@@ -1,46 +1,34 @@
 import { useToastController } from '@tamagui/toast'
 import { useCallback, useMemo } from 'react'
 import { Alert } from 'react-native'
-import { usePokemonDataStore } from '../store/pokemonDataStore'
-import { usePokemonGeneralStore } from '../store/pokemonGeneralStore'
+import { useUserStore } from '../store/userStore'
+import { useShallow } from 'zustand/react/shallow'
 import { clearAllStoredData } from '../utils/storage/clearStorage'
 
-/**
- * Custom hook for managing data clearing functionality
- * 
- * @returns Object with:
- *   - hasStoredData: boolean indicating if there's any stored data
- *   - handleClearData: callback function to trigger the clear data flow
- */
 export function useClearData() {
   const toast = useToastController()
 
-   // Check if there's any stored data
-   const pokemonDetails = usePokemonDataStore((state) => state.pokemonDetails)
-   const bookmarkedPokemonIds = usePokemonGeneralStore((state) => state.bookmarkedPokemonIds)
-   const recentSelections = usePokemonGeneralStore((state) => state.recentSelections)
-   const pokemonByType = usePokemonGeneralStore((state) => state.pokemonByType)
+  const { bookmarkedPokemonIds, recentSelections } = useUserStore(
+    useShallow((state) => ({
+      bookmarkedPokemonIds: state.bookmarkedPokemonIds,
+      recentSelections: state.recentSelections,
+    }))
+  )
 
-   // Check if there's any data to clear
-   const hasStoredData = useMemo(() => {
-     const hasPokemonByType = Object.keys(pokemonByType).length > 0
-     return (
-       Object.keys(pokemonDetails).length > 0 ||
-       bookmarkedPokemonIds.length > 0 ||
-       recentSelections.length > 0 ||
-       hasPokemonByType
-     )
-   }, [
-     pokemonDetails,
-     bookmarkedPokemonIds,
-     recentSelections,
-     pokemonByType,
-   ])
+  const hasStoredData = useMemo(() => {
+    return (
+      bookmarkedPokemonIds.length > 0 ||
+      recentSelections.length > 0
+    )
+  }, [
+    bookmarkedPokemonIds,
+    recentSelections,
+  ])
 
   const handleClearData = useCallback(() => {
     Alert.alert(
       'Clear All Data',
-      'Are you sure you want to clear all stored data? This will remove all bookmarks, recent selections, and cached Pokémon data. This action cannot be undone.',
+      'Are you sure you want to clear all stored data? This will remove all bookmarks and recent selections. This action cannot be undone.',
       [
         {
           text: 'Cancel',
@@ -51,12 +39,8 @@ export function useClearData() {
           style: 'destructive',
           onPress: async () => {
             try {
-              // Clear AsyncStorage
               await clearAllStoredData()
-
-              // Reset all stores to initial state
-              usePokemonDataStore.getState().$reset()
-              usePokemonGeneralStore.getState().$reset()
+              useUserStore.getState().$reset()
 
               toast.show('All stored data cleared', {
                 message: 'All stored data has been cleared successfully',

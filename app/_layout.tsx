@@ -93,15 +93,7 @@ function RootLayoutNav() {
           options={defaultStackOptions}
         />
         <Stack.Screen
-          name="pokemonDetailsV2"
-          options={defaultStackOptions}
-        />
-        <Stack.Screen
           name="typeFilter"
-          options={defaultStackOptions}
-        />
-        <Stack.Screen
-          name="typeFilterV2"
           options={defaultStackOptions}
         />
         <Stack.Screen

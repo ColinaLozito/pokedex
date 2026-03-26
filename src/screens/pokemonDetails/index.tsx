@@ -6,9 +6,9 @@ import { useEffect, useRef } from 'react'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { GetThemeValueForKey, YStack } from 'tamagui'
-import PokemonDetailsContent from './_parts/PokemonDetailsContent'
-import PokemonDetailsEmptyState from './_parts/PokemonDetailsEmptyState'
-import PokemonDetailsHeader from './_parts/PokemonDetailsHeader'
+import PokemonDetailsContent from '@/screens/pokemonDetails/_parts/PokemonDetailsContent'
+import PokemonDetailsEmptyState from '@/screens/pokemonDetails/_parts/PokemonDetailsEmptyState'
+import PokemonDetailsHeader from '@/screens/pokemonDetails/_parts/PokemonDetailsHeader'
 import { usePokemonDetailsScreen } from './hooks/usePokemonDetailsScreen'
 
 export default function PokemonDetailsScreen() {

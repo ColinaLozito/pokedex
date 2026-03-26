@@ -70,6 +70,26 @@ export const SEARCH_POKEMON = gql`
   }
 `
 
+export const GET_POKEMON_TYPES = gql`
+  query GetPokemonTypes {
+    pokemon_v2_type {
+      id
+      name
+    }
+  }
+`
+
+export const EXCLUDED_TYPES = ['unknown', 'shadow', 'stellar']
+
+export interface GQLTypeItem {
+  id: number
+  name: string
+}
+
+export interface GQLPokemonTypesResponse {
+  pokemon_v2_type: GQLTypeItem[]
+}
+
 export const STAT_ORDER = [
   'hp', 
   'attack', 

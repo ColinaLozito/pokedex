@@ -1,51 +1,90 @@
 import { baseColors } from '@theme/colors'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useMemo } from 'react'
+import { useShallow } from 'zustand/react/shallow'
+import { usePokemonDetailsGQL } from '@/hooks/usePokemonDetailsGQL'
+import { useUserStore } from '@/store/userStore'
 import { getPokemonTypeStyles } from 'src/utils/pokemon/typeStyles'
-import type { UsePokemonDetailsScreenReturn } from '../types'
-import { usePokemonDetailsData } from './usePokemonDetailsData'
+import type { UsePokemonDetailsReturn } from '../types'
 
-export function usePokemonDetailsScreen(): UsePokemonDetailsScreenReturn {
-  const { data, status, actions } = usePokemonDetailsData()
+export function usePokemonDetailsScreen(): UsePokemonDetailsReturn {
+  const router = useRouter()
+  const params = useLocalSearchParams<{ id: string }>()
 
-  const primaryType = data.currentPokemon?.types?.[0]?.type?.name
+  const pokemonId = params.id ? parseInt(params.id, 10) : null
+  const id = pokemonId ?? 0
+
+  const {
+    data: pokemonData,
+    isLoading,
+    isError,
+    error,
+  } = usePokemonDetailsGQL({
+    id,
+    enabled: !!id,
+  })
+
+  const primaryType = pokemonData?.types?.[0]?.type?.name
   const { typeColor: themeColor } = primaryType
     ? getPokemonTypeStyles(primaryType)
     : { typeColor: baseColors.white }
 
-  const handleBookmarkPress = useCallback(() => {
-    if (data.currentPokemon) {
-      actions.toggleBookmark(data.currentPokemon.id)
-    }
-  }, [data.currentPokemon, actions])
+  const primaryTypeColor = typeof themeColor === 'string' ? themeColor : baseColors.white
 
-  const handleEvolutionPress = useCallback(async (pokemonId: number) => {
-    if (pokemonId === data.currentPokemonId) {
+  const { bookmarkedPokemonIds, toggleBookmark } = useUserStore(
+    useShallow((store) => ({
+      bookmarkedPokemonIds: store.bookmarkedPokemonIds,
+      toggleBookmark: store.toggleBookmark,
+    }))
+  )
+
+  const isBookmarked = useMemo(() => {
+    return id ? bookmarkedPokemonIds.includes(id) : false
+  }, [bookmarkedPokemonIds, id])
+
+  const handleBookmarkPress = useCallback(() => {
+    if (id) {
+      toggleBookmark(id)
+    }
+  }, [id, toggleBookmark])
+
+  const handleEvolutionPress = useCallback(async (evolutionId: number) => {
+    if (evolutionId === id) {
       return
     }
-    try {
-      await actions.fetchPokemonDetail(pokemonId)
-    } catch {
-      // Error toast handled by store
-    }
-  }, [data.currentPokemonId, actions])
+    
+    router.replace({
+      pathname: '/pokemonDetails',
+      params: { id: evolutionId.toString() },
+    })
+  }, [id, router])
+
+  const clearError = useCallback(() => {
+    // Error handled by React Query
+  }, [])
+
+  const getPokemonDetail = useCallback((pokemonId: number) => {
+    // This is handled by React Query now
+    return undefined
+  }, [])
 
   const dataMemo = useMemo(() => ({
-    currentPokemon: data.currentPokemon,
-    isBookmarked: data.isBookmarked,
-    primaryTypeColor: themeColor,
-  }), [data.currentPokemon, data.isBookmarked, themeColor])
+    currentPokemon: pokemonData,
+    isBookmarked,
+    primaryTypeColor,
+  }), [pokemonData, isBookmarked, primaryTypeColor])
 
   const statusMemo = useMemo(() => ({
-    loading: status.loading,
-    error: status.error,
-  }), [status.loading, status.error])
+    loading: isLoading,
+    error: isError ? (error?.message || 'Failed to load Pokemon') : null,
+  }), [isLoading, isError, error])
 
   const actionsMemo = useMemo(() => ({
     handleEvolutionPress,
     handleBookmarkPress,
-    clearError: actions.clearError,
-    getPokemonDetail: actions.getPokemonDetail,
-  }), [handleEvolutionPress, handleBookmarkPress, actions.clearError, actions.getPokemonDetail])
+    clearError,
+    getPokemonDetail,
+  }), [handleEvolutionPress, handleBookmarkPress, clearError, getPokemonDetail])
 
   return {
     data: dataMemo,
@@ -53,4 +92,3 @@ export function usePokemonDetailsScreen(): UsePokemonDetailsScreenReturn {
     actions: actionsMemo,
   }
 }
-

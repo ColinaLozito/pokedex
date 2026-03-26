@@ -2,22 +2,22 @@ import ErrorScreen from '@/components/common/ErrorScreen'
 import { useLoadingModal } from '@/hooks/useLoadingModal'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { YStack } from 'tamagui'
-import PokemonGrid from './_parts/PokemonGrid'
-import TypeFilterHeader from './_parts/TypeFilterHeader'
+import PokemonGrid from '@/screens/typeFilter/_parts/PokemonGrid'
+import TypeFilterHeader from '@/screens/typeFilter/_parts/TypeFilterHeader'
 import { useTypeFilterScreen } from './hooks/useTypeFilterScreen'
 
 export default function TypeFilterScreen() {
   const { data, status, actions } = useTypeFilterScreen()
 
-  const showLoading = status.loading || status.isLoading
-  useLoadingModal(showLoading && !status.isCached, 'LOADING POKEMON')
+  const showLoading = status.loading
+  useLoadingModal(showLoading, 'LOADING POKEMON')
 
   if (status.error) {
     return (
       <ErrorScreen
         error={status.error}
         onGoBack={actions.onGoBack}
-        backgroundColor={data.typeColor as string}
+        backgroundColor={data.typeColor}
         errorColor="white"
         goBackColor="white"
       />
@@ -25,7 +25,7 @@ export default function TypeFilterScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: data.typeColor as string }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: data.typeColor }}>
       <YStack flex={1}>
         <TypeFilterHeader typeName={data.typeName} typeIcon={data.typeIcon} />
 

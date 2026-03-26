@@ -11,6 +11,10 @@ import { H4, XStack, YStack } from 'tamagui'
 import EvolutionSpriteContainer from './EvolutionSpriteContainer'
 
 export default function EvolutionChain(props: EvolutionChainProps) {
+  if (!props.evolutionChainTree) {
+    return null
+  }
+  
   const rootNode = buildEvolutionTree(props.evolutionChainTree)
   const isBranching = isBranchingEvolution(props.evolutionChainTree)
   const variants = collectEvolutionVariants(rootNode)

@@ -1,7 +1,7 @@
 import { usePokemonSelection } from '@/hooks/usePokemonSelection'
 import { usePokemonSearchGQL } from '@/hooks/usePokemonSearchGQL'
-import { usePokemonDataStore } from '@/store/pokemonDataStore'
-import { usePokemonGeneralStore } from '@/store/pokemonGeneralStore'
+import { usePokemonTypesGQL } from '@/hooks/usePokemonTypesGQL'
+import { useUserStore } from '@/store/userStore'
 import { useMemo, useState, useCallback } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import type { UseHomeDataReturn } from '../types'
@@ -9,39 +9,30 @@ import type { UseHomeDataReturn } from '../types'
 export function useHomeData(): UseHomeDataReturn {
   const [searchTerm, setSearchTerm] = useState('')
 
-  const storeData = usePokemonGeneralStore(
-    useShallow(store => ({
-      pokemonList: store.pokemonList,
+  const { data: typeList } = usePokemonTypesGQL()
+
+  const userStoreData = useUserStore(
+    useShallow((store) => ({
       bookmarkedPokemonIds: store.bookmarkedPokemonIds,
       recentSelections: store.recentSelections,
       removeRecentSelection: store.removeRecentSelection,
-      typeList: store.typeList,
       addRecentSelection: store.addRecentSelection,
       toggleBookmark: store.toggleBookmark,
     }))
   )
 
-  const pokemonStoreData = usePokemonDataStore(
-    useShallow(store => ({
-      fetchPokemonDetail: store.fetchPokemonDetail,
-      getPokemonDetail: store.getPokemonDetail,
-    }))
-  )
-
-  const { suggestions, isLoading } = usePokemonSearchGQL({ searchTerm })
+  const { suggestions, isLoading: isSearchLoading } = usePokemonSearchGQL({ searchTerm })
 
   const pokemonListDataSet = useMemo(() =>
-    storeData.pokemonList.map((pokemon) => ({
-      id: pokemon.id.toString(),
-      title: pokemon.name,
-    })), [storeData.pokemonList]
+    suggestions.map((pokemon) => ({
+      id: pokemon.id,
+      title: pokemon.title,
+    })), [suggestions]
   )
 
   const { handleSelect } = usePokemonSelection({
-    pokemonList: storeData.pokemonList,
-    addRecentSelection: storeData.addRecentSelection,
-    fetchPokemonDetail: pokemonStoreData.fetchPokemonDetail,
-    getPokemonDetail: pokemonStoreData.getPokemonDetail,
+    pokemonList: suggestions.map(p => ({ id: parseInt(p.id, 10), name: p.title })),
+    addRecentSelection: userStoreData.addRecentSelection,
     pokemonListDataSet,
   })
 
@@ -51,30 +42,28 @@ export function useHomeData(): UseHomeDataReturn {
 
   const data = useMemo(() => ({
     pokemonListDataSet,
-    bookmarkedPokemonIds: storeData.bookmarkedPokemonIds,
-    recentSelections: storeData.recentSelections,
-    typeList: storeData.typeList,
+    bookmarkedPokemonIds: userStoreData.bookmarkedPokemonIds,
+    recentSelections: userStoreData.recentSelections,
+    typeList: typeList || [],
     searchResults: suggestions,
-    isSearchLoading: isLoading,
+    isSearchLoading: isSearchLoading,
   }), [
     pokemonListDataSet,
-    storeData.bookmarkedPokemonIds,
-    storeData.recentSelections,
-    storeData.typeList,
+    userStoreData,
+    typeList,
     suggestions,
-    isLoading,
+    isSearchLoading,
   ])
 
   const actions = useMemo(() => ({
-    getPokemonDetail: pokemonStoreData.getPokemonDetail,
-    toggleBookmark: storeData.toggleBookmark,
-    removeRecentSelection: storeData.removeRecentSelection,
+    getPokemonDetail: (_id: number) => undefined,
+    toggleBookmark: userStoreData.toggleBookmark,
+    removeRecentSelection: userStoreData.removeRecentSelection,
     handleSelect,
     onSearchChange,
   }), [
-    pokemonStoreData.getPokemonDetail,
-    storeData.toggleBookmark,
-    storeData.removeRecentSelection,
+    userStoreData.toggleBookmark,
+    userStoreData.removeRecentSelection,
     handleSelect,
     onSearchChange,
   ])

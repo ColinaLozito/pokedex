@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query'
 import graphqlRequest from 'graphql-request'
 import { useMemo } from 'react'
 import type { CombinedPokemonDetail, PokemonAbilityEntry, PokemonStatEntry, PokemonTypeSlot, EvolutionPokemon, EvolutionChainLink } from 'src/services/types'
-import { fetchPokemonSpecies, fetchEvolutionChain } from 'src/services/api'
 import { extractPokemonId } from 'src/utils/api/extractId'
 import { extractEvolutionChain } from 'src/utils/evolution/evolutionTree'
 import { sortStatsByOrder } from 'src/utils/pokemon/statOrder'
@@ -13,6 +12,41 @@ import {
   type GQLPokemonDetailsResponse,
   type GQLPokemonDetailsVariables,
 } from '../services/queries/pokemonQueries'
+
+const POKEMON_API_BASE = 'https://pokeapi.co/api/v2/'
+
+interface PokemonSpeciesResponse {
+  readonly id: number
+  readonly name: string
+  readonly flavor_text_entries: Array<{
+    readonly flavor_text: string
+    readonly language: { readonly name: string }
+  }>
+  readonly genera: Array<{
+    readonly genus: string
+    readonly language: { readonly name: string }
+  }>
+  readonly habitat: { readonly name: string } | null
+  readonly is_legendary: boolean
+  readonly is_mythical: boolean
+  readonly evolution_chain: { readonly url: string } | null
+}
+
+async function fetchPokemonSpecies(id: number): Promise<PokemonSpeciesResponse> {
+  const response = await fetch(`${POKEMON_API_BASE}pokemon-species/${id}`)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch species: ${response.status}`)
+  }
+  return response.json()
+}
+
+async function fetchEvolutionChain(url: string): Promise<{ chain: EvolutionChainLink }> {
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch evolution chain: ${response.status}`)
+  }
+  return response.json()
+}
 
 export interface UsePokemonDetailsGQLOptions {
   id: number

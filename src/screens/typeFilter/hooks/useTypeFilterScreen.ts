@@ -1,54 +1,110 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useShallow } from 'zustand/react/shallow'
+import { ImageSourcePropType } from 'react-native'
 import { getPokemonTypeStyles } from 'src/utils/pokemon/typeStyles'
-import type { UseTypeFilterScreenReturn } from '../types'
-import { useTypeFilterData } from './useTypeFilterData'
+import type { PokemonDisplayDataArray } from 'src/utils/pokemon/displayData'
+import { usePokemonByTypeGQL } from '@/hooks/usePokemonByTypeGQL'
+import type { PokemonListItem } from 'src/services/types'
+import { useUserStore } from '@/store/userStore'
 import { POKEMON_TYPES, type PokemonType } from '@theme/pokemonTypes'
 
 const isValidPokemonType = (type: string): type is PokemonType => {
   return Object.values(POKEMON_TYPES).includes(type as PokemonType)
 }
 
+interface TypeFilterData {
+  filteredData: PokemonDisplayDataArray
+  pokemonListForRecent: PokemonListItem[]
+  typeName: string
+  typeColor: string
+  typeIcon: ImageSourcePropType | undefined
+  hasMore: boolean
+}
+
+interface TypeFilterStatus {
+  loading: boolean
+  isLoading: boolean
+  isFetching: boolean
+  error: string | null
+  isCached: boolean
+}
+
+interface TypeFilterActions {
+  handleSelect: (id: number) => Promise<void>
+  onGoBack: () => void
+  loadMore: () => void
+}
+
+export interface UseTypeFilterScreenReturn {
+  data: TypeFilterData
+  status: TypeFilterStatus
+  actions: TypeFilterActions
+}
+
 export function useTypeFilterScreen(): UseTypeFilterScreenReturn {
   const router = useRouter()
   const params = useLocalSearchParams<{ typeId: string; typeName: string }>()
 
-  const typeId = params.typeId ? parseInt(params.typeId, 10) : null
   const typeNameRaw = params.typeName || 'normal'
   const typeName = isValidPokemonType(typeNameRaw) ? typeNameRaw : 'normal'
 
-  const { data, status, actions } = useTypeFilterData(typeId, typeName)
+  const { 
+    data: gqlData, 
+    isLoading, 
+    isFetching, 
+    isError,
+    error, 
+    hasMore, 
+    loadMore 
+  } = usePokemonByTypeGQL({
+    typeName,
+    enabled: !!typeName,
+  })
 
-  const { typeColor, typeIcon } = getPokemonTypeStyles(typeName)
+  const typeStyles = getPokemonTypeStyles(typeName)
+  const typeColor = typeStyles.typeColor as string
+  const typeIcon = typeStyles.typeIcon
+
+  const { addRecentSelection } = useUserStore(
+    useShallow((store) => ({
+      addRecentSelection: store.addRecentSelection,
+    }))
+  )
+
+  const handleSelect = useCallback(async (id: number) => {
+    const pokemon = gqlData.find(p => p.id === id)
+    addRecentSelection({ id, name: pokemon?.name || '' })
+    router.push({
+      pathname: '/pokemonDetails',
+      params: { id: id.toString() },
+    })
+  }, [router, addRecentSelection, gqlData])
 
   const onGoBack = useCallback(() => router.back(), [router])
 
-  useEffect(() => {
-    actions.loadPokemon()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actions.loadPokemon])
-
   const dataMemo = useMemo(() => ({
-    filteredData: data.filteredData,
-    pokemonListForRecent: data.pokemonListForRecent,
+    filteredData: gqlData,
+    pokemonListForRecent: gqlData.map(p => ({ id: p.id, name: p.name })),
     typeName,
     typeColor,
     typeIcon,
-    hasMore: data.hasMore,
-  }), [data.filteredData, data.pokemonListForRecent, typeName, typeColor, typeIcon, data.hasMore])
+    hasMore,
+  }), [gqlData, typeName, typeColor, typeIcon, hasMore])
 
   const statusMemo = useMemo(() => ({
-    loading: status.loading,
-    isLoading: status.isLoading,
-    error: status.error,
-    isCached: status.isCached,
-  }), [status.loading, status.isLoading, status.error, status.isCached])
+    loading: isLoading,
+    isLoading,
+    isFetching,
+    error: isError ? (error?.message || 'Failed to load Pokemon') : null,
+    isCached: false,
+  }), [isLoading, isFetching, isError, error])
 
   const actionsMemo = useMemo(() => ({
-    handleSelect: actions.handleSelect,
+    handleSelect,
     onGoBack,
-    loadMore: actions.loadMore,
-  }), [actions.handleSelect, actions.loadMore, onGoBack])
+    loadMore,
+  }), [handleSelect, onGoBack, loadMore])
 
   return {
     data: dataMemo,

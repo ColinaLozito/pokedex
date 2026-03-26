@@ -41,6 +41,9 @@ export interface HomeBodyProps {
   onSelect: (id: number) => Promise<void>
   typeList: TypeGridItem[]
   onTypeSelect: (typeId: number, typeName: string) => void
+  onSearchChange?: (searchTerm: string) => void
+  searchResults?: { id: string; title: string }[]
+  isSearchLoading?: boolean
 }
 
 export interface HomeDataData {
@@ -48,6 +51,8 @@ export interface HomeDataData {
   bookmarkedPokemonIds: number[]
   recentSelections: RecentSelection[]
   typeList: TypeGridItem[]
+  searchResults: { id: string; title: string }[]
+  isSearchLoading: boolean
 }
 
 export interface HomeActionsBase {
@@ -55,6 +60,7 @@ export interface HomeActionsBase {
   toggleBookmark: (id: number) => void
   removeRecentSelection: (id: number) => void
   handleSelect: (id: number) => Promise<void>
+  onSearchChange: (term: string) => void
 }
 
 export interface UseHomeDataReturn {

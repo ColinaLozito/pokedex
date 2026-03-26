@@ -55,6 +55,21 @@ export const GET_POKEMON_DETAILS = gql`
   }
 `
 
+export const SEARCH_POKEMON = gql`
+  query SearchPokemon($searchTerm: String!) {
+    pokemon_v2_pokemon(
+      where: { name: { _ilike: $searchTerm } }
+      limit: 15
+    ) {
+      id
+      name
+      pokemon_v2_pokemonsprites {
+        sprites
+      }
+    }
+  }
+`
+
 export const STAT_ORDER = [
   'hp', 
   'attack', 
@@ -132,4 +147,18 @@ export interface GQLPokemonDetail {
 
 export interface GQLPokemonDetailsResponse {
   pokemon_v2_pokemon: GQLPokemonDetail[]
+}
+
+export interface GQLSearchPokemonVariables {
+  searchTerm: string
+}
+
+export interface GQLSearchResult {
+  id: number
+  name: string
+  pokemon_v2_pokemonsprites: GQLSprite[]
+}
+
+export interface GQLSearchPokemonResponse {
+  pokemon_v2_pokemon: GQLSearchResult[]
 }

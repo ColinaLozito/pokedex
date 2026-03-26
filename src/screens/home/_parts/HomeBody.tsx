@@ -6,7 +6,6 @@ import { H3, YStack } from 'tamagui'
 import type { HomeBodyProps } from '../types'
 
 export default function HomeBody({
-  pokemonListDataSet,
   bookmarkedPokemonIds,
   getPokemonDetail,
   toggleBookmark,
@@ -15,6 +14,9 @@ export default function HomeBody({
   onSelect,
   typeList,
   onTypeSelect,
+  onSearchChange,
+  searchResults = [],
+  isSearchLoading = false,
 }: HomeBodyProps) {
   return (
     <YStack gap="$4">
@@ -22,7 +24,9 @@ export default function HomeBody({
         <H3 color="$text">Search for a Pokemon</H3>
         <AutocompleteDropdown
           onSelectItem={onSelect}
-          dataSet={pokemonListDataSet}
+          onChangeText={onSearchChange}
+          dataSet={searchResults}
+          loading={isSearchLoading}
         />
       </YStack>
 

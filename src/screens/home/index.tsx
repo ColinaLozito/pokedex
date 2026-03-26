@@ -39,6 +39,9 @@ export default function HomeScreen() {
                 onSelect={actions.handleSelect}
                 typeList={data.typeList}
                 onTypeSelect={actions.handleTypeSelect}
+                onSearchChange={actions.onSearchChange}
+                searchResults={data.searchResults}
+                isSearchLoading={data.isSearchLoading}
               />
             </YStack>
           }

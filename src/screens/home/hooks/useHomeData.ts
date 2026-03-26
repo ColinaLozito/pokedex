@@ -1,11 +1,14 @@
 import { usePokemonSelection } from '@/hooks/usePokemonSelection'
+import { usePokemonSearchGQL } from '@/hooks/usePokemonSearchGQL'
 import { usePokemonDataStore } from '@/store/pokemonDataStore'
 import { usePokemonGeneralStore } from '@/store/pokemonGeneralStore'
-import { useMemo } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import type { UseHomeDataReturn } from '../types'
 
 export function useHomeData(): UseHomeDataReturn {
+  const [searchTerm, setSearchTerm] = useState('')
+
   const storeData = usePokemonGeneralStore(
     useShallow(store => ({
       pokemonList: store.pokemonList,
@@ -25,6 +28,8 @@ export function useHomeData(): UseHomeDataReturn {
     }))
   )
 
+  const { suggestions, isLoading } = usePokemonSearchGQL({ searchTerm })
+
   const pokemonListDataSet = useMemo(() =>
     storeData.pokemonList.map((pokemon) => ({
       id: pokemon.id.toString(),
@@ -40,16 +45,24 @@ export function useHomeData(): UseHomeDataReturn {
     pokemonListDataSet,
   })
 
+  const onSearchChange = useCallback((term: string) => {
+    setSearchTerm(term)
+  }, [])
+
   const data = useMemo(() => ({
     pokemonListDataSet,
     bookmarkedPokemonIds: storeData.bookmarkedPokemonIds,
     recentSelections: storeData.recentSelections,
     typeList: storeData.typeList,
+    searchResults: suggestions,
+    isSearchLoading: isLoading,
   }), [
     pokemonListDataSet,
     storeData.bookmarkedPokemonIds,
     storeData.recentSelections,
     storeData.typeList,
+    suggestions,
+    isLoading,
   ])
 
   const actions = useMemo(() => ({
@@ -57,11 +70,13 @@ export function useHomeData(): UseHomeDataReturn {
     toggleBookmark: storeData.toggleBookmark,
     removeRecentSelection: storeData.removeRecentSelection,
     handleSelect,
+    onSearchChange,
   }), [
     pokemonStoreData.getPokemonDetail,
     storeData.toggleBookmark,
     storeData.removeRecentSelection,
     handleSelect,
+    onSearchChange,
   ])
 
   return { data, actions }

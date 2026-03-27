@@ -1,4 +1,4 @@
-import type { PokemonListItem } from 'src/services/types'
+import type { PokemonListItem } from 'src/shared/types/pokemon.domain'
 import { usePokemonSelect } from './usePokemonSelect'
 
 interface UsePokemonSelectionOptions {

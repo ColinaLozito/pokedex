@@ -1,7 +1,7 @@
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import graphqlRequest from 'graphql-request'
 import { useCallback, useMemo, useState } from 'react'
-import type { PokemonTypeSlot } from 'src/services/types'
+import type { PokemonTypeSlot } from 'src/shared/types/pokemon.domain'
 import type { PokemonDisplayDataArray } from 'src/utils/pokemon/displayData'
 import { getPokemonSpriteUrl } from 'src/utils/pokemon/sprites'
 import {

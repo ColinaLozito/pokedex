@@ -1,4 +1,4 @@
-import type { EvolutionChainLink } from 'src/services/types'
+import type { EvolutionChainLink } from 'src/shared/types/pokemon.domain'
 import {
   buildEvolutionTree,
   flattenLinearChain,

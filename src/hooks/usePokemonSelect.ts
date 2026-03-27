@@ -1,7 +1,7 @@
 import { useToastController } from '@tamagui/toast'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
-import type { PokemonListItem } from 'src/services/types'
+import type { PokemonListItem } from 'src/shared/types/pokemon.domain'
 import { setToastController } from 'src/utils/ui/toast'
 import { prefetchPokemonDetails } from './usePokemonPrefetch'
 import { getCachedPokemonDetail } from './useGetCachedPokemonDetail'

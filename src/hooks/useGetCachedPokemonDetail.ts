@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { getQueryClient } from '../providers/MainProvidersWrapper'
-import type { CombinedPokemonDetail } from 'src/services/types'
+import type { CombinedPokemonDetail } from 'src/shared/types/pokemon.domain'
 import type { GQLPokemonDetailsResponse } from '../services/queries/pokemonQueries'
 import { getPokemonSpriteUrl } from '../utils/pokemon/sprites'
 

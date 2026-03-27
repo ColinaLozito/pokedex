@@ -1,5 +1,5 @@
 import { STAT_ORDER } from '@/services/queries/pokemonQueries'
-import type { PokemonStatEntry } from 'src/services/types'
+import type { PokemonStatEntry } from 'src/shared/types/pokemon.domain'
 
 export function sortStatsByOrder(stats: PokemonStatEntry[]): PokemonStatEntry[] {
   return STAT_ORDER.map((orderName) => {

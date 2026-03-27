@@ -1,4 +1,4 @@
-import type { PokemonListItem, CombinedPokemonDetail } from 'src/services/types'
+import type { PokemonListItem, CombinedPokemonDetail } from 'src/shared/types/pokemon.domain'
 import { getPokemonDisplayData, transformPokemonToDisplayData } from '../pokemon/displayData'
 
 jest.mock('../pokemon/sprites', () => ({

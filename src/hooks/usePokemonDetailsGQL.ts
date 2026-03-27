@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import graphqlRequest from 'graphql-request'
 import { useMemo } from 'react'
-import type { CombinedPokemonDetail, PokemonAbilityEntry, PokemonStatEntry, PokemonTypeSlot, EvolutionPokemon, EvolutionChainLink } from 'src/services/types'
+import type { CombinedPokemonDetail, PokemonAbilityEntry, PokemonStatEntry, PokemonTypeSlot, EvolutionPokemon, EvolutionChainLink } from 'src/shared/types/pokemon.domain'
 import { extractPokemonId } from 'src/utils/api/extractId'
 import { extractEvolutionChain } from 'src/utils/evolution/evolutionTree'
 import { sortStatsByOrder } from 'src/utils/pokemon/statOrder'

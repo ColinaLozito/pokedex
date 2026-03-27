@@ -1,5 +1,4 @@
-import type { CombinedPokemonDetail } from 'src/services/types/pokemon'
-import type { EvolutionChainLink, EvolutionPokemon } from 'src/services/types/evolution'
+import type { CombinedPokemonDetail, EvolutionChainLink, EvolutionPokemon } from 'src/shared/types/pokemon.domain'
 import type { ScreenStatus } from '@/types/screen'
 
 type PrimaryTypeColor = string

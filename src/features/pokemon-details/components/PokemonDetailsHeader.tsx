@@ -1,6 +1,6 @@
 import BookmarkButton from '@/components/common/BookmarkButton'
 import { GetThemeValueForKey, H2, Image, Text, XStack, YStack } from 'tamagui'
-import type { PokemonDetailsHeaderProps } from '../types'
+import type { PokemonDetailsHeaderProps } from '../details.types'
 
 export default function PokemonDetailsHeader({
   pokemon,

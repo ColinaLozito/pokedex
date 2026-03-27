@@ -5,10 +5,10 @@ import { useEffect, useRef } from 'react'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { GetThemeValueForKey, YStack } from 'tamagui'
-import PokemonDetailsContent from '@/screens/pokemonDetails/_parts/PokemonDetailsContent'
-import PokemonDetailsEmptyState from '@/screens/pokemonDetails/_parts/PokemonDetailsEmptyState'
-import PokemonDetailsHeader from '@/screens/pokemonDetails/_parts/PokemonDetailsHeader'
-import { usePokemonDetailsScreen } from './hooks/usePokemonDetailsScreen'
+import PokemonDetailsContent from './components/PokemonDetailsContent'
+import PokemonDetailsEmptyState from './components/PokemonDetailsEmptyState'
+import PokemonDetailsHeader from './components/PokemonDetailsHeader'
+import { usePokemonDetailsScreen } from './hooks/use-pokemon-details.screen'
 
 export default function PokemonDetailsScreen() {
   const router = useRouter()

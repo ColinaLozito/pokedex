@@ -1,4 +1,4 @@
-import { AttributeRowProps, PokemonAttributesProps } from '@/screens/pokemonDetails/types'
+import type { AttributeRowProps, PokemonAttributesProps } from '../../../details.types'
 import { Card, Text, XStack, YStack } from 'tamagui'
 
 export default function PokemonAttributes({ species, height, weight }: PokemonAttributesProps) {
@@ -42,5 +42,3 @@ function AttributeRow({ label, value }: AttributeRowProps) {
 function AttributeDivider() {
   return <YStack width={1} height="100%" bg="$border" mx="$2" />
 }
-
-

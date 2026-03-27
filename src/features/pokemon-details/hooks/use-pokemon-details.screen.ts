@@ -2,12 +2,12 @@ import { baseColors } from '@theme/colors'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useMemo } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import { usePokemonDetailsGQL } from '@/hooks/usePokemonDetailsGQL'
+import { usePokemonDetailsGQL } from './use-pokemon-details.hook'
 import { useUserStore } from '@/store/userStore'
 import { usePokemonSelect } from '@/hooks/usePokemonSelect'
 import { useGetCachedPokemonDetail } from '@/hooks/useGetCachedPokemonDetail'
 import { getPokemonTypeStyles } from 'src/utils/pokemon/typeStyles'
-import type { UsePokemonDetailsReturn } from '../types'
+import type { UsePokemonDetailsReturn } from '../details.types'
 
 export function usePokemonDetailsScreen(): UsePokemonDetailsReturn {
   const router = useRouter()

@@ -1,5 +1,5 @@
-import { evolutionSpriteVariantStyleConfig } from '@/screens/pokemonDetails/constants'
-import { EvolutionSpriteContainerProps } from '@/screens/pokemonDetails/types'
+import { evolutionSpriteVariantStyleConfig } from '../../../constants'
+import type { EvolutionSpriteContainerProps } from '../../../details.types'
 import { Pressable } from 'react-native'
 import { GetThemeValueForKey, Image, Text, YStack } from 'tamagui'
 

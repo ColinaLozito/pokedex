@@ -1,4 +1,4 @@
-import type { PokemonTypeSlot } from "src/services/types/pokemon"
+import type { PokemonTypeSlot } from "src/shared/types/pokemon.domain"
 
 // Base data for the PokemonCard module
 

@@ -1,4 +1,4 @@
-import { PokemonAbilitiesProps } from '@/screens/pokemonDetails/types'
+import type { PokemonAbilitiesProps } from '../../../details.types'
 import { Card, H4, Text, XStack, YStack } from 'tamagui'
 
 export default function PokemonAbilities({ abilities }: PokemonAbilitiesProps) {

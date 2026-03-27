@@ -1,5 +1,5 @@
-import { calculateStatBarPercentage } from '@/screens/pokemonDetails/constants'
-import { PokemonBaseStatsProps } from '@/screens/pokemonDetails/types'
+import { calculateStatBarPercentage } from '../../../constants'
+import type { PokemonBaseStatsProps } from '../../../details.types'
 import { Card, GetThemeValueForKey, H4, Text, XStack, YStack } from 'tamagui'
 
 export default function PokemonBaseStats({ stats, primaryTypeColor }: PokemonBaseStatsProps) {

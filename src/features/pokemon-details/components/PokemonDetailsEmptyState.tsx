@@ -1,5 +1,5 @@
 import EmptyStateScreen from '@/components/common/EmptyStateScreen'
-import type { PokemonDetailsEmptyStateProps } from '../types'
+import type { PokemonDetailsEmptyStateProps } from '../details.types'
 
 export default function PokemonDetailsEmptyState({
   title = "No Pokémon data available",

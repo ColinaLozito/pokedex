@@ -1,5 +1,5 @@
 import RightArrow from '@/components/common/RightArrow/RightArrow'
-import { EvolutionChainProps } from '@/screens/pokemonDetails/types'
+import type { EvolutionChainProps } from '../../../details.types'
 import {
   buildEvolutionTree,
   collectEvolutionVariants,

@@ -7,14 +7,14 @@ import { prefetchPokemonDetails } from './usePokemonPrefetch'
 import { getCachedPokemonDetail } from './useGetCachedPokemonDetail'
 import { useModal } from './useModal'
 
-interface UsePokemonSelectOptions {
+export interface UsePokemonSelectOptions {
   pokemonList?: PokemonListItem[]
   addRecentSelection?: (pokemon: PokemonListItem) => void
   skipPrefetch?: boolean
   replaceNavigation?: boolean
 }
 
-interface UsePokemonSelectReturn {
+export interface UsePokemonSelectReturn {
   handleSelect: (id: number) => Promise<void>
 }
 

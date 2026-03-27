@@ -1,5 +1,5 @@
 import type { PokemonListDataSet } from '@/types/screen'
-import type { CombinedPokemonDetail } from 'src/shared/types/pokemon.domain'
+import type { CombinedPokemonDetail, PokemonListItem } from 'src/shared/types/pokemon.domain'
 import type { RecentSelection } from 'src/store/types/user'
 
 export interface TypeGridItem {

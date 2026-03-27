@@ -1,9 +1,9 @@
 import { AutocompleteDropdown } from '@/components/common/AutocompleteDropdown'
-import BookmarkedPokemon from '@/screens/home/_parts/BookmarkedPokemon'
-import PokemonTypeGrid from '@/screens/home/_parts/PokemonTypeGrid'
-import RecentSelections from '@/screens/home/_parts/RecentSelections'
+import BookmarkedPokemon from './BookmarkedPokemon'
+import PokemonTypeGrid from './PokemonTypeGrid'
+import RecentSelections from './RecentSelections'
 import { H3, YStack } from 'tamagui'
-import type { HomeBodyProps } from '../types'
+import type { HomeBodyProps } from '../home.types'
 
 export default function HomeBody({
   bookmarkedPokemonIds,

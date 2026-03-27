@@ -3,7 +3,7 @@ import { PokemonCardVariant } from '@/components/pokemon/PokemonCard/types'
 import { useMemo } from 'react'
 import { transformPokemonToDisplayData } from 'src/utils/pokemon/displayData'
 import { H4, XStack, YStack } from 'tamagui'
-import type { RecentSelectionsProps } from '../types'
+import type { RecentSelectionsProps } from '../home.types'
 
 export default function RecentSelections({ 
   recentSelections,

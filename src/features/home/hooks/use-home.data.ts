@@ -1,11 +1,11 @@
 import { usePokemonSelection } from '@/hooks/usePokemonSelection'
-import { usePokemonSearchGQL } from '@/hooks/usePokemonSearchGQL'
-import { usePokemonTypesGQL } from '@/hooks/usePokemonTypesGQL'
+import { usePokemonSearchGQL } from './use-pokemon-search.hook'
+import { usePokemonTypesGQL } from './use-pokemon-types.hook'
 import { useGetCachedPokemonDetail } from '@/hooks/useGetCachedPokemonDetail'
 import { useUserStore } from '@/store/userStore'
 import { useMemo, useState, useCallback } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import type { UseHomeDataReturn } from '../types'
+import type { UseHomeDataReturn } from '../home.types'
 
 export function useHomeData(): UseHomeDataReturn {
   const [searchTerm, setSearchTerm] = useState('')

@@ -1,13 +1,13 @@
 import type { PokemonListItem } from 'src/shared/types/pokemon.domain'
 import { usePokemonSelect } from './usePokemonSelect'
 
-interface UsePokemonSelectionOptions {
+export interface UsePokemonSelectionOptions {
   pokemonList?: PokemonListItem[]
   addRecentSelection?: (pokemon: PokemonListItem) => void
   pokemonListDataSet?: Array<{ id: string; title: string }>
 }
 
-interface UsePokemonSelectionReturn {
+export interface UsePokemonSelectionReturn {
   isLoading: boolean
   pokemonListDataSet?: Array<{ id: string; title: string }>
   handleSelect: (id: number) => Promise<void>

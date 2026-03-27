@@ -4,7 +4,7 @@ import { Bookmark } from '@tamagui/lucide-icons'
 import { useMemo } from 'react'
 import { transformPokemonToDisplayData } from 'src/utils/pokemon/displayData'
 import { H4, XStack, YStack } from 'tamagui'
-import type { BookmarkedPokemonProps } from '../types'
+import type { BookmarkedPokemonProps } from '../home.types'
 
 export default function BookmarkedPokemon({ 
    bookmarkedPokemonIds,

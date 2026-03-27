@@ -1,6 +1,5 @@
-
 import { H2, Image, XStack } from 'tamagui'
-import { TypeFilterHeaderProps } from '../types'
+import { TypeFilterHeaderProps } from '../type-filter.types'
 
 export default function TypeFilterHeader({ typeName, typeIcon }: TypeFilterHeaderProps) {
   return (

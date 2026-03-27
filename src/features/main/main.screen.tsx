@@ -20,7 +20,6 @@ export default function MainScreen() {
       resizeMode="cover"
     >
       <YStack flex={1} justifyContent='flex-end' alignItems='flex-end'>
-        {/* Clear Data Button - Top Right */}
         {hasStoredData && (
           <YStack position="absolute" top={insets.top + size[4]} right="$4" zIndex={10}>
             <Button

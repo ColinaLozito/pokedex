@@ -6,7 +6,7 @@ import {
   GET_POKEMON_TYPES,
   POKEAPI_GQL_V2_ENDPOINT,
   type GQLPokemonTypesResponse,
-} from '../services/queries/pokemonQueries'
+} from '@/services/queries/pokemonQueries'
 
 export interface TypeListItem {
   id: number

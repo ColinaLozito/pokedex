@@ -3,8 +3,8 @@ import { FlatList } from 'react-native'
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { YStack } from 'tamagui'
-import HomeBody from './_parts/HomeBody'
-import { useHomeScreen } from './hooks/useHomeScreen'
+import HomeBody from './components/HomeBody'
+import { useHomeScreen } from './hooks/use-home.screen'
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets()

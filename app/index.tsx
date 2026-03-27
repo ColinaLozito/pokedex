@@ -1,3 +1,3 @@
-import Main from '@/screens/main'; // Importas la lógica de src
+import Main from '@/features/main'
 
 export default Main

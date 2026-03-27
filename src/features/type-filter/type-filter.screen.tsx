@@ -2,9 +2,9 @@ import ErrorScreen from '@/components/common/ErrorScreen'
 import { useLoadingModal } from '@/hooks/useLoadingModal'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { YStack } from 'tamagui'
-import PokemonGrid from '@/screens/typeFilter/_parts/PokemonGrid'
-import TypeFilterHeader from '@/screens/typeFilter/_parts/TypeFilterHeader'
-import { useTypeFilterScreen } from './hooks/useTypeFilterScreen'
+import PokemonGrid from './components/PokemonGrid'
+import TypeFilterHeader from './components/TypeFilterHeader'
+import { useTypeFilterScreen } from './hooks/use-type-filter.screen'
 
 export default function TypeFilterScreen() {
   const { data, status, actions } = useTypeFilterScreen()

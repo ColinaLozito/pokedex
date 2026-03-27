@@ -9,7 +9,7 @@ import {
   POKEAPI_GQL_V2_ENDPOINT,
   type GQLPokemonByTypeResponse,
   type GQLPokemonByTypeVariables,
-} from '../services/queries/pokemonQueries'
+} from '../../../services/queries/pokemonQueries'
 
 const INITIAL_LOAD_COUNT = 10
 

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useRouter } from 'expo-router'
-import { useHomeData } from './useHomeData'
-import type { UseHomeScreenReturn } from '../types'
+import { useHomeData } from './use-home.data'
+import type { UseHomeScreenReturn } from '../home.types'
 
 export function useHomeScreen(): UseHomeScreenReturn {
   const router = useRouter()

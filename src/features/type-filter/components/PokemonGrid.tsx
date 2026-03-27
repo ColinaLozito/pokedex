@@ -4,7 +4,7 @@ import { PokemonDisplayDataArray } from '@/types/global'
 import { LegendList } from '@legendapp/list'
 import { useCallback } from 'react'
 import { YStack } from 'tamagui'
-import { PokemonGridProps } from '../types'
+import { PokemonGridProps } from '../type-filter.types'
 
 export default function PokemonGrid({ data, onSelect, onLoadMore, hasMore }: PokemonGridProps) {
   const renderItem = useCallback(({ item }: { item: PokemonDisplayDataArray[number] }) => (

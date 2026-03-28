@@ -1,4 +1,4 @@
-import TypeChips from '@components/pokemon/PokemonTypeChips'
+import TypeChips from '@/shared/components/pokemon/PokemonTypeChips'
 import { XStack, YStack } from 'tamagui'
 import type { PokemonDetailsContentProps } from '../../details.types'
 import EvolutionChain from './_parts/EvolutionChain'

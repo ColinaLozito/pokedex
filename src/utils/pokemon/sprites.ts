@@ -1,4 +1,4 @@
-import type { CombinedPokemonDetail } from 'src/shared/types/pokemon.domain'
+import type { CombinedPokemonDetail } from '@/shared/types/pokemon.domain'
 
 /**
  * Base URL for Pokemon official artwork sprites

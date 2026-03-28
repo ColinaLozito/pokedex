@@ -1,4 +1,4 @@
-import ErrorScreen from '@/components/common/ErrorScreen'
+import ErrorScreen from '@/shared/components/ui/atomic/ErrorScreen'
 import { baseColors } from '@theme/colors'
 import { useRouter } from 'expo-router'
 import { useEffect, useRef } from 'react'

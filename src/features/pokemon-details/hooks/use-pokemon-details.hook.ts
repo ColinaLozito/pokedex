@@ -1,17 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
 import graphqlRequest from 'graphql-request'
 import { useMemo } from 'react'
-import type { CombinedPokemonDetail, PokemonAbilityEntry, PokemonStatEntry, PokemonTypeSlot, EvolutionPokemon, EvolutionChainLink } from 'src/shared/types/pokemon.domain'
-import { extractPokemonId } from 'src/utils/api/extractId'
-import { extractEvolutionChain } from 'src/utils/evolution/evolutionTree'
-import { sortStatsByOrder } from 'src/utils/pokemon/statOrder'
-import { getPokemonSpriteUrl } from 'src/utils/pokemon/sprites'
+import type { CombinedPokemonDetail, PokemonAbilityEntry, PokemonStatEntry, PokemonTypeSlot, EvolutionPokemon, EvolutionChainLink } from '@/shared/types/pokemon.domain'
+import { extractPokemonId } from '@/utils/api/extractId'
+import { extractEvolutionChain } from '@/utils/evolution/evolutionTree'
+import { sortStatsByOrder } from '@/utils/pokemon/statOrder'
+import { getPokemonSpriteUrl } from '@/utils/pokemon/sprites'
 import {
   GET_POKEMON_DETAILS,
   POKEAPI_GQL_V2_ENDPOINT,
   type GQLPokemonDetailsResponse,
   type GQLPokemonDetailsVariables,
-} from '@/services/queries/pokemonQueries'
+} from '@/shared/api/queries/pokemonQueries'
 
 const POKEMON_API_BASE = 'https://pokeapi.co/api/v2/'
 

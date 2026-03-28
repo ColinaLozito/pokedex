@@ -1,4 +1,4 @@
-import { AutocompleteDropdown } from '@/components/common/AutocompleteDropdown'
+import { AutocompleteDropdown } from '@/shared/components/ui/atomic/AutocompleteDropdown'
 import BookmarkedPokemon from './BookmarkedPokemon'
 import PokemonTypeGrid from './PokemonTypeGrid'
 import RecentSelections from './RecentSelections'

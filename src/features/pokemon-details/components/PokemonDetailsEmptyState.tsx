@@ -1,4 +1,4 @@
-import EmptyStateScreen from '@/components/common/EmptyStateScreen'
+import EmptyStateScreen from '@/shared/components/ui/atomic/EmptyStateScreen'
 import type { PokemonDetailsEmptyStateProps } from '../details.types'
 
 export default function PokemonDetailsEmptyState({

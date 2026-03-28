@@ -1,15 +1,15 @@
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import graphqlRequest from 'graphql-request'
 import { useCallback, useMemo, useState } from 'react'
-import type { PokemonTypeSlot } from 'src/shared/types/pokemon.domain'
-import type { PokemonDisplayDataArray } from 'src/utils/pokemon/displayData'
-import { getPokemonSpriteUrl } from 'src/utils/pokemon/sprites'
+import type { PokemonTypeSlot } from '@/shared/types/pokemon.domain'
+import type { PokemonDisplayDataArray } from '@/utils/pokemon/displayData'
+import { getPokemonSpriteUrl } from '@/utils/pokemon/sprites'
 import {
   GET_POKEMON_BY_TYPE,
   POKEAPI_GQL_V2_ENDPOINT,
   type GQLPokemonByTypeResponse,
   type GQLPokemonByTypeVariables,
-} from '../../../services/queries/pokemonQueries'
+} from '@/shared/api/queries/pokemonQueries'
 
 const INITIAL_LOAD_COUNT = 10
 

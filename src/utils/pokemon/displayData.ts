@@ -1,7 +1,7 @@
-export type { PokemonDisplayDataArray } from '@/types/global'
-import type { PokemonDisplayDataArray } from '@/types/global'
-import type { PokemonDisplayData } from '@/types/global'
-import type { CombinedPokemonDetail, PokemonListItem } from 'src/shared/types/pokemon.domain'
+export type { PokemonDisplayDataArray } from '@/shared/types/global'
+import type { PokemonDisplayDataArray } from '@/shared/types/global'
+import type { PokemonDisplayData } from '@/shared/types/global'
+import type { CombinedPokemonDetail, PokemonListItem } from '@/shared/types/pokemon.domain'
 import { getPokemonSprite, getPokemonSpriteUrl } from './sprites'
 
 /**

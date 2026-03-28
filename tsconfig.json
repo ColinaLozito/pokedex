@@ -2,19 +2,20 @@
   "extends": "./tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "baseUrl": ".", 
+    "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "@features/*": ["src/features/*"],
+      "@shared/*": ["src/shared/*"],
+      "@utils/*": ["src/utils/*"],
+      "@store/*": ["src/store/*"],
+      "@providers/*": ["src/providers/*"],
       "@theme/*": ["theme/*"],
       "@icons/*": ["assets/icons/*"],
       "@images/*": ["assets/images/*"],
       "@assets/*": ["assets/*"],
       "@fonts/*": ["assets/fonts/*"],
-      "@colors/*": ["theme/colors/*"],
-      "@screens/*": ["src/screens/*"],
-      "@components/*": ["src/components/*"],
-      "@common/*": ["src/components/common/*"],
-      "@pokemon/*": ["src/components/pokemon/*"]
+      "@colors/*": ["theme/colors/*"]
     }
   },
   "include": [
@@ -22,8 +23,8 @@
     "src/**/*.tsx",
     "app/**/*.ts",
     "app/**/*.tsx",
+    "assets/**/*.d.ts",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "types/**/*.d.ts"
+    "expo-env.d.ts"
   ]
 }

@@ -1,8 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect } from 'react'
-import GlobalErrorBoundary from '../components/common/GlobalErrorBoundary'
+import GlobalErrorBoundary from '@/shared/components/ui/atomic/GlobalErrorBoundary'
 import { Provider as TamaguiProvider } from './TamaguiProvider'
-import { prefetchPokemonTypes } from '../hooks/usePokemonTypesPrefetch'
+import { prefetchPokemonTypes } from '@/shared/hooks/usePokemonTypesPrefetch'
 
 const defaultQueryClient = new QueryClient({
   defaultOptions: {

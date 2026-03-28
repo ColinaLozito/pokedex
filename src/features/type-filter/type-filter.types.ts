@@ -1,6 +1,6 @@
-import type { PokemonListItem, ScreenStatusWithCache } from '@/types/screen'
+import type { PokemonListItem, ScreenStatusWithCache } from '@/shared/types/screen'
 import { ImageSourcePropType } from 'react-native'
-import type { PokemonDisplayDataArray } from 'src/utils/pokemon/displayData'
+import type { PokemonDisplayDataArray } from '@/utils/pokemon/displayData'
 import { GetThemeValueForKey } from 'tamagui'
 
 type PrimaryTypeColor = string | GetThemeValueForKey<'backgroundColor'>

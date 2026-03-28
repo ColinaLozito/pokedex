@@ -1,4 +1,4 @@
-import BookmarkButton from '@/components/common/BookmarkButton'
+import BookmarkButton from '@/shared/components/ui/atomic/BookmarkButton'
 import { GetThemeValueForKey, H2, Image, Text, XStack, YStack } from 'tamagui'
 import type { PokemonDetailsHeaderProps } from '../details.types'
 

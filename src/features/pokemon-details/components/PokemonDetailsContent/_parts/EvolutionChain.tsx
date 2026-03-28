@@ -1,4 +1,4 @@
-import RightArrow from '@/components/common/RightArrow/RightArrow'
+import RightArrow from '@/shared/components/ui/atomic/RightArrow/RightArrow'
 import type { EvolutionChainProps } from '../../../details.types'
 import {
   buildEvolutionTree,

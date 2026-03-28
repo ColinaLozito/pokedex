@@ -1,16 +1,15 @@
+import { useGetCachedPokemonDetail } from '@/shared/hooks/useGetCachedPokemonDetail'
+import { usePokemonSelect } from '@/shared/hooks/usePokemonSelect'
+import { useUserStore } from '@/store/userStore'
+import { getPokemonTypeStyles } from '@/utils/pokemon/typeStyles'
 import { baseColors } from '@theme/colors'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import { useCallback, useMemo } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import { usePokemonDetailsGQL } from './use-pokemon-details.hook'
-import { useUserStore } from '@/store/userStore'
-import { usePokemonSelect } from '@/hooks/usePokemonSelect'
-import { useGetCachedPokemonDetail } from '@/hooks/useGetCachedPokemonDetail'
-import { getPokemonTypeStyles } from 'src/utils/pokemon/typeStyles'
 import type { UsePokemonDetailsReturn } from '../details.types'
+import { usePokemonDetailsGQL } from './use-pokemon-details.hook'
 
 export function usePokemonDetailsScreen(): UsePokemonDetailsReturn {
-  const router = useRouter()
   const params = useLocalSearchParams<{ id: string }>()
 
   const pokemonId = params.id ? parseInt(params.id, 10) : null

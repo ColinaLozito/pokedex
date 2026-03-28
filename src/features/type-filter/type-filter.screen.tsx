@@ -1,5 +1,5 @@
-import ErrorScreen from '@/components/common/ErrorScreen'
-import { useLoadingModal } from '@/hooks/useLoadingModal'
+import ErrorScreen from '@/shared/components/ui/atomic/ErrorScreen'
+import { useLoadingModal } from '@/shared/hooks/useLoadingModal'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { YStack } from 'tamagui'
 import PokemonGrid from './components/PokemonGrid'

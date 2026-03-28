@@ -1,4 +1,4 @@
-import type { EvolutionChainLink } from "src/shared/types/pokemon.domain"
+import type { EvolutionChainLink } from "@/shared/types/pokemon.domain"
 import { extractPokemonId } from "../api/extractId"
 import { getPokemonSpriteUrl } from "../pokemon/sprites"
 

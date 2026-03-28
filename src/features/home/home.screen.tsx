@@ -1,4 +1,4 @@
-import { useLoadingModal } from '@/hooks/useLoadingModal'
+import { useLoadingModal } from '@/shared/hooks/useLoadingModal'
 import { FlatList } from 'react-native'
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'

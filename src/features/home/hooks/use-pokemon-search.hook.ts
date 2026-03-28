@@ -6,7 +6,7 @@ import {
   POKEAPI_GQL_V2_ENDPOINT,
   type GQLSearchPokemonResponse,
   type GQLSearchPokemonVariables,
-} from '@/services/queries/pokemonQueries'
+} from '@/shared/api/queries/pokemonQueries'
 
 export interface SearchSuggestion {
   id: string

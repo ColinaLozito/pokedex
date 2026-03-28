@@ -1,13 +1,13 @@
-import { ActionButton } from '@/components/common/ActionButton'
-import { useClearData } from '@/hooks/useClearData'
+import { ActionButton } from '@/shared/components/ui/atomic/ActionButton'
+import { useClearData } from '@/shared/hooks/useClearData'
 import { Trash2 } from '@tamagui/lucide-icons'
 import { size } from '@theme/space'
+import PokedexLogo from "assets/images/pokedex-logo.png"
+import PokedexWallpaper from "assets/images/pokedex-wallpaper.jpg"
 import { router } from 'expo-router'
 import { ImageBackground } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Button, Image, XStack, YStack } from 'tamagui'
-import PokedexLogo from "../../assets/images/pokedex-logo.png"
-import PokedexWallpaper from "../../assets/images/pokedex-wallpaper.jpg"
 
 export default function MainScreen() {
   const insets = useSafeAreaInsets()

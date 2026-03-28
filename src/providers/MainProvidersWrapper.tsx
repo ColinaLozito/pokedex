@@ -20,7 +20,7 @@ const defaultQueryClient = new QueryClient({
   },
 })
 
-const asyncStoragePersister = {
+export const asyncStoragePersister = {
   persistClient: async (client: unknown) => {
     await AsyncStorage.setItem(PERSIST_KEY, JSON.stringify(client))
   },

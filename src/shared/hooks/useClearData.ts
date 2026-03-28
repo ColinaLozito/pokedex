@@ -4,6 +4,7 @@ import { Alert } from 'react-native'
 import { useUserStore } from '@/store/userStore'
 import { useShallow } from 'zustand/react/shallow'
 import { clearAllStoredData } from '@/utils/storage/clearStorage'
+import { queryClient, asyncStoragePersister } from '@/providers/MainProvidersWrapper'
 
 export function useClearData() {
   const toast = useToastController()
@@ -25,38 +26,63 @@ export function useClearData() {
     recentSelections,
   ])
 
+  const clearStoredDataOnly = useCallback(async () => {
+    try {
+      await clearAllStoredData()
+      useUserStore.getState().$reset()
+
+      toast.show('Stored data cleared', {
+        message: 'Bookmarks and recent selections have been cleared',
+      })
+    } catch (error) {
+      console.error('Failed to clear stored data:', error)
+      toast.show('Error clearing data', {
+        message: 'Failed to clear stored data. Please try again.',
+      })
+    }
+  }, [toast])
+
+  const clearAllData = useCallback(async () => {
+    try {
+      await clearAllStoredData()
+      useUserStore.getState().$reset()
+      queryClient.clear()
+      await asyncStoragePersister.removeClient()
+
+      toast.show('All data cleared', {
+        message: 'Stored data and cached Pokemon have been cleared',
+      })
+    } catch (error) {
+      console.error('Failed to clear all data:', error)
+      toast.show('Error clearing data', {
+        message: 'Failed to clear data. Please try again.',
+      })
+    }
+  }, [toast])
+
   const handleClearData = useCallback(() => {
     Alert.alert(
-      'Clear All Data',
-      'Are you sure you want to clear all stored data? This will remove all bookmarks and recent selections. This action cannot be undone.',
+      'Clear Data',
+      'What would you like to clear?',
       [
         {
           text: 'Cancel',
           style: 'cancel',
         },
         {
-          text: 'Clear',
+          text: 'Stored Data Only',
           style: 'destructive',
-          onPress: async () => {
-            try {
-              await clearAllStoredData()
-              useUserStore.getState().$reset()
-
-              toast.show('All stored data cleared', {
-                message: 'All stored data has been cleared successfully',
-              })
-            } catch (error) {
-              console.error('Failed to clear stored data:', error)
-              toast.show('Error clearing data', {
-                message: 'Failed to clear stored data. Please try again.',
-              })
-            }
-          },
+          onPress: clearStoredDataOnly,
+        },
+        {
+          text: 'All Data (Including Cache)',
+          style: 'destructive',
+          onPress: clearAllData,
         },
       ],
       { cancelable: true }
     )
-  }, [toast])
+  }, [clearStoredDataOnly, clearAllData])
 
   return {
     hasStoredData,

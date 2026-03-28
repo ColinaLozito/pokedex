@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect } from 'react'
+import { View, StyleSheet } from 'react-native'
 import MontserratBlack from '../assets/fonts/Montserrat-Black.ttf'
 import MontserratBold from '../assets/fonts/Montserrat-Bold.ttf'
 import MontserratExtraBold from '../assets/fonts/Montserrat-ExtraBold.ttf'
@@ -13,6 +14,8 @@ import MontserratMedium from '../assets/fonts/Montserrat-Medium.ttf'
 import MontserratRegular from '../assets/fonts/Montserrat-Regular.ttf'
 import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf'
 import MontserratThin from '../assets/fonts/Montserrat-Thin.ttf'
+import LoadingModalScreen from '@/shared/components/modals/loading'
+import { useModalStore } from '@/store/modalStore'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -64,13 +67,9 @@ const defaultStackOptions: React.ComponentProps<typeof Stack.Screen>['options'] 
   headerTransparent: true,
 }
 
-const defaultModalOptions: React.ComponentProps<typeof Stack.Screen>['options'] = {
-  presentation: 'transparentModal',
-  headerShown: false,
-  animation: 'fade',
-}
-
 function RootLayoutNav() {
+  const modalType = useModalStore((state) => state.type)
+  const isLoadingModal = modalType === 'loading'
 
   return (
     <ThemeProvider value={DefaultTheme}>
@@ -96,11 +95,12 @@ function RootLayoutNav() {
           name="typeFilter"
           options={defaultStackOptions}
         />
-        <Stack.Screen
-          name="modals/loading"
-          options={defaultModalOptions}
-        />
       </Stack>
+      {isLoadingModal && (
+        <View style={{ ...StyleSheet.absoluteFillObject, zIndex: 9999 }}>
+          <LoadingModalScreen />
+        </View>
+      )}
     </ThemeProvider>
   )
 }

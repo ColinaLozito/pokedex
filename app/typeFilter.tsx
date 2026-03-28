@@ -1,3 +1,3 @@
-import TypeFilterScreen from '@/screens/typeFilter'
+import TypeFilterScreen from '@/features/type-filter'
 
 export default TypeFilterScreen

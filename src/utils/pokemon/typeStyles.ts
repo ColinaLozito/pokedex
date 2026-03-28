@@ -1,6 +1,6 @@
 import { pokemonTypeColors } from '@theme/colors'
 import type { ImageSourcePropType } from 'react-native'
-import typeSymbolsIcons from 'src/utils/ui/typeIcons'
+import typeSymbolsIcons from '@/utils/ui/typeIcons'
 import { GetThemeValueForKey } from 'tamagui'
 
 interface PokemonTypeStyles {

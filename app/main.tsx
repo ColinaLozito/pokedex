@@ -1,3 +1,3 @@
-import MainScreen from '@/screens/main'
+import MainScreen from '@/features/main'
 
 export default MainScreen

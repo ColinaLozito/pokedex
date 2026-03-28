@@ -1,4 +1,4 @@
-import { useModalStore } from '../modalStore'
+import { useModalStore } from '@/store/modalStore'
 
 describe('modalStore', () => {
   beforeEach(() => {

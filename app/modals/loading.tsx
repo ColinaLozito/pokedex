@@ -1,3 +1,3 @@
-import LoadingModalScreen from '@/modals/loading'
+import LoadingModalScreen from '@/shared/components/modals/loading'
 
 export default LoadingModalScreen

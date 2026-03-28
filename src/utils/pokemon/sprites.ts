@@ -1,4 +1,4 @@
-import type { CombinedPokemonDetail, PokemonDetail } from '../../services/types'
+import type { CombinedPokemonDetail } from '@/shared/types/pokemon.domain'
 
 /**
  * Base URL for Pokemon official artwork sprites
@@ -26,7 +26,7 @@ export function getPokemonSpriteUrl(id: number): string {
  * @returns Sprite URL, preferring official artwork, falling back to ID-based URL
  */
 export function getPokemonSprite(
-  pokemonData: PokemonDetail | CombinedPokemonDetail | undefined,
+  pokemonData: CombinedPokemonDetail | undefined,
   pokemonId: number
 ): string {
   // If we have Pokemon data, try to get sprite from it

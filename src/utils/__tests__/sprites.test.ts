@@ -1,4 +1,4 @@
-import { getPokemonSpriteUrl, getPokemonSprite } from '../pokemon/sprites'
+import { getPokemonSpriteUrl, getPokemonSprite } from '@/utils/pokemon/sprites'
 
 describe('sprites', () => {
   describe('getPokemonSpriteUrl', () => {

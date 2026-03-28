@@ -1,32 +1,28 @@
-import type { PokemonListItem, CombinedPokemonDetail } from '@/shared/types/pokemon.domain'
-import { getPokemonDisplayData, transformPokemonToDisplayData } from '../pokemon/displayData'
+import { getPokemonDisplayData, transformPokemonToDisplayData } from '@/utils/pokemon/displayData'
+import {
+  createMockPokemon,
+  createMockPokemonListItem,
+} from '@/shared/tests/mocks'
 
-jest.mock('../pokemon/sprites', () => ({
-  getPokemonSprite: jest.fn((data, id) => `https://example.com/sprite/${id}.png`),
+jest.mock('@/utils/pokemon/sprites', () => ({
+  getPokemonSprite: jest.fn((_data, id) => `https://example.com/sprite/${id}.png`),
   getPokemonSpriteUrl: jest.fn((id) => `https://example.com/sprite/${id}.png`),
 }))
 
 describe('displayData', () => {
   describe('getPokemonDisplayData', () => {
     it('should transform pokemon list with cached details', () => {
-      const pokemonList: PokemonListItem[] = [
-        { id: 1, name: 'bulbasaur' },
-        { id: 2, name: 'ivysaur' },
+      const pokemonList = [
+        createMockPokemonListItem({ id: 1, name: 'bulbasaur' }),
+        createMockPokemonListItem({ id: 2, name: 'ivysaur' }),
       ]
 
-      const pokemonDetails: Record<number, CombinedPokemonDetail> = {
-        1: {
+      const pokemonDetails = {
+        1: createMockPokemon({
           id: 1,
           name: 'bulbasaur',
-          height: 7,
-          weight: 69,
-          sprites: {} as never,
           types: [{ slot: 1, type: { name: 'grass', url: '' } }],
-          stats: [],
-          abilities: [],
-          speciesInfo: {} as never,
-          evolutionChain: [],
-        },
+        }),
       }
 
       const result = getPokemonDisplayData(pokemonList, pokemonDetails)
@@ -38,8 +34,8 @@ describe('displayData', () => {
     })
 
     it('should use fallback type when no cached data', () => {
-      const pokemonList: PokemonListItem[] = [{ id: 3, name: 'venusaur' }]
-      const pokemonDetails: Record<number, CombinedPokemonDetail> = {}
+      const pokemonList = [createMockPokemonListItem({ id: 3, name: 'venusaur' })]
+      const pokemonDetails = {}
 
       const result = getPokemonDisplayData(pokemonList, pokemonDetails, 'poison')
 
@@ -47,8 +43,8 @@ describe('displayData', () => {
     })
 
     it('should use normal as default fallback type', () => {
-      const pokemonList: PokemonListItem[] = [{ id: 3, name: 'venusaur' }]
-      const pokemonDetails: Record<number, CombinedPokemonDetail> = {}
+      const pokemonList = [createMockPokemonListItem({ id: 3, name: 'venusaur' })]
+      const pokemonDetails = {}
 
       const result = getPokemonDisplayData(pokemonList, pokemonDetails)
 
@@ -60,18 +56,11 @@ describe('displayData', () => {
     it('should transform with cached data', () => {
       const getPokemonDetail = (id: number) => {
         if (id === 1) {
-          return {
+          return createMockPokemon({
             id: 1,
             name: 'bulbasaur',
-            height: 7,
-            weight: 69,
-            sprites: {} as never,
             types: [{ slot: 1, type: { name: 'grass', url: '' } }],
-            stats: [],
-            abilities: [],
-            speciesInfo: {} as never,
-            evolutionChain: [],
-          }
+          })
         }
         return undefined
       }

@@ -1,30 +1,27 @@
-import type { EvolutionChainLink } from '@/shared/types/pokemon.domain'
 import {
   buildEvolutionTree,
   flattenLinearChain,
   isBranchingEvolution,
   collectEvolutionVariants,
   extractEvolutionChain,
-} from '../evolution/evolutionTree'
+} from '@/utils/evolution/evolutionTree'
+import { createMockEvolutionChainLink } from '@/shared/tests/mocks'
 
-jest.mock('../api/extractId', () => ({
+jest.mock('@/utils/api/extractId', () => ({
   extractPokemonId: jest.fn((url: string) => {
     const matches = url.match(/\/pokemon(?:-species)?\/(\d+)\/?/)
     return matches ? parseInt(matches[1], 10) : 0
   }),
 }))
 
-jest.mock('../pokemon/sprites', () => ({
+jest.mock('@/utils/pokemon/sprites', () => ({
   getPokemonSpriteUrl: jest.fn((id: number) => `https://example.com/sprite/${id}.png`),
 }))
 
 describe('evolutionTree', () => {
   describe('buildEvolutionTree', () => {
     it('should build tree from EvolutionChainLink', () => {
-      const chain: EvolutionChainLink = {
-        species: { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon-species/1/' },
-        evolves_to: [],
-      }
+      const chain = createMockEvolutionChainLink()
 
       const result = buildEvolutionTree(chain)
 
@@ -34,15 +31,13 @@ describe('evolutionTree', () => {
     })
 
     it('should include nested evolutions', () => {
-      const chain: EvolutionChainLink = {
-        species: { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon-species/1/' },
+      const chain = createMockEvolutionChainLink({
         evolves_to: [
-          {
+          createMockEvolutionChainLink({
             species: { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon-species/2/' },
-            evolves_to: [],
-          },
+          }),
         ],
-      }
+      })
 
       const result = buildEvolutionTree(chain)
 
@@ -53,20 +48,18 @@ describe('evolutionTree', () => {
 
   describe('flattenLinearChain', () => {
     it('should flatten linear evolution chain', () => {
-      const chain: EvolutionChainLink = {
-        species: { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon-species/1/' },
+      const chain = createMockEvolutionChainLink({
         evolves_to: [
-          {
+          createMockEvolutionChainLink({
             species: { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon-species/2/' },
             evolves_to: [
-              {
+              createMockEvolutionChainLink({
                 species: { name: 'venusaur', url: 'https://pokeapi.co/api/v2/pokemon-species/3/' },
-                evolves_to: [],
-              },
+              }),
             ],
-          },
+          }),
         ],
-      }
+      })
 
       const tree = buildEvolutionTree(chain)
       const result = flattenLinearChain(tree)
@@ -76,10 +69,7 @@ describe('evolutionTree', () => {
     })
 
     it('should handle single node', () => {
-      const chain: EvolutionChainLink = {
-        species: { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon-species/1/' },
-        evolves_to: [],
-      }
+      const chain = createMockEvolutionChainLink()
 
       const tree = buildEvolutionTree(chain)
       const result = flattenLinearChain(tree)
@@ -91,24 +81,22 @@ describe('evolutionTree', () => {
 
   describe('isBranchingEvolution', () => {
     it('should return true for branching evolution', () => {
-      const chain: EvolutionChainLink = {
-        species: { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon-species/1/' },
+      const chain = createMockEvolutionChainLink({
         evolves_to: [
-          { species: { name: 'ivysaur', url: '' }, evolves_to: [] },
-          { species: { name: 'other', url: '' }, evolves_to: [] },
+          createMockEvolutionChainLink({ species: { name: 'ivysaur', url: '' } }),
+          createMockEvolutionChainLink({ species: { name: 'other', url: '' } }),
         ],
-      }
+      })
 
       expect(isBranchingEvolution(chain)).toBe(true)
     })
 
     it('should return false for linear evolution', () => {
-      const chain: EvolutionChainLink = {
-        species: { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon-species/1/' },
+      const chain = createMockEvolutionChainLink({
         evolves_to: [
-          { species: { name: 'ivysaur', url: '' }, evolves_to: [] },
+          createMockEvolutionChainLink({ species: { name: 'ivysaur', url: '' } }),
         ],
-      }
+      })
 
       expect(isBranchingEvolution(chain)).toBe(false)
     })
@@ -116,17 +104,18 @@ describe('evolutionTree', () => {
 
   describe('collectEvolutionVariants', () => {
     it('should collect all descendants from branching node', () => {
-      const chain: EvolutionChainLink = {
-        species: { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon-species/1/' },
+      const chain = createMockEvolutionChainLink({
         evolves_to: [
-          {
+          createMockEvolutionChainLink({
             species: { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon-species/2/' },
             evolves_to: [
-              { species: { name: 'venusaur', url: 'https://pokeapi.co/api/v2/pokemon-species/3/' }, evolves_to: [] },
+              createMockEvolutionChainLink({
+                species: { name: 'venusaur', url: 'https://pokeapi.co/api/v2/pokemon-species/3/' },
+              }),
             ],
-          },
+          }),
         ],
-      }
+      })
 
       const tree = buildEvolutionTree(chain)
       const result = collectEvolutionVariants(tree)
@@ -138,15 +127,13 @@ describe('evolutionTree', () => {
 
   describe('extractEvolutionChain', () => {
     it('should extract flat array from chain', () => {
-      const chain: EvolutionChainLink = {
-        species: { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon-species/1/' },
+      const chain = createMockEvolutionChainLink({
         evolves_to: [
-          {
+          createMockEvolutionChainLink({
             species: { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon-species/2/' },
-            evolves_to: [],
-          },
+          }),
         ],
-      }
+      })
 
       const result = extractEvolutionChain(chain)
 
@@ -156,10 +143,7 @@ describe('evolutionTree', () => {
     })
 
     it('should handle empty chain', () => {
-      const chain: EvolutionChainLink = {
-        species: { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon-species/1/' },
-        evolves_to: [],
-      }
+      const chain = createMockEvolutionChainLink()
 
       const result = extractEvolutionChain(chain)
 

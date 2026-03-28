@@ -1,4 +1,4 @@
-import { clearAllStoredData } from '../storage/clearStorage'
+import { clearAllStoredData } from '@/utils/storage/clearStorage'
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
   removeItem: jest.fn().mockResolvedValue(undefined),

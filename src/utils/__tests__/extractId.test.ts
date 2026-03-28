@@ -1,4 +1,4 @@
-import { extractPokemonId, extractTypeId } from '../api/extractId'
+import { extractPokemonId, extractTypeId } from '@/utils/api/extractId'
 
 describe('extractId', () => {
   describe('extractPokemonId', () => {

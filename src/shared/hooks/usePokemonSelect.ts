@@ -1,12 +1,12 @@
-/* eslint-disable max-len */
-import { useToastController } from '@tamagui/toast'
-import { useRouter } from 'expo-router'
-import { useCallback, useEffect, useState } from 'react'
+ 
 import type { PokemonListItem } from '@/shared/types/pokemon.domain'
 import { setToastController } from '@/utils/ui/toast'
-import { prefetchPokemonDetails } from './usePokemonPrefetch'
+import { useToastController } from '@tamagui/toast'
+import { useRouter } from 'expo-router'
+import { useCallback } from 'react'
 import { getCachedPokemonDetail } from './useGetCachedPokemonDetail'
 import { useModal } from './useModal'
+import { prefetchPokemonDetails } from './usePokemonPrefetch'
 
 export interface UsePokemonSelectOptions {
   pokemonList?: PokemonListItem[]
@@ -29,9 +29,7 @@ export function usePokemonSelect({
   const toast = useToastController()
   const { showLoading, dismiss: dismissModal } = useModal()
 
-  const [pendingNavigationId, setPendingNavigationId] = useState<number | null>(null)
-
-  useEffect(() => {
+  useCallback(() => {
     setToastController(toast)
   }, [toast])
 
@@ -42,9 +40,11 @@ export function usePokemonSelect({
     }
 
     const selectedPokemon = pokemonList?.find((p) => p.id === id)
+
+    // Check if data is cached - if so, navigate instantly
     const isCached = !!getCachedPokemonDetail(id)
 
-    if (isCached) {
+    if (isCached || skipPrefetch) {
       if (selectedPokemon && addRecentSelection) {
         addRecentSelection(selectedPokemon)
       }
@@ -60,27 +60,10 @@ export function usePokemonSelect({
         })
       }
       return
+    } else {
+      // NOT cached - show loading modal while fetching
+      showLoading('Loading Pokémon...')
     }
-
-    if (skipPrefetch) {
-      if (selectedPokemon && addRecentSelection) {
-        addRecentSelection(selectedPokemon)
-      }
-      if (replaceNavigation) {
-        router.replace({ 
-          pathname: '/pokemonDetails', 
-          params: { id: id.toString() } 
-        })
-      } else {
-        router.push({ 
-          pathname: '/pokemonDetails', 
-          params: { id: id.toString() } 
-        })
-      }
-      return
-    }
-
-    showLoading('Loading Pokémon...')
 
     try {
       await prefetchPokemonDetails(id)
@@ -89,35 +72,34 @@ export function usePokemonSelect({
         addRecentSelection(selectedPokemon)
       }
 
-      setPendingNavigationId(id)
+      // Dismiss modal first
+      dismissModal()
+
+      // Then navigate
+      if (replaceNavigation) {
+        router.replace({ 
+          pathname: '/pokemonDetails', 
+          params: { id: id.toString() } 
+        })
+      } else {
+        router.push({ 
+          pathname: '/pokemonDetails', 
+          params: { id: id.toString() } 
+        })
+      }
     } catch (_error) {
       dismissModal()
-      setPendingNavigationId(null)
     }
-  }, [pokemonList, addRecentSelection, toast, showLoading, dismissModal, router, skipPrefetch, replaceNavigation])
-
-  useEffect(() => {
-    if (pendingNavigationId !== null) {
-      dismissModal()
-      
-      const timer = setTimeout(() => {
-        if (replaceNavigation) {
-          router.replace({ 
-            pathname: '/pokemonDetails', 
-            params: { id: pendingNavigationId.toString() } 
-          })
-        } else {
-          router.push({ 
-            pathname: '/pokemonDetails', 
-            params: { id: pendingNavigationId.toString() } 
-          })
-        }
-        setPendingNavigationId(null)
-      }, 100)
-
-      return () => clearTimeout(timer)
-    }
-  }, [pendingNavigationId, router, dismissModal, replaceNavigation])
+  }, [
+    pokemonList, 
+    addRecentSelection, 
+    toast, 
+    showLoading, 
+    dismissModal, 
+    router, 
+    skipPrefetch, 
+    replaceNavigation
+  ])
 
   return {
     handleSelect,

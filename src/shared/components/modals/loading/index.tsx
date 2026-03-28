@@ -1,46 +1,22 @@
-import { DISMISSAL_DELAY, MODAL_STYLES } from '../constants'
-import { useRouter } from 'expo-router'
 import { useEffect, useRef } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { H1, YStack } from 'tamagui'
+import { MODAL_STYLES } from '../constants'
 import { useLoadingModalScreen } from './hooks/useLoadingModalScreen'
 
 export default function LoadingModalScreen() {
-  const router = useRouter()
-  const { data, actions } = useLoadingModalScreen()
+  const { data } = useLoadingModalScreen()
 
-  const isDismissingRef = useRef(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    if (!data.loadingProps && !isDismissingRef.current) {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-        timeoutRef.current = null
-      }
-
-      isDismissingRef.current = true
-      try {
-        router.back()
-      } catch {
-        // Modal may not be in stack
-      }
-
-      timeoutRef.current = setTimeout(() => {
-        actions.closeModal()
-        isDismissingRef.current = false
-        timeoutRef.current = null
-      }, DISMISSAL_DELAY)
-    }
-
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
         timeoutRef.current = null
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.loadingProps, router, actions.closeModal])
+  }, [])
 
   if (!data.loadingProps) {
     return null

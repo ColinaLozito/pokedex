@@ -1,30 +1,15 @@
-import { usePathname, useRouter } from 'expo-router'
-import { useCallback } from 'react'
 import { useModalStore } from '@/store/modalStore'
+import { useCallback } from 'react'
 
 export function useModal() {
-  const router = useRouter()
-  const pathname = usePathname()
   const openModal = useModalStore((state) => state.openModal)
   const closeModal = useModalStore((state) => state.closeModal)
-  const modalType = useModalStore((state) => state.type)
 
   const showLoading = useCallback(
-    async (message?: string) => {
-      if (modalType === 'loading' && pathname === '/modals/loading') {
-        openModal('loading', { message })
-        return
-      }
-      
-      try {
-        openModal('loading', { message })
-        await router.push('/modals/loading')
-      } catch (error) {
-        console.error('Failed to show loading modal:', error)
-        closeModal()
-      }
+    (message?: string) => {
+      openModal('loading', { message })
     },
-    [openModal, router, closeModal, modalType, pathname],
+    [openModal],
   )
 
   const dismiss = useCallback(() => {

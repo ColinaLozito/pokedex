@@ -14,11 +14,7 @@ export function useLoadingModal(
     const shouldShow = typeof isLoading === 'function' ? isLoading() : isLoading
 
     if (shouldShow) {
-      showLoading(message).catch((error) => {
-        if (!cancelledRef.current) {
-          console.error('Failed to show loading modal:', error)
-        }
-      })
+      showLoading(message)
     } else {
       dismiss()
     }

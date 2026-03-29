@@ -1,16 +1,16 @@
+import { Card, GetThemeValueForKey, H4, Text, XStack, YStack } from 'tamagui'
 import { calculateStatBarPercentage } from '../../../constants'
 import type { PokemonBaseStatsProps } from '../../../details.types'
-import { Card, GetThemeValueForKey, H4, Text, XStack, YStack } from 'tamagui'
 
 export default function PokemonBaseStats({ stats, primaryTypeColor }: PokemonBaseStatsProps) {
   return (
     <Card>
-      <Card.Header padded>
+      <Card.Header>
         <H4 mb="$3" color="$text">Base Stats</H4>
         <YStack gap="$3">
           {stats.map((statInfo) => (
             <YStack key={statInfo.stat.name} gap="$1">
-              <XStack justify="space-between">
+              <XStack justifyContent="space-between">
                 <Text
                   fontSize="$2"
                   textTransform="capitalize"

@@ -1,20 +1,13 @@
-import { useToastController } from '@tamagui/toast'
 import { useCallback, useMemo } from 'react'
 import { Alert } from 'react-native'
 import { useUserStore } from '@/store/userStore'
-import { useShallow } from 'zustand/react/shallow'
 import { clearAllStoredData } from '@/utils/storage/clearStorage'
-import { queryClient, asyncStoragePersister } from '@/providers/MainProvidersWrapper'
+import { queryClient, asyncStoragePersister } from '@/shared/utils/queryClient'
+import { toast } from '@/shared/utils/tamaguiToast'
 
 export function useClearData() {
-  const toast = useToastController()
-
-  const { bookmarkedPokemonIds, recentSelections } = useUserStore(
-    useShallow((state) => ({
-      bookmarkedPokemonIds: state.bookmarkedPokemonIds,
-      recentSelections: state.recentSelections,
-    }))
-  )
+  const bookmarkedPokemonIds = useUserStore((state) => state.bookmarkedPokemonIds)
+  const recentSelections = useUserStore((state) => state.recentSelections)
 
   const hasStoredData = useMemo(() => {
     return (
@@ -31,16 +24,16 @@ export function useClearData() {
       await clearAllStoredData()
       useUserStore.getState().$reset()
 
-      toast.show('Stored data cleared', {
-        message: 'Bookmarks and recent selections have been cleared',
+      toast.message('Stored data cleared', {
+        description: 'Bookmarks and recent selections have been cleared',
       })
     } catch (error) {
       console.error('Failed to clear stored data:', error)
-      toast.show('Error clearing data', {
-        message: 'Failed to clear stored data. Please try again.',
+      toast.error('Error clearing data', {
+        description: 'Failed to clear stored data. Please try again.',
       })
     }
-  }, [toast])
+  }, [])
 
   const clearAllData = useCallback(async () => {
     try {
@@ -49,16 +42,16 @@ export function useClearData() {
       queryClient.clear()
       await asyncStoragePersister.removeClient()
 
-      toast.show('All data cleared', {
-        message: 'Stored data and cached Pokemon have been cleared',
+      toast.message('All data cleared', {
+        description: 'Stored data and cached Pokemon have been cleared',
       })
     } catch (error) {
       console.error('Failed to clear all data:', error)
-      toast.show('Error clearing data', {
-        message: 'Failed to clear data. Please try again.',
+      toast.error('Error clearing data', {
+        description: 'Failed to clear data. Please try again.',
       })
     }
-  }, [toast])
+  }, [])
 
   const handleClearData = useCallback(() => {
     Alert.alert(

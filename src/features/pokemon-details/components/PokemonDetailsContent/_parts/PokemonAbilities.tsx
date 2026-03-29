@@ -1,14 +1,14 @@
-import type { PokemonAbilitiesProps } from '../../../details.types'
 import { Card, H4, Text, XStack, YStack } from 'tamagui'
+import type { PokemonAbilitiesProps } from '../../../details.types'
 
 export default function PokemonAbilities({ abilities }: PokemonAbilitiesProps) {
   return (
     <Card>
-      <Card.Header padded>
+      <Card.Header>
         <H4 mb="$2" color="$text">Abilities</H4>
         <YStack gap="$2">
           {abilities.map((abilityInfo, index) => (
-            <XStack key={index} gap="$2" items="center">
+            <XStack key={index} gap="$2" alignItems="center">
               <Text
                 fontSize="$3"
                 textTransform="capitalize"

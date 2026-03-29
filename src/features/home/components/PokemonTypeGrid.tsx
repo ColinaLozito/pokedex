@@ -29,20 +29,18 @@ export default function PokemonTypeGrid({ typeList, onTypeSelect }: TypeGridProp
 
 function TypeCard({ type, onPress }: TypeCardProps) {
   
-  const typeSymbol = typeSymbolsIcons[type.name.toLowerCase() as keyof typeof typeSymbolsIcons]
+  const typeSymbol = 
+    typeSymbolsIcons[type.name.toLowerCase() as keyof typeof typeSymbolsIcons] as string
   
   return (
     <Card
       flex={1}
       borderWidth={0}
-      animation="bouncy"
-      hoverStyle={{ scale: 0.98 }}
-      pressStyle={{ scale: 0.95 }}
       onPress={() => onPress(type.id, type.name)}
       backgroundColor={getTypeColor(type.name) as GetThemeValueForKey<"backgroundColor">}
     >
-      <Card.Header padded>
-        <XStack justify="space-between" items="center" gap="$2">
+      <Card.Header>
+        <XStack justifyContent="space-between" alignItems="center" gap="$2">
           <YStack flex={1}>
             <Text
               fontSize="$3"
@@ -54,7 +52,7 @@ function TypeCard({ type, onPress }: TypeCardProps) {
             </Text>
           </YStack>
           <Image
-            source={typeSymbol}
+            src={typeSymbol}
             style={{ width: 24, height: 24, opacity: 0.8 }}
             objectFit="contain"
           />

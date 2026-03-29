@@ -1,7 +1,7 @@
-import { evolutionSpriteVariantStyleConfig } from '../../../constants'
-import type { EvolutionSpriteContainerProps } from '../../../details.types'
 import { Pressable } from 'react-native'
 import { GetThemeValueForKey, Image, Text, YStack } from 'tamagui'
+import { evolutionSpriteVariantStyleConfig } from '../../../constants'
+import type { EvolutionSpriteContainerProps } from '../../../details.types'
 
 export default function EvolutionSpriteContainer({
   sprite,
@@ -21,7 +21,7 @@ export default function EvolutionSpriteContainer({
       })}
     >
       <YStack
-        items="center"
+        alignItems="center"
         p={variantConfig.padding as GetThemeValueForKey<"padding">}
         borderRadius="$3"
         bg={isCurrent ? (variantConfig.backgroundColor as GetThemeValueForKey<"backgroundColor">) : undefined}
@@ -32,7 +32,7 @@ export default function EvolutionSpriteContainer({
         }}
       >
         <Image
-          source={{ uri: sprite }}
+          src={sprite}
           width={variantConfig.imageSize}
           height={variantConfig.imageSize}
           objectFit="contain"

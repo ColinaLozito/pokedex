@@ -58,7 +58,7 @@ function PokemonCardComponent({
       })}
     >
       <Card
-        elevate
+        elevation="$3"
         borderRadius="$3"
         overflow="hidden"
         bg={backgroundColor}

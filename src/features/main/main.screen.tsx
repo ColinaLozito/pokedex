@@ -19,7 +19,7 @@ export default function MainScreen() {
       style={{ flex: 1 }}
       resizeMode="cover"
     >
-      <YStack flex={1} justifyContent='flex-end' alignItems='flex-end'>
+      <YStack flex={1} justifyContent='flex-end'  alignItems='flex-end'>
         {hasStoredData && (
           <YStack position="absolute" top={insets.top + size[4]} right="$4" zIndex={10}>
             <Button
@@ -35,7 +35,7 @@ export default function MainScreen() {
 
         <YStack width="100%" height="$9" position="absolute" top="35%">
           <Image
-            source={PokedexLogo}
+            src={PokedexLogo as string}
             width="$19"
             height="$8"
             alignSelf='center'
@@ -43,7 +43,7 @@ export default function MainScreen() {
         </YStack>
         <XStack 
           width='100%' 
-          alignItems='center' 
+           alignItems='center' 
           justifyContent='center' 
           gap="$6" 
           marginBottom="$11"

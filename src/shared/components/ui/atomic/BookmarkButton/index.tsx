@@ -12,9 +12,8 @@ export default function BookmarkButton({
   return (
     <Button
       circular
-      elevate
+      elevation="$2"
       icon={isBookmarked ? BookmarkCheck : Bookmark}
-      color={theme?.text?.val ?? '$white'}
       shadowColor={"$opacity1"}
       shadowOpacity={0.3}
       shadowRadius="$2"

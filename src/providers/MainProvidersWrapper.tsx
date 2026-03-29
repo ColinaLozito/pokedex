@@ -1,10 +1,10 @@
+import GlobalErrorBoundary from '@/shared/components/ui/atomic/GlobalErrorBoundary'
+import { prefetchPokemonTypes } from '@/shared/hooks/usePokemonTypesPrefetch'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useEffect } from 'react'
-import GlobalErrorBoundary from '@/shared/components/ui/atomic/GlobalErrorBoundary'
 import { Provider as TamaguiProvider } from './TamaguiProvider'
-import { prefetchPokemonTypes } from '@/shared/hooks/usePokemonTypesPrefetch'
 
 const STALE_TIME = 1000 * 60 * 60 * 24 // 24 hours
 const PERSIST_KEY = 'pokedex-cache'

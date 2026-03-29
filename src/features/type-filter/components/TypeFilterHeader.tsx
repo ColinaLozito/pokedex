@@ -5,11 +5,11 @@ export default function TypeFilterHeader({ typeName, typeIcon }: TypeFilterHeade
   return (
     <XStack
       gap={12}
-      items="center"
+      alignItems="center"
       px={16}
       pb={12}
     >
-      <XStack flex={1} items="center" justify="center">
+      <XStack flex={1} alignItems="center" justifyContent="center">
         <H2
           color="white"
           textTransform="capitalize"
@@ -19,7 +19,7 @@ export default function TypeFilterHeader({ typeName, typeIcon }: TypeFilterHeade
         </H2>
         {typeIcon && (
           <Image
-            source={typeIcon}
+            src={typeIcon as string}
             position="absolute"
             right={-90}
             width={200}

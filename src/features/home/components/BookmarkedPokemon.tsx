@@ -1,8 +1,8 @@
 import PokemonCard from '@/shared/components/pokemon/PokemonCard'
 import { PokemonCardVariant } from '@/shared/components/pokemon/PokemonCard/types'
+import { transformPokemonToDisplayData } from '@/utils/pokemon/displayData'
 import { Bookmark } from '@tamagui/lucide-icons'
 import { useMemo } from 'react'
-import { transformPokemonToDisplayData } from '@/utils/pokemon/displayData'
 import { H4, XStack, YStack } from 'tamagui'
 import type { BookmarkedPokemonProps } from '../home.types'
 
@@ -28,11 +28,11 @@ export default function BookmarkedPokemon({
 
   return (
     <YStack gap="$3">
-      <XStack gap="$2" items="center">
+      <XStack gap="$2"  alignItems="center">
         <Bookmark size={20} color="$text" fill="$text" />
         <H4 color="$text">Bookmarked</H4>
       </XStack>
-      <XStack flexWrap="wrap" justify="space-between" gap="$2">
+      <XStack flexWrap="wrap" justifyContent="space-between" gap="$2">
         {bookmarkedPokemonData.map((pokemon) => (
           <YStack key={pokemon.id} width="48%">
              <PokemonCard

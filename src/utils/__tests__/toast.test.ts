@@ -1,8 +1,18 @@
-import { setToastController, showToast } from '@/utils/ui/toast'
+const mockMessage = jest.fn()
+
+jest.mock('@/shared/utils/tamaguiToast', () => ({
+  toast: {
+    message: mockMessage,
+  },
+}))
+
+const { showToast } = require('@/utils/ui/toast') as {
+  showToast: (title: string, message?: string) => void
+}
 
 describe('toast', () => {
   beforeEach(() => {
-    jest.resetModules()
+    jest.clearAllMocks()
   })
 
   describe('showToast', () => {
@@ -10,34 +20,20 @@ describe('toast', () => {
       expect(() => showToast('Test')).not.toThrow()
     })
 
-    it('should not throw when controller is set but show is called', () => {
-      const mockShow = jest.fn()
-      const mockController = { show: mockShow } as never
-
-      setToastController(mockController)
+    it('should call toast.message with title and message', () => {
       showToast('Test Title', 'Test Message')
 
-      expect(mockShow).toHaveBeenCalledWith('Test Title', { message: 'Test Message' })
+      expect(mockMessage).toHaveBeenCalledWith('Test Title', {
+        description: 'Test Message',
+      })
     })
 
-    it('should call show with title only', () => {
-      const mockShow = jest.fn()
-      const mockController = { show: mockShow } as never
-
-      setToastController(mockController)
+    it('should call toast.message with title only', () => {
       showToast('Test Title')
 
-      expect(mockShow).toHaveBeenCalledWith('Test Title', { message: undefined })
-    })
-  })
-
-  describe('setToastController', () => {
-    it('should set the toast controller', () => {
-      const mockController = { show: jest.fn() } as never
-
-      setToastController(mockController)
-
-      expect(() => showToast('Test')).not.toThrow()
+      expect(mockMessage).toHaveBeenCalledWith('Test Title', {
+        description: undefined,
+      })
     })
   })
 })

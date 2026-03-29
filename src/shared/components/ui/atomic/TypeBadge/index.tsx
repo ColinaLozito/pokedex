@@ -1,9 +1,9 @@
 import { pokemonTypeColors } from '@theme/colors'
 import { Text, YStack } from 'tamagui'
 import { typeBadgeSizeStyles } from './constant'
-import { TypeBadgeProps } from './types'
+import { TypeBadgeProps, DEFAULT_TYPE_BADGE_TEST_ID } from './types'
 
-export default function TypeBadge({ typeName, size = 'medium' }: TypeBadgeProps) {
+export default function TypeBadge({ typeName, size = 'medium', testID = DEFAULT_TYPE_BADGE_TEST_ID }: TypeBadgeProps) {
   const typeColor = pokemonTypeColors[typeName]
   const styles = typeBadgeSizeStyles[size]
 
@@ -14,6 +14,7 @@ export default function TypeBadge({ typeName, size = 'medium' }: TypeBadgeProps)
       p={styles.p}
       borderRadius={styles.borderRadius}
       alignSelf="flex-start"
+      testID={testID}
     >
       <Text
         color="$white"

@@ -1,1 +1,2 @@
+# To skip this hook, use: git push --no-verify
 yarn test:coverage

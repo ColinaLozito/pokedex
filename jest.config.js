@@ -4,6 +4,8 @@ module.exports = {
   moduleNameMapper: {
     '^src/(.*)$': '<rootDir>/src/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@assets/(.*)$': '<rootDir>/assets/$1',
+    '^assets/(.*)$': '<rootDir>/assets/$1',
     '^@theme/(.*)$': '<rootDir>/theme/$1',
     '^theme/(.*)$': '<rootDir>/theme/$1',
   },

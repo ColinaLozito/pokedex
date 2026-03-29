@@ -8,7 +8,7 @@ import { Card, GetThemeValueForKey, YStack } from 'tamagui';
 import PokemonCardHeader from './_parts/PokemonCardHeader';
 import PokemonCardRemoveButton from './_parts/PokemonCardRemoveButton';
 import PokemonCardTypes from './_parts/PokemonCardTypes';
-import { PokemonCardProps, PokemonCardVariant } from './types';
+import { PokemonCardProps, PokemonCardVariant, DEFAULT_POKEMON_CARD_TEST_ID } from './types';
 
 function PokemonCardComponent({ 
   id, 
@@ -19,7 +19,8 @@ function PokemonCardComponent({
   types = [],
   onRemove,
   onSelect,
-  onNavigate
+  onNavigate,
+  testID = `${DEFAULT_POKEMON_CARD_TEST_ID}-${name}`
 }: PokemonCardProps) {
   const router = useRouter()
 
@@ -49,6 +50,7 @@ function PokemonCardComponent({
   return (
     <Pressable
       onPress={handleCardPress}
+      testID={testID}
       style={({ pressed }) => ({
         opacity: pressed ? 0.9 : 1,
         transform: [{ scale: pressed ? 0.98 : 1 }],
@@ -68,17 +70,19 @@ function PokemonCardComponent({
             <PokemonCardRemoveButton 
               onRemove={onRemove}
               id={id}
+              baseID={testID}
             />
           }
-          <PokemonCardHeader id={id} name={name} />
+          <PokemonCardHeader id={id} name={name} baseID={testID} />
           
           {/* Middle Section: Pokemon Sprite with Circular Background */}
           <PokemonSprite
             sprite={sprite}
+            baseID={testID}
           />
           
           {/* Bottom Section: Type Chips */}
-          <PokemonCardTypes types={types} primaryType={primaryType} />
+          <PokemonCardTypes types={types} primaryType={primaryType} baseID={testID} />
         </YStack>
       </Card>
     </Pressable>

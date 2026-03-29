@@ -1,9 +1,11 @@
 import { Text, XStack } from 'tamagui'
 import { PokemonCardHeaderProps } from '../types'
 
-export default function PokemonCardHeader({ id, name }: PokemonCardHeaderProps) {
+export default function PokemonCardHeader({ id, name, baseID = '' }: PokemonCardHeaderProps & { baseID?: string }) {
+  const headerTestID = baseID ? `${baseID}-header` : undefined
+  
   return (
-    <XStack justify="space-between" items="center">
+    <XStack justify="space-between" items="center" testID={headerTestID}>
       <Text
         fontSize="$2"
         lineHeight="$3"

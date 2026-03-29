@@ -6,9 +6,11 @@ import { Image, YStack } from 'tamagui';
 import { PokemonCardSpriteProps } from '../types';
 
 export default function PokemonSprite({ 
-  sprite, 
+  sprite,
+  baseID = ''
 }: PokemonCardSpriteProps) {
-  const circularBackgroundColor = POKEMON_CARD_COLORS.circularBackground; // This is a placeholder, we can adjust based on variant and primaryType if needed
+  const spriteTestID = baseID ? `${baseID}-sprite` : undefined
+  const circularBackgroundColor = POKEMON_CARD_COLORS.circularBackground;
   const [imageError, setImageError] = useState(false);
 
   return (
@@ -18,6 +20,7 @@ export default function PokemonSprite({
       alignItems='flex-end'
       position='relative' 
       minHeight="$7"
+      testID={spriteTestID}
     >
       {/* Circular Background */}
       <YStack

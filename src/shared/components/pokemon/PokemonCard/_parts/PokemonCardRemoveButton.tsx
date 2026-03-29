@@ -5,8 +5,11 @@ import { PokemonCardRemoveButtonProps } from '../types'
 
 export default function PokemonCardRemoveButton({
   onRemove,
-  id
+  id,
+  baseID = ''
 }: PokemonCardRemoveButtonProps) {
+  const removeTestID = baseID ? `${baseID}-remove` : undefined
+  
   return (
     <XStack position='absolute' top={6} right={6} zIndex={10}>
       <Button
@@ -16,6 +19,7 @@ export default function PokemonCardRemoveButton({
         chromeless
         backgroundColor={POKEMON_CARD_COLORS.buttonBackground}
         color="white"
+        testID={removeTestID}
         onPress={(e) => {
           e.stopPropagation();
           onRemove?.(id);

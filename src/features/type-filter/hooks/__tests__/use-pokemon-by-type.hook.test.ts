@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-native'
+import { renderHook } from '@testing-library/react-native'
 import { useQuery } from '@tanstack/react-query'
 import { usePokemonByTypeGQL } from '../use-pokemon-by-type.hook'
 

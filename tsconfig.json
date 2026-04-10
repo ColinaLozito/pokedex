@@ -15,7 +15,8 @@
       "@images/*": ["assets/images/*"],
       "@assets/*": ["assets/*"],
       "@fonts/*": ["assets/fonts/*"],
-      "@colors/*": ["theme/colors/*"]
+      "@colors/*": ["theme/colors/*"],
+      "tamagui": ["./node_modules/tamagui"]
     }
   },
   "include": [

@@ -5,11 +5,7 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 )
 
 jest.mock('expo-router', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-  }),
+  useRouter: () => ({ push: jest.fn(), replace: jest.fn(), back: jest.fn() }),
   useLocalSearchParams: jest.fn(() => ({})),
   useGlobalSearchParams: jest.fn(() => ({})),
   Link: ({ children }: { children: React.ReactNode }) => children,
@@ -20,28 +16,23 @@ jest.mock('expo-router', () => ({
 }))
 
 jest.mock('expo-constants', () => ({
-  default: {
-    manifest: {},
-    systemFonts: [],
-  },
+  default: { manifest: {}, systemFonts: [] },
 }))
 
 jest.mock('graphql-request', () => ({
   default: jest.fn(),
-  gql: (strings: TemplateStringsArray, ...args: string[]) => {
-    return strings.reduce((result, string, i) => {
-      return result + string + (args[i] || '')
-    }, '')
-  },
+  gql: (strings: TemplateStringsArray, ...args: string[]) =>
+    strings.reduce((result, string, i) => result + string + (args[i] || ''), ''),
 }))
 
 jest.mock('@tanstack/react-query', () => ({
   useQuery: jest.fn(),
-  keepPreviousData: { },
+  keepPreviousData: {},
   QueryClient: jest.fn().mockImplementation(() => ({
     getQueryData: jest.fn(),
     setQueryData: jest.fn(),
     prefetchQuery: jest.fn(),
+    clear: jest.fn(),
   })),
   QueryClientProvider: ({ children }: { children: React.ReactNode }) => children,
 }))

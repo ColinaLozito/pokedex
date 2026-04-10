@@ -4,7 +4,9 @@ import { usePokemonByTypeGQL } from '../use-pokemon-by-type.hook'
 import { usePokemonSelect } from '@/shared/hooks/usePokemonSelect'
 import { useUserStore } from '@/store/userStore'
 
-const mockUsePokemonByTypeGQL = usePokemonByTypeGQL as jest.MockedFunction<typeof usePokemonByTypeGQL>
+const mockUsePokemonByTypeGQL = usePokemonByTypeGQL as jest.MockedFunction<
+  typeof usePokemonByTypeGQL
+>
 const mockUsePokemonSelect = usePokemonSelect as jest.MockedFunction<typeof usePokemonSelect>
 const mockUseUserStore = useUserStore as jest.MockedFunction<typeof useUserStore>
 

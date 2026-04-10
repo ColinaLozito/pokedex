@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-native'
 import { useQuery } from '@tanstack/react-query'
 import { usePokemonDetailsGQL } from '../use-pokemon-details.hook'
-import { createMockEvolutionChainLink, createMockPokemon } from '@/shared/tests/mocks'
+import { createMockEvolutionChainLink } from '@/shared/tests/mocks'
 
 const mockUseQuery = useQuery as jest.MockedFunction<typeof useQuery>
 
@@ -21,9 +21,11 @@ jest.mock('@/utils/api/extractId', () => ({
 }))
 
 jest.mock('@/utils/evolution/evolutionTree', () => ({
-  extractEvolutionChain: jest.fn((chain: { species: { name: string; url: string }; evolves_to: unknown[] }) => {
-    return [chain.species]
-  }),
+  extractEvolutionChain: jest.fn(
+    (chain: { species: { name: string; url: string }; evolves_to: unknown[] }) => {
+      return [chain.species]
+    }
+  ),
 }))
 
 describe('usePokemonDetailsGQL', () => {

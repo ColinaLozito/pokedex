@@ -1,12 +1,11 @@
  
 import type { PokemonListItem } from '@/shared/types/pokemon.domain'
-import { setToastController } from '@/utils/ui/toast'
-import { useToastController } from '@tamagui/toast'
 import { useRouter } from 'expo-router'
 import { useCallback } from 'react'
 import { getCachedPokemonDetail } from './useGetCachedPokemonDetail'
 import { useModal } from './useModal'
 import { prefetchPokemonDetails } from './usePokemonPrefetch'
+import { toast } from '@/shared/utils/tamaguiToast'
 
 export interface UsePokemonSelectOptions {
   pokemonList?: PokemonListItem[]
@@ -26,16 +25,13 @@ export function usePokemonSelect({
   replaceNavigation = false,
 }: UsePokemonSelectOptions = {}): UsePokemonSelectReturn {
   const router = useRouter()
-  const toast = useToastController()
   const { showLoading, dismiss: dismissModal } = useModal()
-
-  useCallback(() => {
-    setToastController(toast)
-  }, [toast])
 
   const handleSelect = useCallback(async (id: number) => {
     if (!id || id === 0 || isNaN(id)) {
-      toast.show('Invalid Selection', { message: 'Please select a valid Pokemon' })
+      toast.warning('Invalid Selection', {
+        description: 'Please select a valid Pokemon',
+      })
       return
     }
 
@@ -93,7 +89,6 @@ export function usePokemonSelect({
   }, [
     pokemonList, 
     addRecentSelection, 
-    toast, 
     showLoading, 
     dismissModal, 
     router, 

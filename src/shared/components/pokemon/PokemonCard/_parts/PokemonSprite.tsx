@@ -1,8 +1,8 @@
-import { POKEMON_CARD_COLORS } from '../constants';
 import imageNotFound from '@images/notFound.png';
 import { useState } from 'react';
 import { Image as RNImage } from 'react-native';
 import { Image, YStack } from 'tamagui';
+import { POKEMON_CARD_COLORS } from '../constants';
 import { PokemonCardSpriteProps } from '../types';
 
 export default function PokemonSprite({ 
@@ -16,8 +16,8 @@ export default function PokemonSprite({
   return (
     <YStack   
       flex={1} 
-      justify='flex-start' 
-      alignItems='flex-end'
+      justifyContent='flex-start' 
+       alignItems='flex-end'
       position='relative' 
       minHeight="$7"
       testID={spriteTestID}
@@ -36,7 +36,7 @@ export default function PokemonSprite({
       {/* Pokemon Sprite */}
       {sprite ? (
           <Image
-            source={{ uri: imageError ? RNImage.resolveAssetSource(imageNotFound).uri : sprite }}
+            src={imageError ? RNImage.resolveAssetSource(imageNotFound).uri : sprite}
             width="$8"
             height="$8"
             zIndex={1}
@@ -45,7 +45,7 @@ export default function PokemonSprite({
           />
       ) : (
         <Image
-          source={{ uri: RNImage.resolveAssetSource(imageNotFound).uri }}
+          src={RNImage.resolveAssetSource(imageNotFound).uri}
           width="$8"
           height="$8"
           zIndex={1}

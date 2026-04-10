@@ -4,6 +4,11 @@
   "version": "1.0.0",
   "packageManager": "yarn@4.5.0",
   "private": true,
+  "resolutions": {
+    "@tamagui/web": "2.0.0-rc.33",
+    "@tamagui/core": "2.0.0-rc.33",
+    "@tamagui/helpers-icon": "2.0.0-rc.33"
+  },
   "scripts": {
     "upgrade:tamagui": "yarn up '*tamagui*'@latest '@tamagui/*'@latest",
     "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary",
@@ -32,9 +37,11 @@
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-navigation/native": "^7.1.6",
     "@shopify/flash-list": "2.0.2",
-    "@tamagui/config": "^1.138.0",
-    "@tamagui/lucide-icons": "^1.138.0",
-    "@tamagui/toast": "^1.138.0",
+    "@tamagui/animations-react-native": "2.0.0-rc.33",
+    "@tamagui/config": "2.0.0-rc.33",
+    "@tamagui/lucide-icons": "2.0.0-rc.26",
+    "@tamagui/shorthands": "2.0.0-rc.33",
+    "@tamagui/toast": "2.0.0-rc.33",
     "@tanstack/react-query": "^5.95.2",
     "@tanstack/react-query-persist-client": "^5.95.2",
     "babel-preset-expo": "~54.0.10",
@@ -62,16 +69,16 @@
     "react-native-svg": "15.12.1",
     "react-native-web": "^0.21.0",
     "react-native-worklets": "0.5.1",
-    "tamagui": "^1.138.0",
-    "zustand": "^5.0.8"
+    "tamagui": "2.0.0-rc.33",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@babel/core": "^7.24.6",
     "@eslint/js": "^9.39.1",
     "@expo/metro-runtime": "~6.1.2",
-    "@tamagui/babel-plugin": "^1.138.0",
-    "@tamagui/cli": "^1.138.0",
-    "@tamagui/metro-plugin": "^1.138.0",
+    "@tamagui/babel-plugin": "2.0.0-rc.33",
+    "@tamagui/cli": "2.0.0-rc.33",
+    "@tamagui/metro-plugin": "2.0.0-rc.33",
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "~29.5.14",
     "@types/react": "~19.1.10",

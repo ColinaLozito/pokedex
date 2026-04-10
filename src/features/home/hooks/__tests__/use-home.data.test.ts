@@ -6,10 +6,18 @@ import { useGetCachedPokemonDetail } from '@/shared/hooks/useGetCachedPokemonDet
 import { usePokemonSelection } from '@/shared/hooks/usePokemonSelection'
 import { useUserStore } from '@/store/userStore'
 
-const mockUsePokemonTypesGQL = usePokemonTypesGQL as jest.MockedFunction<typeof usePokemonTypesGQL>
-const mockUsePokemonSearchGQL = usePokemonSearchGQL as jest.MockedFunction<typeof usePokemonSearchGQL>
-const mockUseGetCachedPokemonDetail = useGetCachedPokemonDetail as jest.MockedFunction<typeof useGetCachedPokemonDetail>
-const mockUsePokemonSelection = usePokemonSelection as jest.MockedFunction<typeof usePokemonSelection>
+const mockUsePokemonTypesGQL = usePokemonTypesGQL as jest.MockedFunction<
+  typeof usePokemonTypesGQL
+>
+const mockUsePokemonSearchGQL = usePokemonSearchGQL as jest.MockedFunction<
+  typeof usePokemonSearchGQL
+>
+const mockUseGetCachedPokemonDetail = useGetCachedPokemonDetail as jest.MockedFunction<
+  typeof useGetCachedPokemonDetail
+>
+const mockUsePokemonSelection = usePokemonSelection as jest.MockedFunction<
+  typeof usePokemonSelection
+>
 const mockUseUserStore = useUserStore as jest.MockedFunction<typeof useUserStore>
 
 jest.mock('../use-pokemon-types.hook')

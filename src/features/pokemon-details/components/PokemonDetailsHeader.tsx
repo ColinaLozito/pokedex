@@ -18,7 +18,7 @@ export default function PokemonDetailsHeader({
       bg="$background"
       paddingHorizontal="$4"
       paddingTop="$6"
-      items="center"
+      alignItems="center"
     >
       <XStack
         position="absolute"
@@ -34,8 +34,8 @@ export default function PokemonDetailsHeader({
       
       <XStack
         width="100%"
-        justify="space-between"
-        items="center"
+        justifyContent="space-between"
+        alignItems="center"
         marginBottom="$4"
       >
         <H2
@@ -57,7 +57,7 @@ export default function PokemonDetailsHeader({
 
       {sprite && (
         <Image
-          source={{ uri: sprite }}
+          src={sprite}
           width={250}
           height={250}
           objectFit="contain"

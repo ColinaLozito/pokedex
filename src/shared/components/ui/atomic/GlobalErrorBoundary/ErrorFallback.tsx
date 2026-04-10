@@ -21,19 +21,20 @@ export default function ErrorFallback({
       <YStack
         flex={1}
         justifyContent="center"
-        alignItems="center"
+         alignItems="center"
         padding="$4"
         gap="$4"
       >
         <Card
-          bordered
+          borderWidth={1}
+          borderColor="$border"
           backgroundColor="$white"
           padding="$6"
           borderRadius="$4"
           width="100%"
           maxWidth={400}
         >
-          <YStack alignItems="center" gap="$3">
+          <YStack  alignItems="center" gap="$3">
             <Text
               fontSize="$8"
               fontWeight="700"
@@ -65,13 +66,11 @@ export default function ErrorFallback({
             <Button
               onPress={resetErrorBoundary}
               backgroundColor="$primary"
-              color="$text"
-              fontWeight="600"
               borderRadius="$3"
               paddingHorizontal="$6"
               paddingVertical="$3"
             >
-              Try Again
+              <Text color="$text" fontWeight="600">Try Again</Text>
             </Button>
 
             <YStack height="$2" />

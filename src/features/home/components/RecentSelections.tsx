@@ -1,7 +1,7 @@
 import PokemonCard from '@/shared/components/pokemon/PokemonCard'
 import { PokemonCardVariant } from '@/shared/components/pokemon/PokemonCard/types'
-import { useMemo } from 'react'
 import { transformPokemonToDisplayData } from '@/utils/pokemon/displayData'
+import { useMemo } from 'react'
 import { H4, XStack, YStack } from 'tamagui'
 import type { RecentSelectionsProps } from '../home.types'
 
@@ -29,7 +29,7 @@ export default function RecentSelections({
   return (
     <YStack gap="$4">
       <H4 color="$text">Recently Inspected</H4>
-      <XStack gap="$2" flexWrap='wrap' justify='space-between'>
+      <XStack gap="$2" flexWrap='wrap' justifyContent='space-between'>
         {recentPokemonData.map((pokemon) => (
           <YStack key={pokemon.id} width='49%'>
             <PokemonCard

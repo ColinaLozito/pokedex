@@ -1,5 +1,5 @@
-import TypeChips from '../../PokemonTypeChips'
 import { Text, XStack } from 'tamagui'
+import TypeChips from '../../PokemonTypeChips'
 import { POKEMON_CARD_COLORS } from '../constants'
 import { PokemonCardTypesProps } from '../types'
 
@@ -24,7 +24,7 @@ export default function PokemonCardTypes({ types, primaryType, baseID = '' }: Po
 
   // fallback for missing type data
   return (
-    <XStack mt="$3" justify="center" testID={typesTestID}>
+    <XStack mt="$3" justifyContent="center" testID={typesTestID}>
       <Text fontSize="$4" fontWeight="$7" color={POKEMON_CARD_COLORS.mutedText}>??</Text>
     </XStack>
   )

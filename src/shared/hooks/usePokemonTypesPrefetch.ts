@@ -1,5 +1,5 @@
 import graphqlRequest from 'graphql-request'
-import { getQueryClient } from '@/providers/MainProvidersWrapper'
+import { getQueryClient } from '@/shared/utils/queryClient'
 import {
   GET_POKEMON_TYPES,
   POKEAPI_GQL_V2_ENDPOINT,

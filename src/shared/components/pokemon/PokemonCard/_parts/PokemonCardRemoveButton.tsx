@@ -18,7 +18,6 @@ export default function PokemonCardRemoveButton({
         icon={X}
         chromeless
         backgroundColor={POKEMON_CARD_COLORS.buttonBackground}
-        color="white"
         testID={removeTestID}
         onPress={(e) => {
           e.stopPropagation();

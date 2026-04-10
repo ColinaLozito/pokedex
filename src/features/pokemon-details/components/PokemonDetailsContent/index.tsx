@@ -24,7 +24,7 @@ export default function PokemonDetailsContent({
       marginTop="$4"
       gap="$2"
     >
-      <XStack justify="center" items="center" width="100%" mb="$2">
+      <XStack justifyContent="center" alignItems="center" width="100%" mb="$2">
         <TypeChips types={pokemon.types} size="medium" gap="$2" />
       </XStack>
 

@@ -1,5 +1,5 @@
-import type { AttributeRowProps, PokemonAttributesProps } from '../../../details.types'
 import { Card, Text, XStack, YStack } from 'tamagui'
+import type { AttributeRowProps, PokemonAttributesProps } from '../../../details.types'
 
 export default function PokemonAttributes({ species, height, weight }: PokemonAttributesProps) {
   
@@ -8,8 +8,8 @@ export default function PokemonAttributes({ species, height, weight }: PokemonAt
   
   return (
     <Card>
-      <Card.Header padded>
-        <XStack justify="space-around" items="flex-start">
+      <Card.Header>
+        <XStack justifyContent="space-around" alignItems="flex-start">
           {species && (
             <>
               <AttributeRow label="Species" value={species} />
@@ -28,7 +28,7 @@ export default function PokemonAttributes({ species, height, weight }: PokemonAt
 
 function AttributeRow({ label, value }: AttributeRowProps) {
   return (
-    <YStack flex={1} items="center">
+    <YStack flex={1} alignItems="center">
       <Text fontSize="$1" color="$text" mb="$1">
         {label}
       </Text>

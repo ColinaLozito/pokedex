@@ -6,10 +6,10 @@ module.exports = (api) => {
       [
         '@tamagui/babel-plugin',
         {
+          config: './theme/tamagui.config.ts',
           components: ['tamagui'],
-          config: './theme/tamagui.config',
-          logTimings: true,
-          disableExtraction: process.env.NODE_ENV === 'development',
+          importsWhitelist: ['constants.js', 'colors.js'],
+          disableExtractInlineCSS: true,
         },
       ],
 

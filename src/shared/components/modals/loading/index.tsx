@@ -28,7 +28,7 @@ export default function LoadingModalScreen() {
         flex: 1,
         backgroundColor: MODAL_STYLES.backgroundColor,
         justifyContent: 'center',
-        alignItems: 'center',
+         alignItems: 'center',
         padding: MODAL_STYLES.padding,
       }}
     >
@@ -37,7 +37,7 @@ export default function LoadingModalScreen() {
         maxWidth={MODAL_STYLES.maxWidth}
         minHeight={MODAL_STYLES.minHeight}
         justifyContent="center"
-        alignItems="center"
+         alignItems="center"
         gap="$4"
       >
         <H1 color="$white" textAlign="center">{data.message}</H1>

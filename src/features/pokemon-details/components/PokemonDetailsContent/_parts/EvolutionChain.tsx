@@ -1,5 +1,4 @@
 import RightArrow from '@/shared/components/ui/atomic/RightArrow/RightArrow'
-import type { EvolutionChainProps } from '../../../details.types'
 import {
   buildEvolutionTree,
   collectEvolutionVariants,
@@ -8,6 +7,7 @@ import {
 } from '@/utils/evolution/evolutionTree'
 import { getPokemonSprite } from '@/utils/pokemon/sprites'
 import { H4, XStack, YStack } from 'tamagui'
+import type { EvolutionChainProps } from '../../../details.types'
 import EvolutionSpriteContainer from './EvolutionSpriteContainer'
 
 export default function EvolutionChain(props: EvolutionChainProps) {
@@ -20,10 +20,10 @@ export default function EvolutionChain(props: EvolutionChainProps) {
   const variants = collectEvolutionVariants(rootNode)
   return (
     <YStack width='100%'>
-      <H4 mb="$5" text='center' color="$text">Evolution</H4>
+      <H4 mb="$5" textAlign='center' color="$text">Evolution</H4>
       
       {isBranching ? (
-       <YStack items='center' gap="$1" width='100%'>
+       <YStack alignItems='center' gap="$1" width='100%'>
        <EvolutionSpriteContainer
          sprite={getPokemonSprite(props.getPokemonDetail?.(rootNode.id), rootNode.id)}
          name={rootNode.name}
@@ -34,9 +34,9 @@ export default function EvolutionChain(props: EvolutionChainProps) {
        />
        
        {variants.length > 0 && (
-         <XStack flexWrap='wrap' justify='center' width='100%'>
+         <XStack flexWrap='wrap' justifyContent='center' width='100%'>
            {variants.map((variant, index) => (
-             <YStack key={`${variant.id}-${index}`} width='30%' items='center'>
+             <YStack key={`${variant.id}-${index}`} width='30%' alignItems='center'>
                <EvolutionSpriteContainer
                  sprite={getPokemonSprite(props.getPokemonDetail?.(variant.id), variant.id)}
                  name={variant.name}
@@ -51,9 +51,9 @@ export default function EvolutionChain(props: EvolutionChainProps) {
        )}
      </YStack>
       ) : (
-        <XStack items='center' justify='center' flexWrap='wrap' gap="$1">
+        <XStack alignItems='center' justifyContent='center' flexWrap='wrap' gap="$1">
           {flattenLinearChain(rootNode).map((node, index) => (
-            <XStack key={`${node.id}-${index}`} items='center'>
+            <XStack key={`${node.id}-${index}`} alignItems='center'>
               <EvolutionSpriteContainer
                 sprite={getPokemonSprite(props.getPokemonDetail?.(node.id), node.id)}
                 name={node.name}

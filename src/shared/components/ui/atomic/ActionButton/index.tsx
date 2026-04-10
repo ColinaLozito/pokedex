@@ -1,7 +1,11 @@
 import { Button, Text } from 'tamagui'
 import { ActionButtonProps, DEFAULT_ACTION_BUTTON_TEST_ID } from './types'
 
-export function ActionButton({ text, onPress, testID = DEFAULT_ACTION_BUTTON_TEST_ID }: ActionButtonProps) {
+export function ActionButton({
+  text,
+  onPress,
+  testID = DEFAULT_ACTION_BUTTON_TEST_ID,
+}: ActionButtonProps) {
   return (
     <Button
       onPress={onPress}

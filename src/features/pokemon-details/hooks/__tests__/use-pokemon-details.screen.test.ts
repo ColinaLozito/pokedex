@@ -1,13 +1,19 @@
-import { renderHook, act } from '@testing-library/react-native'
+import { renderHook } from '@testing-library/react-native'
 import { usePokemonDetailsScreen } from '../use-pokemon-details.screen'
 import { usePokemonDetailsGQL } from '../use-pokemon-details.hook'
 import { useGetCachedPokemonDetail } from '@/shared/hooks/useGetCachedPokemonDetail'
 import { usePokemonSelect } from '@/shared/hooks/usePokemonSelect'
 import { useUserStore } from '@/store/userStore'
 
-const mockUsePokemonDetailsGQL = usePokemonDetailsGQL as jest.MockedFunction<typeof usePokemonDetailsGQL>
-const mockUseGetCachedPokemonDetail = useGetCachedPokemonDetail as jest.MockedFunction<typeof useGetCachedPokemonDetail>
-const mockUsePokemonSelect = usePokemonSelect as jest.MockedFunction<typeof usePokemonSelect>
+const mockUsePokemonDetailsGQL = usePokemonDetailsGQL as jest.MockedFunction<
+  typeof usePokemonDetailsGQL
+>
+const mockUseGetCachedPokemonDetail = useGetCachedPokemonDetail as jest.MockedFunction<
+  typeof useGetCachedPokemonDetail
+>
+const mockUsePokemonSelect = usePokemonSelect as jest.MockedFunction<
+  typeof usePokemonSelect
+>
 const mockUseUserStore = useUserStore as jest.MockedFunction<typeof useUserStore>
 
 jest.mock('../use-pokemon-details.hook')

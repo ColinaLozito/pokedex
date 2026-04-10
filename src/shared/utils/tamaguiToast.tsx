@@ -1,21 +1,4 @@
-import { Toast, ToastViewport, useToastState } from '@tamagui/toast'
-import { YStack, Text } from 'tamagui'
 import type { ComponentType } from 'react'
-
-function ToastContent() {
-  const toast = useToastState()
-  
-  if (!toast) return null
-  
-  return (
-    <Toast>
-      <YStack>
-        <Text>{toast.title}</Text>
-        {toast.message && <Text>{toast.message}</Text>}
-      </YStack>
-    </Toast>
-  )
-}
 
 export const toast = {
   message: (title: string, data?: { description?: string }) => {

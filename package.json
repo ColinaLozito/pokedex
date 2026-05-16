@@ -2,18 +2,13 @@
   "name": "pokedex",
   "main": "expo-router/entry",
   "version": "1.0.0",
-  "packageManager": "yarn@4.5.0",
+  "packageManager": "pnpm@10.32.1",
   "private": true,
-  "resolutions": {
-    "@tamagui/web": "2.0.0-rc.33",
-    "@tamagui/core": "2.0.0-rc.33",
-    "@tamagui/helpers-icon": "2.0.0-rc.33"
-  },
   "scripts": {
-    "upgrade:tamagui": "yarn up '*tamagui*'@latest '@tamagui/*'@latest",
-    "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary",
+    "upgrade:tamagui": "pnpm up '*tamagui*'@latest '@tamagui/*'@latest",
+    "upgrade:tamagui:canary": "pnpm up '*tamagui*'@canary '@tamagui/*'@canary",
     "check:tamagui": "tamagui check",
-    "start": "yarn expo start",
+    "start": "WATCHMAN_DISABLE=1 expo start --clear",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "test": "jest --watchAll",
@@ -23,7 +18,7 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "postinstall": "husky install"
+    "postinstall": "husky"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
@@ -50,6 +45,7 @@
     "expo-build-properties": "~1.0.10",
     "expo-constants": "~18.0.13",
     "expo-font": "~14.0.11",
+    "expo-linear-gradient": "^55.0.14",
     "expo-linking": "~8.0.11",
     "expo-router": "~6.0.23",
     "expo-splash-screen": "~31.0.13",

@@ -14,7 +14,7 @@ module.exports = {
     '^@tamagui/lucide-icons$': '<rootDir>/__mocks__/tamagui-lucide-icons.ts',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|expo|@expo|@unimodules|unimodules|expo-modules-core|@tamagui)/)',
+    'node_modules/(?!(.pnpm|react-native|@react-native|expo|@expo|@unimodules|unimodules|expo-modules-core|@tamagui)/)',
   ],
   testMatch: ['**/__tests__/**/*.test.ts', '**/__tests__/**/*.test.tsx'],
   collectCoverageFrom: [

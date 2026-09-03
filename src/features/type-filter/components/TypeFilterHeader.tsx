@@ -1,4 +1,4 @@
-import { H2, Image, XStack } from 'tamagui'
+import { H5, Image, XStack } from 'tamagui'
 import { TypeFilterHeaderProps } from '../type-filter.types'
 
 export default function TypeFilterHeader({ typeName, typeIcon }: TypeFilterHeaderProps) {
@@ -7,23 +7,22 @@ export default function TypeFilterHeader({ typeName, typeIcon }: TypeFilterHeade
       gap={12}
       alignItems="center"
       px={16}
-      pb={12}
     >
       <XStack flex={1} alignItems="center" justifyContent="center">
-        <H2
-          color="white"
+        <H5
+          color="black"
           textTransform="capitalize"
           fontWeight="$8"
         >
           {typeName}
-        </H2>
+        </H5>
         {typeIcon && (
           <Image
             src={typeIcon as string}
             position="absolute"
-            right={-90}
-            width={200}
-            height={200}
+            right={0}
+            width="$10"
+            height="$10"
             zIndex={-1}
             objectFit="contain"
           />

@@ -25,10 +25,20 @@ export default function TypeFilterScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: data.typeColor }}>
-      <YStack flex={1}>
-        <TypeFilterHeader typeName={data.typeName} typeIcon={data.typeIcon} />
-
+    <YStack flex={1}>
+        <SafeAreaView 
+          style={{ 
+            paddingBottom: -10, 
+            backgroundColor: "transparent", 
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1,
+           }}
+          >
+          <TypeFilterHeader typeName={data.typeName} typeIcon={data.typeIcon} />
+        </SafeAreaView>
         <YStack
           flex={1}
           bg="white"
@@ -46,6 +56,5 @@ export default function TypeFilterScreen() {
           />
         </YStack>
       </YStack>
-    </SafeAreaView>
   )
 }

@@ -32,8 +32,12 @@ export default function PokemonGrid({ data, onSelect, onLoadMore, hasMore }: Pok
     }
   }, [hasMore, onLoadMore])
 
+  const ListHeader = useCallback(() => <YStack height={100} />, [])
+
+
   return (
     <LegendList
+      ListHeaderComponent={ListHeader}
       data={data}
       numColumns={2}
       renderItem={renderItem}
@@ -43,6 +47,7 @@ export default function PokemonGrid({ data, onSelect, onLoadMore, hasMore }: Pok
       initialScrollIndex={0}
       onEndReached={onEndReached}
       style={{ flex: 1 }}
+      contentContainerStyle={{ paddingBottom: 16 }}
     />
   )
 }

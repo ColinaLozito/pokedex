@@ -1,5 +1,5 @@
 import { Pressable } from 'react-native'
-import { GetThemeValueForKey, Image, Text, YStack } from 'tamagui'
+import { GetThemeValueForKey, Image, Square, Text, YStack } from 'tamagui'
 import { evolutionSpriteVariantStyleConfig } from '../../../constants'
 import type { EvolutionSpriteContainerProps } from '../../../details.types'
 
@@ -31,12 +31,24 @@ export default function EvolutionSpriteContainer({
           maxWidth: variantConfig.maxWidth,
         }}
       >
-        <Image
-          src={sprite}
+        <Square
           width={variantConfig.imageSize}
           height={variantConfig.imageSize}
-          objectFit="contain"
-        />
+          alignSelf="flex-end"
+          transition="slow"
+          enterStyle={{
+            opacity: 0,
+            scale: 0.5,
+          }}
+        >
+
+          <Image
+            src={sprite}
+            width="100%"
+            height="100%"
+            objectFit="contain"
+          />
+        </Square>
         <Text
           fontSize={variantConfig.nameFontSize as GetThemeValueForKey<"fontSize">}
           fontWeight="$7"

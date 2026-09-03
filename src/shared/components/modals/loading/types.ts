@@ -1,8 +1,8 @@
-import type { LoadingModalProps } from '@/store/types/modal'
+import type { LoadingModalProps, ModalType } from '@/store/types/modal'
 
 export interface UseLoadingModalDataReturn {
   data: {
-    modalType: 'loading' | null
+    modalType: ModalType
     loadingProps: LoadingModalProps | null
   }
   actions: {

@@ -27,6 +27,7 @@ export default function HomeScreen() {
           data={null}
           renderItem={() => null}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 80 }}
           ListHeaderComponent={
             <YStack paddingTop={insets.top}>
               <HomeBody

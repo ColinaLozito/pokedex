@@ -7,7 +7,7 @@ import PokedexWallpaper from "assets/images/pokedex-wallpaper.jpg"
 import { router } from 'expo-router'
 import { ImageBackground } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Button, Image, XStack, YStack } from 'tamagui'
+import { Button, Image, Square, XStack, YStack } from 'tamagui'
 
 export default function MainScreen() {
   const insets = useSafeAreaInsets()
@@ -34,12 +34,23 @@ export default function MainScreen() {
         )}
 
         <YStack width="100%" height="$9" position="absolute" top="35%">
-          <Image
-            src={PokedexLogo as string}
-            width="$19"
-            height="$8"
-            alignSelf='center'
-          />
+          <Square
+            w="$20"
+            h="$10"
+            alignSelf="center"
+            transition="slow"
+            enterStyle={{
+              opacity: 0,
+              scale: 0.5,
+            }}
+          >
+            <Image
+              src={PokedexLogo as string}
+              width="100%"
+              height="100%"
+              objectFit="contain"
+            />
+          </Square>
         </YStack>
         <XStack 
           width='100%' 

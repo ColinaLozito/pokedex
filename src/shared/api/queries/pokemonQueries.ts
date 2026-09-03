@@ -70,6 +70,15 @@ export const SEARCH_POKEMON = gql`
   }
 `
 
+export const GET_POKEMON_NAMES = gql`
+  query GetPokemonNames($ids: [Int!]!) {
+    pokemon_v2_pokemon(where: {id: {_in: $ids}}) {
+      id
+      name
+    }
+  }
+`
+
 export const GET_POKEMON_TYPES = gql`
   query GetPokemonTypes {
     pokemon_v2_type {
@@ -84,6 +93,15 @@ export const EXCLUDED_TYPES = ['unknown', 'shadow', 'stellar']
 export interface GQLTypeItem {
   id: number
   name: string
+}
+
+export interface GQLPokemonNamesItem {
+  id: number
+  name: string
+}
+
+export interface GQLPokemonNamesResponse {
+  pokemon_v2_pokemon: GQLPokemonNamesItem[]
 }
 
 export interface GQLPokemonTypesResponse {

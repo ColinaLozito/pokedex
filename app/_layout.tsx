@@ -1,10 +1,15 @@
 import { MainProvidersWrapper } from '@/providers/MainProvidersWrapper'
+import LoadingModalScreen from '@/shared/components/modals/loading'
+import { useModalStore } from '@/store/modalStore'
+import WhosThatPokemonResultModal from '@features/whosthatpokemon/components/result-modal'
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { BarChart2 } from '@tamagui/lucide-icons'
 import { useFonts } from 'expo-font'
-import { SplashScreen, Stack } from 'expo-router'
+import { SplashScreen, Stack, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useEffect } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { useCallback, useEffect } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { XStack } from 'tamagui'
 import MontserratBlack from '../assets/fonts/Montserrat-Black.ttf'
 import MontserratBold from '../assets/fonts/Montserrat-Bold.ttf'
 import MontserratExtraBold from '../assets/fonts/Montserrat-ExtraBold.ttf'
@@ -14,8 +19,6 @@ import MontserratMedium from '../assets/fonts/Montserrat-Medium.ttf'
 import MontserratRegular from '../assets/fonts/Montserrat-Regular.ttf'
 import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf'
 import MontserratThin from '../assets/fonts/Montserrat-Thin.ttf'
-import LoadingModalScreen from '@/shared/components/modals/loading'
-import { useModalStore } from '@/store/modalStore'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -65,11 +68,18 @@ const defaultStackOptions: React.ComponentProps<typeof Stack.Screen>['options'] 
   title: '',
   headerShown: true,
   headerTransparent: true,
+  contentStyle: { backgroundColor: 'white' },
 }
 
 function RootLayoutNav() {
   const modalType = useModalStore((state) => state.type)
   const isLoadingModal = modalType === 'loading'
+  const isResultModal = modalType === 'whos-that-pokemon-result'
+  const router = useRouter()
+
+  const onNavigateToStats = useCallback(() => {
+    router.push('/whos-that-pokemon-stats')
+  }, [router])
 
   return (
     <ThemeProvider value={DefaultTheme}>
@@ -95,10 +105,34 @@ function RootLayoutNav() {
           name="typeFilter"
           options={defaultStackOptions}
         />
+        <Stack.Screen
+          name="whos-that-pokemon"
+          options={{
+            ...defaultStackOptions,
+            headerRight: () => (
+              <XStack padding="$2" onPress={onNavigateToStats}>
+                <BarChart2 size={24} color="white" />
+              </XStack>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="whos-that-pokemon-stats"
+          options={defaultStackOptions}
+        />
+        <Stack.Screen
+          name="modals/whos-that-pokemon-result"
+          options={{ headerShown: false, presentation: 'transparentModal' }}
+        />
       </Stack>
       {isLoadingModal && (
         <View style={{ ...StyleSheet.absoluteFillObject, zIndex: 9999 }}>
           <LoadingModalScreen />
+        </View>
+      )}
+      {isResultModal && (
+        <View style={{ ...StyleSheet.absoluteFillObject, zIndex: 9999 }}>
+          <WhosThatPokemonResultModal />
         </View>
       )}
     </ThemeProvider>

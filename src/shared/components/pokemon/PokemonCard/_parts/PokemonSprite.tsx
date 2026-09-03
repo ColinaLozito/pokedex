@@ -1,7 +1,7 @@
 import imageNotFound from '@images/notFound.png';
 import { useState } from 'react';
 import { Image as RNImage } from 'react-native';
-import { Image, YStack } from 'tamagui';
+import { Image, Square, YStack } from 'tamagui';
 import { POKEMON_CARD_COLORS } from '../constants';
 import { PokemonCardSpriteProps } from '../types';
 
@@ -34,11 +34,21 @@ export default function PokemonSprite({
       />
       
       {/* Pokemon Sprite */}
+      <Square
+        w="$size.8"
+        h="$size.8"
+        alignSelf="flex-end"
+        transition="slow"
+        enterStyle={{
+          opacity: 0,
+          scale: 0.5,
+        }}
+      >
       {sprite ? (
           <Image
             src={imageError ? RNImage.resolveAssetSource(imageNotFound).uri : sprite}
-            width="$8"
-            height="$8"
+            width="100%"
+            height="100%"
             zIndex={1}
             objectFit="contain"
             onError={() => setImageError(true)}
@@ -46,13 +56,14 @@ export default function PokemonSprite({
       ) : (
         <Image
           src={RNImage.resolveAssetSource(imageNotFound).uri}
-          width="$8"
-          height="$8"
+          width="100%"
+          height="100%"
           zIndex={1}
           objectFit="contain"
           onError={() => setImageError(true)}
         />
       )}
+      </Square>
     </YStack>
   );
 }
